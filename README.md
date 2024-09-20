@@ -9,9 +9,9 @@ This browser based web application to ...
 
 List team members and/or short bio's here...
 
+- My name is Patrick Kennedy. I'm a recent highschool graduate and I'm excited to finish the CST course.
 - Hi, my name is Kai. I'm excited to get in and work on a real world problem.
--
-- ...
+- Hi, my name is Victor! I'm a CST Student at BCIT's Downtown Campus.
 
 ## 3. Technologies and Resources Used
 
