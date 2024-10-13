@@ -1,3 +1,38 @@
 .card {
     max-width: 1000px;
 }
+
+.bottom-bar {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding: 0 8px 4px;
+    border-top: 2px solid var(--bs-border-color-translucent);
+}
+
+.bottom-nav {
+    display: flex;
+    list-style: none;
+    justify-content: space-around;
+    padding: 0;
+    margin-block: 12px;
+}
+
+.bottom-bar a {
+    color: rgba(var(--bs-emphasis-color-rgb), 0.8);
+    text-decoration: none;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+.bottom-bar .material-icons {
+    margin-inline: auto;
+    font-size: 58px;
+}
+
+@media screen and (min-width: 992px) {
+    .bottom-bar {
+        display: none;
+    }
+}
