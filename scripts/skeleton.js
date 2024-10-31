@@ -9,7 +9,9 @@ function loadSkeleton() {
             // User is signed in.
             // Do something for the user here.
             console.log(
-                $("#headerPlaceholder").load("./text/header_after_login.html")
+                $("#headerPlaceholder")
+                    .load("./text/header_after_login.html")
+                    .on("click", ".sign-out", logout)
             );
             console.log($("#footerPlaceholder").load("./text/footer.html"));
         } else {
