@@ -41,6 +41,20 @@
 
         <!-- Link to styles of your own -->
         <link rel="stylesheet" href="./styles/style.css" />
+
+        <!-- Header module -->
+        <script>
+            $(function () {
+                    $('#headerPlaceholder').load("header.html");
+                });
+        </script>
+        
+        <!-- Footer module -->
+        <script>
+            $(function () {
+                    $('#footerPlaceholder').load("footer.html");
+                });
+        </script>
     </head>
 
     <body>
@@ -73,7 +87,7 @@
                                 healthcare news.
                             </p>
                             <a
-                                href="/login.html"
+                                href="./login.html"
                                 class="btn btn-info py-3 px-5 fs-5 align-self-sm-start align-self-md-strech"
                                 >Sign Up</a
                             >
@@ -194,32 +208,8 @@
                 </div>
             </section>
 
-            <footer class="bottom-bar">
-                <nav>
-                    <ul class="bottom-nav">
-                        <li>
-                            <a href="/">
-                                <span class="material-icons">feed </span>
-                                <div>News</div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/topics.html">
-                                <span class="material-icons">explore </span>
-                                <div>Topics</div></a
-                            >
-                        </li>
-                        <li>
-                            <a href="#">
-                                <span class="material-icons"
-                                    >notifications</span
-                                >
-                                <div>Updates</div></a
-                            >
-                        </li>
-                    </ul>
-                </nav>
-            </footer>
+            <footer id="footerPlaceholder"></footer>
+             
         </main>
 
         <!---------------------------------------------->
