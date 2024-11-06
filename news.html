@@ -19,6 +19,17 @@
 
     <!-- Other libraries go here -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+        <!-- ------------------------------------------------------>
+        <!-- Firebase 8 Library related CSS, JS, JQuery go here -->
+        <!-------------------------------------------------------->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+        <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
 
     <!-- Link to styles of your own -->
     <link rel="stylesheet" href="./styles/style.css" />
@@ -36,7 +47,7 @@
                             <a class="nav-link" aria-current="page" href="/explore">Explore</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/news">News</a>
+                            <a class="nav-link" href="./news.html">News</a>
                         </li>
                     </ul>
                 </div>
@@ -48,7 +59,7 @@
                 </form>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link px-2 px-lg-4" href="/login">
+                        <a class="nav-link px-2 px-lg-4" href="./login.html">
                             Sign In
                         </a>
                     </li>
@@ -57,54 +68,33 @@
         </nav>
     </header>
 
-    <main>
-        <section class="py-5 px-3 text-center">
-            <h1 class="pb-3">Set Your Location to get Local News</h1>
-            <p class="fs-3">
-                <button class="btn btn-info" type="submit">
-                    Detect Location
-                </button>
-            </p>
-        </section>
+    <div>
+        <h1 class="p-4 text-center">Enter Postal Code (ex. V6X3N2) to get Local News </h1>
+        <form>
+            <fieldset class="p-4 mb-3" id="personalInfoField">
+                <div class="form-group">
+                    <input type="text" id="postalCodeInput" class="form-control text-center" placeholder="Enter your postal code">
+                </div>
+            </fieldset>
+            <div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-secondary" onclick="editUserGeoInfo()">Edit</button>
+                <span style="width: 10px"></span>
+                <button type="button" class="btn btn-info" onclick="getUserGeoInfo()">Save</button>
+            </div>
+        </form>
+    </div>
 
-        <section class="px-3 text-center">
-            <h1 class="pb-3">or Enter City/Postal Code: </h1>
-            <input class="me-2" type="text">
-
-        </section>
-
-        <footer class="bottom-bar">
-            <nav>
-                <ul class="bottom-nav">
-                    <li>
-                        <a href="/">
-                            <span class="material-icons">home </span>
-                            <div>Home</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class="material-icons">explore </span>
-                            <div>Topics</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class="material-icons">feed</span>
-                            <div>News</div>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </footer>
-    </main>
+    <footer id="footerPlaceholder"></footer>
 
     <!---------------------------------------------->
     <!-- Your own JavaScript functions go here    -->
     <!---------------------------------------------->
 
     <!-- Link to scripts of your own -->
+    <script src="./scripts/firebaseAPI_DTC14.js"></script>
+    <script src="./scripts/skeleton.js"></script>
     <script src="./scripts/script.js"></script>
+    <script src="./scripts/postalcode.js"></script>
 
 </body>
 
