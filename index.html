@@ -27,6 +27,17 @@
             href="https://fonts.googleapis.com/icon?family=Material+Icons"
             rel="stylesheet"
         />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+        <link
+            type="text/css"
+            rel="stylesheet"
+            href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css"
+        />
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
         <!-- Link to styles of your own -->
         <link rel="stylesheet" href="./styles/style.css" />
@@ -38,51 +49,7 @@
         <!------------------------------>
         <!-- Stuff for body goes here -->
 
-        <header>
-            <nav class="navbar navbar-expand-lg bg-body-tertiary">
-                <div class="container-fluid">
-                    <div
-                        class="collapse navbar-collapse"
-                        id="navbarSupportedContent"
-                    >
-                        <a class="navbar-brand px-4" href="#">Care Compass</a>
-                        <ul
-                            class="navbar-nav me-auto mb-2 mb-lg-0 d-none d-md-flex"
-                        >
-                            <li class="nav-item">
-                                <a
-                                    class="nav-link"
-                                    aria-current="page"
-                                    href="/explore"
-                                    >Explore</a
-                                >
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/news.html">News</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <form class="d-flex" role="search">
-                        <input
-                            class="form-control me-2"
-                            type="search"
-                            placeholder="Search"
-                            aria-label="Search"
-                        />
-                        <button class="btn btn-info" type="submit">
-                            Search
-                        </button>
-                    </form>
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link px-2 px-lg-4" href="/login">
-                                Sign In
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </header>
+        <header id="headerPlaceholder"></header>
 
         <main>
             <section class="py-5 px-3 bg-info-subtle text-center">
@@ -102,11 +69,11 @@
                         </h2>
                         <div class="d-flex flex-column gap-2">
                             <p class="card-text fs-4">
-                                Sign up or login to view personalized healthcare
-                                news.
+                                Sign up or log in to view personalized
+                                healthcare news.
                             </p>
                             <a
-                                href="/login.html"
+                                href="./login.html"
                                 class="btn btn-info py-3 px-5 fs-5 align-self-sm-start align-self-md-strech"
                                 >Sign Up</a
                             >
@@ -114,94 +81,121 @@
                     </div>
                 </div>
             </section>
-            
+
             <section class="news">
-              <h1>
-                National News
-              </h1>
-              <div class="article-preview" style="">
-                <div class="article-preview-title" style="display: flex; flex-direction: row; gap: 5px">
-                  <img src="https://picsum.photos/32" alt="logo" style="border-radius: 50%; height: 32px; width: 32px;">
-                  <h3>
-                    Article Title
-                  </h3>
+                <h1>National News</h1>
+                <div class="article-preview" style="">
+                    <div
+                        class="article-preview-title"
+                        style="display: flex; flex-direction: row; gap: 5px"
+                    >
+                        <img
+                            src="https://picsum.photos/32"
+                            alt="logo"
+                            style="
+                                border-radius: 50%;
+                                height: 32px;
+                                width: 32px;
+                            "
+                        />
+                        <h3>Article Title</h3>
+                    </div>
+                    <div class="article-preview-byline">
+                        Lorem ipsum, dolor sit amet consectetur adipisicing
+                        elit. Illo nulla, deleniti ab quidem harum voluptate
+                        explicabo pariatur. Recusandae, corporis asperiores.
+                        Rerum enim non, voluptates officiis labore ab. Earum,
+                        quas necessitatibus.
+                    </div>
+                    <div class="article-preview-read">
+                        <a href="#" style="">
+                            Read more
+                            <span
+                                class="material-icons"
+                                style="
+                                    text-decoration: none;
+                                    vertical-align: bottom;
+                                "
+                            >
+                                chevron_right
+                            </span>
+                        </a>
+                    </div>
                 </div>
-                <div class="article-preview-byline">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illo nulla, deleniti ab quidem harum voluptate explicabo pariatur. Recusandae, corporis asperiores. Rerum enim non, voluptates officiis labore ab. Earum, quas necessitatibus.
+                <div class="article-preview">
+                    <div
+                        class="article-preview-title"
+                        style="display: flex; flex-direction: row; gap: 5px"
+                    >
+                        <img
+                            src="https://picsum.photos/32"
+                            alt="logo"
+                            style="
+                                border-radius: 50%;
+                                height: 32px;
+                                width: 32px;
+                            "
+                        />
+                        <h3>Article Title</h3>
+                    </div>
+                    <div class="article-preview-byline">
+                        Lorem ipsum, dolor sit amet consectetur adipisicing
+                        elit. Illo nulla, deleniti ab quidem harum voluptate
+                        explicabo pariatur. Recusandae, corporis asperiores.
+                        Rerum enim non, voluptates officiis labore ab. Earum,
+                        quas necessitatibus.
+                    </div>
+                    <div class="article-preview-read">
+                        <a href="#">
+                            Read more
+                            <span
+                                class="material-icons"
+                                style="vertical-align: bottom"
+                            >
+                                chevron_right
+                            </span>
+                        </a>
+                    </div>
                 </div>
-                <div class="article-preview-read">
-                  <a href="#" style="">
-                    Read more 
-                    <span class="material-icons" style="text-decoration: none; vertical-align: bottom;">
-                      chevron_right
-                    </span>
-                  </a>
+                <div class="article-preview">
+                    <div
+                        class="article-preview-title"
+                        style="display: flex; flex-direction: row; gap: 5px"
+                    >
+                        <img
+                            src="https://picsum.photos/32"
+                            alt="logo"
+                            style="
+                                border-radius: 50%;
+                                height: 32px;
+                                width: 32px;
+                            "
+                        />
+                        <h3>Article Title</h3>
+                    </div>
+                    <div class="article-preview-byline">
+                        Lorem ipsum, dolor sit amet consectetur adipisicing
+                        elit. Illo nulla, deleniti ab quidem harum voluptate
+                        explicabo pariatur. Recusandae, corporis asperiores.
+                        Rerum enim non, voluptates officiis labore ab. Earum,
+                        quas necessitatibus.
+                    </div>
+                    <div class="article-preview-read">
+                        <a href="#">
+                            Read more
+                            <span
+                                class="material-icons"
+                                style="vertical-align: bottom"
+                            >
+                                chevron_right
+                            </span>
+                        </a>
+                    </div>
                 </div>
-              </div>
-              <div class="article-preview">
-                <div class="article-preview-title" style="display: flex; flex-direction: row; gap: 5px">
-                  <img src="https://picsum.photos/32" alt="logo" style="border-radius: 50%; height: 32px; width: 32px;">
-                  <h3>
-                    Article Title
-                  </h3>
-                </div>
-                <div class="article-preview-byline">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illo nulla, deleniti ab quidem harum voluptate explicabo pariatur. Recusandae, corporis asperiores. Rerum enim non, voluptates officiis labore ab. Earum, quas necessitatibus.
-                </div>
-                <div class="article-preview-read">
-                  <a href="#">
-                    Read more 
-                    <span class="material-icons" style="vertical-align: bottom;">
-                      chevron_right
-                    </span>
-                  </a>
-                </div>
-              </div>
-              <div class="article-preview">
-                <div class="article-preview-title" style="display: flex; flex-direction: row; gap: 5px">
-                  <img src="https://picsum.photos/32" alt="logo" style="border-radius: 50%; height: 32px; width: 32px;">
-                  <h3>
-                    Article Title
-                  </h3>
-                </div>
-                <div class="article-preview-byline">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illo nulla, deleniti ab quidem harum voluptate explicabo pariatur. Recusandae, corporis asperiores. Rerum enim non, voluptates officiis labore ab. Earum, quas necessitatibus.
-                </div>
-                <div class="article-preview-read">
-                  <a href="#">
-                    Read more 
-                    <span class="material-icons" style="vertical-align: bottom;">
-                      chevron_right
-                    </span>
-                  </a>
-                </div>
-              </div>
             </section>
-            
-            <footer class="bottom-bar">
-                <nav>
-                    <ul class="bottom-nav">
-                        <li>
-                            <a href="/">
-                                <span class="material-icons">home </span>
-                                <div>Home</div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <span class="material-icons">explore </span>
-                                <div>Topics</div></a
-                            >
-                        </li>
-                        <li>
-                            <a href="#">
-                                <span class="material-icons">feed</span>
-                                <div>News</div></a
-                            >
-                        </li>
-                    </ul>
-                </nav>
-            </footer>
+
+            <footer id="footerPlaceholder"></footer>
+             
         </main>
 
         <!---------------------------------------------->
@@ -209,6 +203,8 @@
         <!---------------------------------------------->
 
         <!-- Link to scripts of your own -->
-        <!-- <script src="./scripts/script.js"></script> -->
+        <script src="./scripts/firebaseAPI_DTC14.js"></script>
+        <script src="./scripts/script.js"></script>
+        <script src="./scripts/skeleton.js"></script>
     </body>
 </html>

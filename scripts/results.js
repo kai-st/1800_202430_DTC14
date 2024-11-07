@@ -8,27 +8,28 @@ let topic = "Topic";
 
 const dummyResults = [
     {
-        sourceLinkUrl: "sourceLinkUrl",
+        sourceUrl: "sourceUrl",
         sourceLogoUrl: "sourceLogoUrl",
-        source: "Source",
+        sourceName: "Source",
+        id: "si0zxhc98gbwffcdv",
         subpages: [
             {
                 subpageTitle: "subpageTitle",
-                subpageLinkUrl: "subpageLinkUrl",
+                subpageUrl: "subpageUrl",
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
                 id: "1",
             },
             {
                 subpageTitle: "subpageTitle",
-                subpageLinkUrl: "subpageLinkUrl",
+                subpageUrl: "subpageUrl",
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
                 id: "2",
             },
             {
                 subpageTitle: "subpageTitle",
-                subpageLinkUrl: "subpageLinkUrl",
+                subpageUrl: "subpageUrl",
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
                 id: "3",
@@ -36,41 +37,42 @@ const dummyResults = [
         ],
     },
     {
-        sourceLinkUrl: "sourceLinkUrl",
+        sourceUrl: "sourceUrl",
         sourceLogoUrl: "sourceLogoUrl",
-        source: "Source",
+        sourceName: "Source",
+        id: "si0zxhc98gbwffcdv",
         subpages: [
             {
                 subpageTitle: "subpageTitle",
-                subpageLinkUrl: "subpageLinkUrl",
+                subpageUrl: "subpageUrl",
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
                 id: "4",
             },
             {
                 subpageTitle: "subpageTitle",
-                subpageLinkUrl: "subpageLinkUrl",
+                subpageUrl: "subpageUrl",
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
                 id: "4",
             },
             {
                 subpageTitle: "subpageTitle",
-                subpageLinkUrl: "subpageLinkUrl",
+                subpageUrl: "subpageUrl",
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
                 id: "5",
             },
             {
                 subpageTitle: "subpageTitle",
-                subpageLinkUrl: "subpageLinkUrl",
+                subpageUrl: "subpageUrl",
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
                 id: "6",
             },
             {
                 subpageTitle: "subpageTitle",
-                subpageLinkUrl: "subpageLinkUrl",
+                subpageUrl: "subpageUrl",
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
                 id: "7",
@@ -78,13 +80,14 @@ const dummyResults = [
         ],
     },
     {
-        sourceLinkUrl: "sourceLinkUrl",
+        sourceUrl: "sourceUrl",
         sourceLogoUrl: "sourceLogoUrl",
-        source: "Source",
+        sourceName: "Source",
+        id: "si0zxhc98gbwffcdv",
         subpages: [
             {
                 subpageTitle: "subpageTitle",
-                subpageLinkUrl: "subpageLinkUrl",
+                subpageUrl: "subpageUrl",
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
                 id: "8",
@@ -138,7 +141,7 @@ const loadResults = () => {
                                             ${subpage.content}
                                         </div>
                                         <a
-                                            href="${subpage.subpageLinkUrl}"
+                                            href="${subpage.subpageUrl}"
                                             class="subpage-link"
                                             >Visit Page</a
                                         >
@@ -149,12 +152,14 @@ const loadResults = () => {
             subpages += subpageAccordionItem;
         });
 
-        const sourceAccordionItem = `<section class="source-block">
+        const sourceAccordionItem = `<section class="source-block" data-source-id="${
+            result.id
+        }">
                                 <div class="source">
                                     <h2>
                                         <span class="d-none d-sm-inline">From: </span
                                         ><a class="source-link" href="${
-                                            result.sourceLinkUrl
+                                            result.sourceUrl
                                         }"
                                             ><img
                                                 src="${result.sourceLogoUrl}"
@@ -190,7 +195,7 @@ const loadResults = () => {
                                                             class="subscribe-all dropdown-item"
                                                             type="button"
                                                         >
-                                                            Subscribe to all updates from ${result.source}
+                                                            Subscribe to all updates from ${result.sourceName}
                                                         </button>
                                                     </li>
                                                 </ul>
