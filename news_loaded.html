@@ -24,6 +24,19 @@
         crossorigin="anonymous"
     ></script>
 
+    <!-- Link to news.js -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+    
+    <script src="./scripts/firebaseAPI_DTC14.js"></script> 
+    <script src="./scripts/news.js" defer></script>
+
     <!-- Other libraries go here -->
     <link
         href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -31,7 +44,8 @@
     />
 
     <!-- Link to styles of your own -->
-    <link rel="stylesheet" href="./styles/style.css" /></head>
+    <link rel="stylesheet" href="./styles/style.css" />
+</head>
 <body>
     <!-- Navbar -->
     <header>
@@ -81,162 +95,10 @@
     </header>
 
     <!-- News -->
-    <section class="news">
-        <h1>
-          News
-        </h1>
-        <div class="article-preview" style="">
-          <div class="article-preview-title" style="display: flex; flex-direction: row; gap: 5px">
-            <img src="https://picsum.photos/32" alt="logo" style="border-radius: 50%; height: 32px; width: 32px;">
-            <h3>
-              Article Title
-            </h3>
-          </div>
-          <div class="article-preview-byline">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illo nulla, deleniti ab quidem harum voluptate explicabo pariatur. Recusandae, corporis asperiores. Rerum enim non, voluptates officiis labore ab. Earum, quas necessitatibus.
-          </div>
-          <div class="article-preview-read">
-            <a href="#" style="">
-              Read more 
-              <span class="material-icons" style="text-decoration: none; vertical-align: bottom;">
-                chevron_right
-              </span>
-            </a>
-          </div>
-        </div>
-        <div class="article-preview">
-          <div class="article-preview-title" style="display: flex; flex-direction: row; gap: 5px">
-            <img src="https://picsum.photos/32" alt="logo" style="border-radius: 50%; height: 32px; width: 32px;">
-            <h3>
-              Article Title
-            </h3>
-          </div>
-          <div class="article-preview-byline">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illo nulla, deleniti ab quidem harum voluptate explicabo pariatur. Recusandae, corporis asperiores. Rerum enim non, voluptates officiis labore ab. Earum, quas necessitatibus.
-          </div>
-          <div class="article-preview-read">
-            <a href="#">
-              Read more 
-              <span class="material-icons" style="vertical-align: bottom;">
-                chevron_right
-              </span>
-            </a>
-          </div>
-        </div>
-        <div class="article-preview">
-          <div class="article-preview-title" style="display: flex; flex-direction: row; gap: 5px">
-            <img src="https://picsum.photos/32" alt="logo" style="border-radius: 50%; height: 32px; width: 32px;">
-            <h3>
-              Article Title
-            </h3>
-          </div>
-          <div class="article-preview-byline">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illo nulla, deleniti ab quidem harum voluptate explicabo pariatur. Recusandae, corporis asperiores. Rerum enim non, voluptates officiis labore ab. Earum, quas necessitatibus.
-          </div>
-          <div class="article-preview-read">
-            <a href="#">
-              Read more 
-              <span class="material-icons" style="vertical-align: bottom;">
-                chevron_right
-              </span>
-            </a>
-          </div>
-        </div>
-        <div class="article-preview">
-            <div class="article-preview-title" style="display: flex; flex-direction: row; gap: 5px">
-              <img src="https://picsum.photos/32" alt="logo" style="border-radius: 50%; height: 32px; width: 32px;">
-              <h3>
-                Article Title
-              </h3>
-            </div>
-            <div class="article-preview-byline">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illo nulla, deleniti ab quidem harum voluptate explicabo pariatur. Recusandae, corporis asperiores. Rerum enim non, voluptates officiis labore ab. Earum, quas necessitatibus.
-            </div>
-            <div class="article-preview-read">
-              <a href="#">
-                Read more 
-                <span class="material-icons" style="vertical-align: bottom;">
-                  chevron_right
-                </span>
-              </a>
-            </div>
-          </div>
-          <div class="article-preview">
-            <div class="article-preview-title" style="display: flex; flex-direction: row; gap: 5px">
-              <img src="https://picsum.photos/32" alt="logo" style="border-radius: 50%; height: 32px; width: 32px;">
-              <h3>
-                Article Title
-              </h3>
-            </div>
-            <div class="article-preview-byline">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illo nulla, deleniti ab quidem harum voluptate explicabo pariatur. Recusandae, corporis asperiores. Rerum enim non, voluptates officiis labore ab. Earum, quas necessitatibus.
-            </div>
-            <div class="article-preview-read">
-              <a href="#">
-                Read more 
-                <span class="material-icons" style="vertical-align: bottom;">
-                  chevron_right
-                </span>
-              </a>
-            </div>
-          </div>
-          <div class="article-preview">
-            <div class="article-preview-title" style="display: flex; flex-direction: row; gap: 5px">
-              <img src="https://picsum.photos/32" alt="logo" style="border-radius: 50%; height: 32px; width: 32px;">
-              <h3>
-                Article Title
-              </h3>
-            </div>
-            <div class="article-preview-byline">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illo nulla, deleniti ab quidem harum voluptate explicabo pariatur. Recusandae, corporis asperiores. Rerum enim non, voluptates officiis labore ab. Earum, quas necessitatibus.
-            </div>
-            <div class="article-preview-read">
-              <a href="#">
-                Read more 
-                <span class="material-icons" style="vertical-align: bottom;">
-                  chevron_right
-                </span>
-              </a>
-            </div>
-          </div>
-          <div class="article-preview">
-            <div class="article-preview-title" style="display: flex; flex-direction: row; gap: 5px">
-              <img src="https://picsum.photos/32" alt="logo" style="border-radius: 50%; height: 32px; width: 32px;">
-              <h3>
-                Article Title
-              </h3>
-            </div>
-            <div class="article-preview-byline">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illo nulla, deleniti ab quidem harum voluptate explicabo pariatur. Recusandae, corporis asperiores. Rerum enim non, voluptates officiis labore ab. Earum, quas necessitatibus.
-            </div>
-            <div class="article-preview-read">
-              <a href="#">
-                Read more 
-                <span class="material-icons" style="vertical-align: bottom;">
-                  chevron_right
-                </span>
-              </a>
-            </div>
-          </div>
-          <div class="article-preview">
-            <div class="article-preview-title" style="display: flex; flex-direction: row; gap: 5px">
-              <img src="https://picsum.photos/32" alt="logo" style="border-radius: 50%; height: 32px; width: 32px;">
-              <h3>
-                Article Title
-              </h3>
-            </div>
-            <div class="article-preview-byline">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illo nulla, deleniti ab quidem harum voluptate explicabo pariatur. Recusandae, corporis asperiores. Rerum enim non, voluptates officiis labore ab. Earum, quas necessitatibus.
-            </div>
-            <div class="article-preview-read">
-              <a href="#">
-                Read more 
-                <span class="material-icons" style="vertical-align: bottom;">
-                  chevron_right
-                </span>
-              </a>
-            </div>
-          </div>
+    <section class="news" id="news">
+      <h1>
+        News
+      </h1>
     </section>
 
     <!-- Footer -->
