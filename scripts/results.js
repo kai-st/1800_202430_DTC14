@@ -4,30 +4,38 @@ const EDIT_NOTIFICATION_ICON = "&#xe525;";
 
 let topic = "COVID-19";
 
+let currentUser;
+
 const dummyResults = [
     {
         sourceUrl: "sourceUrl",
         sourceLogoUrl: "sourceLogoUrl",
         sourceName: "Source",
         id: "si0zxhc98gbwffcdv",
+        path: "/sources/N04ecYckTRSBcqo3lhgP",
         subpages: [
             {
                 subpageTitle: "subpageTitle",
                 subpageUrl: "subpageUrl",
+                path: "/sources/N04ecYckTRSBcqo3lhgP/subpages/vtdQmEGNYJpisemz9jU1",
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
                 id: "1",
+                path: "/sources/N04ecYckTRSBcqo3lhgP/subpages/vtdQmEGNYJpisemz9jU1",
             },
             {
                 subpageTitle: "subpageTitle",
                 subpageUrl: "subpageUrl",
+                path: "/sources/N04ecYckTRSBcqo3lhgP/subpages/vtdQmEGNYJpisemz9jU1",
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
                 id: "2",
+                path: "/sources/N04ecYckTRSBcqo3lhgP/subpages/vtdQmEGNYJpisemz9jU1",
             },
             {
                 subpageTitle: "subpageTitle",
                 subpageUrl: "subpageUrl",
+                path: "/sources/N04ecYckTRSBcqo3lhgP/subpages/vtdQmEGNYJpisemz9jU1",
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
                 id: "3",
@@ -39,38 +47,48 @@ const dummyResults = [
         sourceLogoUrl: "sourceLogoUrl",
         sourceName: "Source",
         id: "si0zxhc98gbwffcdv",
+        path: "/sources/N04ecYckTRSBcqo3lhgP",
         subpages: [
             {
                 subpageTitle: "subpageTitle",
                 subpageUrl: "subpageUrl",
+                path: "/sources/N04ecYckTRSBcqo3lhgP/subpages/vtdQmEGNYJpisemz9jU1",
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
                 id: "4",
+                path: "/sources/N04ecYckTRSBcqo3lhgP/subpages/vtdQmEGNYJpisemz9jU1",
             },
             {
                 subpageTitle: "subpageTitle",
                 subpageUrl: "subpageUrl",
+                path: "/sources/N04ecYckTRSBcqo3lhgP/subpages/vtdQmEGNYJpisemz9jU1",
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
                 id: "4",
+                path: "/sources/N04ecYckTRSBcqo3lhgP/subpages/vtdQmEGNYJpisemz9jU1",
             },
             {
                 subpageTitle: "subpageTitle",
                 subpageUrl: "subpageUrl",
+                path: "/sources/N04ecYckTRSBcqo3lhgP/subpages/vtdQmEGNYJpisemz9jU1",
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
                 id: "5",
+                path: "/sources/N04ecYckTRSBcqo3lhgP/subpages/vtdQmEGNYJpisemz9jU1",
             },
             {
                 subpageTitle: "subpageTitle",
                 subpageUrl: "subpageUrl",
+                path: "/sources/N04ecYckTRSBcqo3lhgP/subpages/vtdQmEGNYJpisemz9jU1",
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
                 id: "6",
+                path: "/sources/N04ecYckTRSBcqo3lhgP/subpages/vtdQmEGNYJpisemz9jU1",
             },
             {
                 subpageTitle: "subpageTitle",
                 subpageUrl: "subpageUrl",
+                path: "/sources/N04ecYckTRSBcqo3lhgP/subpages/vtdQmEGNYJpisemz9jU1",
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
                 id: "7",
@@ -82,10 +100,12 @@ const dummyResults = [
         sourceLogoUrl: "sourceLogoUrl",
         sourceName: "Source",
         id: "si0zxhc98gbwffcdv",
+        path: "/sources/N04ecYckTRSBcqo3lhgP",
         subpages: [
             {
                 subpageTitle: "subpageTitle",
                 subpageUrl: "subpageUrl",
+                path: "/sources/N04ecYckTRSBcqo3lhgP/subpages/vtdQmEGNYJpisemz9jU1",
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
                 id: "8",
@@ -97,17 +117,26 @@ const dummyResults = [
 const loadResults = async () => {
     console.log("loading");
 
-    $("#results-wrapper").empty();
-
     firebase.auth().onAuthStateChanged(async (user) => {
+        currentUser = user;
         let loggedIn = !!user;
 
-        const userSubscriptionPaths = await getUserSubscriptionPaths(user.uid);
+        let userSubscriptionPaths = [];
+
+        if (loggedIn) {
+            userSubscriptionPaths = await getUserSubscriptionPaths(user.uid);
+        }
+
+        $("#results-wrapper").empty();
 
         dummyResults.forEach((result) => {
             let subpages = "";
 
             result.subpages.forEach((subpage) => {
+                const userSubscribed = userSubscriptionPaths.includes(
+                    subpage.path.substring(1)
+                );
+                console.log("userSubscribed", userSubscribed);
                 const subpageAccordionItem = `<div class="subpage-item accordion-item">
                                     <div class="subpage-header accordion-header">
                                         <h3>${subpage.subpageTitle}</h3>
@@ -115,13 +144,29 @@ const loadResults = async () => {
                                             loggedIn
                                                 ? `<button
                                             type="button"
-                                            class="subpage-subscribe subscribe btn"
+                                            class="${
+                                                userSubscribed
+                                                    ? "subscribed"
+                                                    : "not-subscribed"
+                                            } subpage-subscribe subscribe btn"
+                                            data-subpage-path="${subpage.path}"
+                                        >
+                                            <span class="material-icons"
+                                                >${
+                                                    userSubscribed
+                                                        ? REMOVE_NOTIFICATION_ICON
+                                                        : ADD_NOTIFICATION_ICON
+                                                }
+                                            </span>
+                                        </button>`
+                                                : `<button
+                                            type="button"
+                                            class="logged-out subpage-subscribe subscribe btn"
                                         >
                                             <span class="material-icons"
                                                 >&#xe399;
                                             </span>
                                         </button>`
-                                                : ""
                                         }
                                         <button
                                             class="accordion-button custom collapsed"
@@ -188,13 +233,14 @@ const loadResults = async () => {
                                                             <button
                                                                 class="subscribe-topic dropdown-item"
                                                                 type="button"
-                                                            >
+                                                                >
                                                                 Subscribe to updates on ${result.topic}
-                                                            </button>
-                                                        </li>
-                                                        <li>
-                                                            <button
+                                                                </button>
+                                                                </li>
+                                                                <li>
+                                                                <button
                                                                 class="subscribe-all dropdown-item"
+                                                                data-sourse-path="${result.path}"
                                                                 type="button"
                                                             >
                                                                 Subscribe to all updates from ${result.sourceName}
@@ -220,6 +266,19 @@ const loadResults = async () => {
 
             $("#results-wrapper").append(sourceAccordionItem);
         });
+
+        if (loggedIn) {
+            $("#results-wrapper").on(
+                "click",
+                ".not-subscribed",
+                addSubscriptionHandler
+            );
+            $("#results-wrapper").on(
+                "click",
+                ".subscribed",
+                removeSubscriptionHandler
+            );
+        }
     });
 };
 
@@ -237,14 +296,63 @@ async function getUserSubscriptionPaths(userId) {
             throw new Error("No user found in db");
         }
 
+        if (!userDoc.data().subscriptions) {
+            return [];
+        }
+
         const subscriptionPaths = userDoc
             .data()
             .subscriptions.map((subscriptionRef) => subscriptionRef.path);
-        console.log("user subscription paths", subscriptionPaths);
+        console.log(`user subscription paths for ${userId}`, subscriptionPaths);
 
         return subscriptionPaths;
     } catch (error) {
         console.error(error);
         return [];
     }
+}
+
+async function addUserSubscription(userId, subscriptionPath) {
+    const updated = await db
+        .collection("users")
+        .doc(userId)
+        .update({
+            subscriptions: firebase.firestore.FieldValue.arrayUnion(
+                db.doc(subscriptionPath)
+            ),
+        });
+
+    console.log(`sub added for user ${userId}`);
+}
+
+async function addSubscriptionHandler(event) {
+    const target = event.currentTarget;
+
+    const subscriptionPath = target.dataset.subpagePath;
+
+    console.log("add path to sub", subscriptionPath);
+
+    await addUserSubscription(currentUser.uid, subscriptionPath);
+}
+
+async function removeUserSubscription(userId, subscriptionPath) {
+    const updated = db
+        .collection("users")
+        .doc(userId)
+        .update({
+            subscriptions: firebase.firestore.FieldValue.arrayRemove(
+                db.doc(subscriptionPath)
+            ),
+        });
+
+    console.log(`sub removed for user ${userId}`, updated);
+}
+
+async function removeSubscriptionHandler(event) {
+    const target = event.currentTarget;
+    const subscriptionPath = target.dataset.subpagePath;
+
+    console.log("remove path to sub", subscriptionPath);
+
+    await removeUserSubscription(currentUser.uid, subscriptionPath);
 }
