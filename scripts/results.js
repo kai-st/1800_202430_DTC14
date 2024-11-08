@@ -325,6 +325,7 @@ async function addUserSubscription(userId, subscriptionPath) {
     console.log(`sub added for user ${userId}`);
 }
 
+// TODO make single handler
 async function addSubscriptionHandler(event) {
     const target = event.currentTarget;
 
@@ -332,6 +333,17 @@ async function addSubscriptionHandler(event) {
 
     console.log("add path to sub", subscriptionPath);
 
+    console.log("add target", target);
+    target.classList.add("subscribed");
+    target.classList.remove("not-subscribed");
+    // target.removeEventListener("click", addSubscriptionHandler);
+    console.log("icon span", target.querySelector(".material-icons"));
+
+    const removeNotificationSpan = document.createElement("span");
+    removeNotificationSpan.classList.add("material-icons");
+    removeNotificationSpan.innerHTML = REMOVE_NOTIFICATION_ICON;
+    target.querySelector(".material-icons").replaceWith(removeNotificationSpan);
+    // target.addEventListener("click", removeUserSubscription);
     await addUserSubscription(currentUser.uid, subscriptionPath);
 }
 
@@ -354,5 +366,15 @@ async function removeSubscriptionHandler(event) {
 
     console.log("remove path to sub", subscriptionPath);
 
+    console.log("remove target", target);
+    target.classList.remove("subscribed");
+    target.classList.add("not-subscribed");
+    // target.removeEventListener("click", removeSubscriptionHandler);
+    console.log("icon span", target.querySelector(".material-icons"));
+    const addNotificationSpan = document.createElement("span");
+    addNotificationSpan.classList.add("material-icons");
+    addNotificationSpan.innerHTML = ADD_NOTIFICATION_ICON;
+    target.querySelector(".material-icons").replaceWith(addNotificationSpan);
+    // target.addEventListener("click", addUserSubscription);
     await removeUserSubscription(currentUser.uid, subscriptionPath);
 }
