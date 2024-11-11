@@ -19,6 +19,13 @@
 
     <!-- Other libraries go here -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
     <!-- Link to styles of your own -->
     <link rel="stylesheet" href="./styles/style.css" />
@@ -26,37 +33,8 @@
 
 <body>
     <!-- Your HTML Layout go here -->
-    <header>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-            <div class="container-fluid">
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <a class="navbar-brand px-4" href="#">Care Compass</a>
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-none d-md-flex">
-                        <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="/explore">Explore</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/news.html">News</a>
-                        </li>
-                    </ul>
-                </div>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                    <button class="btn btn-info" type="submit">
-                        Search
-                    </button>
-                </form>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link px-2 px-lg-4" href="/login.html">
-                            Sign In
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-    
+    <header id="headerPlaceholder"></header>
+
     <main>
         <section class="py-5 px-3 text-center">
             <h1 class="pb-3">Account Settings</h1>
@@ -65,85 +43,45 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-12 col-lg-10 col-xl-8 mx-auto">
-
                     <strong class="mb-0">Location</strong>
-                    <p>Control your location preferences.</p>
+                    <p>Update your location.</p>
                     <div class="list-group mb-5 shadow">
                         <div class="list-group-item">
                             <div class="row align-items-center">
                                 <div class="col">
-                                    <strong class="mb-0">Set location based on postal code</strong>
-                                    <p class="text-muted mb-0">You will receive the latest news based on your provided postal code.
+                                    <strong class="mb-0">Update your location based on postal code</strong>
+                                    <p class="text-muted mb-0">You will receive the latest news based on your provided
+                                        postal code.
                                     </p>
                                 </div>
                                 <div class="col-auto">
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                                        <input class="form-check-input" type="checkbox" role="switch"
+                                            id="flexSwitchCheckDefault">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                     <hr class="my-4" />
 
                     <strong class="mb-0">Notifications</strong>
-                    <p>Control where you will be notified.</p>
+                    <p>Control how you want to be notified.</p>
                     <div class="list-group mb-5 shadow">
                         <div class="list-group-item">
                             <div class="row align-items-center">
                                 <div class="col">
-                                    <strong class="mb-0">Get notifications within Care Compass</strong>
-                                    <p class="text-muted mb-0">You will receive notifications while you are in the Care Compass app.
+                                    <strong class="mb-0">Get notifications by email</strong>
+                                    <p class="text-muted mb-0">You will receive notifications to your email based on
+                                        your subscribed topics and/or categories.
                                     </p>
                                 </div>
                                 <div class="col-auto">
                                     <div class="custom-control custom-switch">
                                         <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list-group-item">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <strong class="mb-0">Get notifications outside of Care Compass</strong>
-                                    <p class="text-muted mb-0">You will receive notifications when you are not in the Care Compass app.</p>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list-group-item">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <strong class="mb-0">Get notifications on the latest news</strong>
-                                    <p class="text-muted mb-0">You will receive notifications when the latest news are published.</p>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="custom-control custom-switch">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list-group-item">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <strong class="mb-0">Get notifications on the latest updates </strong>
-                                    <p class="text-muted mb-0">You will receive notifications on the latest updates on the Care Compass app.</p>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="custom-control custom-switch">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                                            <input class="form-check-input" type="checkbox" role="switch"
+                                                id="flexSwitchCheckDefault">
                                         </div>
                                     </div>
                                 </div>
@@ -152,81 +90,29 @@
                     </div>
                     <hr class="my-4" />
 
-                    <strong class="mb-0">System</strong>
-                    <p>Control how your system interacts with Care Compass.</p>
+                    <strong class="mb-0">Danger zone</strong>
+                    <p>Actions done in this zone cannot be reversed once implemented.</p>
                     <div class="list-group mb-5 shadow">
                         <div class="list-group-item">
                             <div class="row align-items-center">
                                 <div class="col">
-                                    <strong class="mb-0">Notify me about new features and updates</strong>
-                                    <p class="text-muted mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                                    <strong class="mb-0">Delete account</strong>
+                                    <p class="text-muted mb-0">Any data associated with your account will also be
+                                        deleted.</p>
                                 </div>
                                 <div class="col-auto">
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list-group-item">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <strong class="mb-0">Notify me by email for latest news</strong>
-                                    <p class="text-muted mb-0">Nulla et tincidunt sapien. Sed eleifend volutpat elementum.
-                                    </p>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list-group-item">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <strong class="mb-0">Notify me about tips on using account</strong>
-                                    <p class="text-muted mb-0">Donec in quam sed urna bibendum tincidunt quis mollis mauris.
-                                    </p>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                                    </div>
-                                    </div>
+                                    <button class="btn bg-danger text-white popup" onclick="deleteConfirmation()">
+                                        Delete
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        
         </div>
 
-        <footer class="bottom-bar">
-            <nav>
-                <ul class="bottom-nav">
-                    <li>
-                        <a href="/">
-                            <span class="material-icons">home </span>
-                            <div>Home</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class="material-icons">explore </span>
-                            <div>Topics</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class="material-icons">feed</span>
-                            <div>News</div>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </footer>
+        <footer id="footerPlaceholder"></footer>
     </main>
 
     <!---------------------------------------------->
@@ -234,7 +120,10 @@
     <!---------------------------------------------->
 
     <!-- Link to scripts of your own -->
+    <script src="./scripts/firebaseAPI_DTC14.js"></script>
     <script src="./scripts/script.js"></script>
+    <script src="./scripts/skeleton.js"></script>
+    <script src="./scripts/deleteButton.js"></script>
 
 </body>
 
