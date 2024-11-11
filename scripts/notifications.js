@@ -5,7 +5,9 @@ firebase.auth().onAuthStateChanged((user) => {
 
 async function loadNotifications(user)
 {
-    notificationCollection = await db.collection("users").doc(user.uid).collection("notifications").get()
+    db.collection("users").doc("user.uid").update("notificationsRead", true)
+    
+    notificationCollection = await db.collection("users").doc("user.uid").collection("notifications").get()
     notificationIds = []
     notifications = []
     for(notification of notificationCollection.docs)
@@ -31,13 +33,84 @@ async function loadNotifications(user)
         }
     }
 
-
-    notifications.forEach((subpage) => {
-        displayNotification(subpage)
-    })
+    for (notification of notifications)
+    {
+        displayNotification({...notification.data(), id: notification.id})
+    }
 }
 
-function displayNotification(subpage)
+async function displayNotification(doc)
 {
-    console.log(subpage.id)
+    sourceID = doc.sourceID
+    source = await db.collection("sources").doc(sourceID).get()
+    sourceData = source.data()
+
+    logo_URL = sourceData.sourceLogoUrl
+
+    new_URL = new URL("article_template.html", window.location.href)
+    new_URL.searchParams.set('id', doc.id) 
+
+    title = doc.subpageTitle
+    byline = doc.subpageSummary
+
+    notifications_section = document.getElementById("notifications")
+
+    notifications_section.innerHTML += `<div class="article-preview">
+    <div class="article-preview-title" style="display: flex; flex-direction: row; gap: 20px;">
+      <img src="${logo_URL}" alt="logo" style="height: 28px; width: auto;">
+      <h3 style="">
+        ${title}
+      </h3>
+    </div>
+    <div class="article-preview-byline">
+        ${byline}
+    </div>
+    <div class="article-preview-read">
+      <a href="${new_URL}" style="">
+        Read more 
+          <span class="material-icons" style="text-decoration: none; vertical-align: bottom;">
+            chevron_right
+          </span>
+        </a>
+      </div>
+    </div>`
+}
+
+async function printNewsArticle(doc)
+{
+    sourceID = doc.sourceID
+    source = await db.collection("sources").doc(sourceID).get()
+    sourceData = source.data()
+
+    logo_URL = sourceData.sourceLogoUrl
+   
+   
+    new_URL = new URL("article_template.html", window.location.href)
+    new_URL.searchParams.set('id', doc.id) 
+
+
+    title = doc.subpageTitle
+    byline = doc.subpageSummary
+    
+    news_section = document.getElementById("news")
+    
+    news_section.innerHTML += `<div class="article-preview">
+    <div class="article-preview-title" style="display: flex; flex-direction: row; gap: 20px;">
+      <img src="${logo_URL}" alt="logo" style="height: 28px; width: auto;">
+      <h3 style="">
+        ${title}
+      </h3>
+    </div>
+    <div class="article-preview-byline">
+        ${byline}
+    </div>
+    <div class="article-preview-read">
+      <a href="${new_URL}" style="">
+        Read more 
+          <span class="material-icons" style="text-decoration: none; vertical-align: bottom;">
+            chevron_right
+          </span>
+        </a>
+      </div>
+    </div>`
 }
