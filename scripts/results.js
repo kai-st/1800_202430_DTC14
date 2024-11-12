@@ -93,6 +93,23 @@ const dummyResults = [
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
                 id: "7",
             },
+            {
+                subpageTitle: "subpageTitle",
+                subpageUrl: "subpageUrl",
+                path: "/sources/N04ecYckTRSBcqo3lhgP/subpages/vtdQmEGNYJpisemz9jU1",
+                content:
+                    "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
+                id: "8",
+                path: "/sources/N04ecYckTRSBcqo3lhgP/subpages/vtdQmEGNYJpisemz9jU1",
+            },
+            {
+                subpageTitle: "subpageTitle",
+                subpageUrl: "subpageUrl",
+                path: "/sources/N04ecYckTRSBcqo3lhgP/subpages/vtdQmEGNYJpisemz9jU1",
+                content:
+                    "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
+                id: "9",
+            },
         ],
     },
     {
@@ -114,6 +131,7 @@ const dummyResults = [
     },
 ];
 
+// TODO: rework with template and handle source subscriptions
 const loadResults = async () => {
     console.log("loading");
 
@@ -121,10 +139,10 @@ const loadResults = async () => {
         currentUser = user;
         let loggedIn = !!user;
 
-        let userSubscriptionPaths = [];
+        let userSubscriptions = {};
 
         if (loggedIn) {
-            userSubscriptionPaths = await getUserSubscriptionPaths(user.uid);
+            userSubscriptions = await getUserSubscriptions(user.uid);
         }
 
         $("#results-wrapper").empty();
@@ -133,10 +151,11 @@ const loadResults = async () => {
             let subpages = "";
 
             result.subpages.forEach((subpage) => {
-                const userSubscribed = userSubscriptionPaths.includes(
-                    subpage.path.substring(1)
-                );
-                console.log("userSubscribed", userSubscribed);
+                const userSubscribedToSubpage =
+                    userSubscriptions.subscriptionPaths.includes(
+                        subpage.path.substring(1)
+                    );
+                console.log("userSubscribedToSubpage", userSubscribedToSubpage);
                 const subpageAccordionItem = `<div class="subpage-item accordion-item">
                                     <div class="subpage-header accordion-header">
                                         <h3>${subpage.subpageTitle}</h3>
@@ -145,7 +164,7 @@ const loadResults = async () => {
                                                 ? `<button
                                             type="button"
                                             class="${
-                                                userSubscribed
+                                                userSubscribedToSubpage
                                                     ? "subscribed"
                                                     : "not-subscribed"
                                             } subpage-subscribe subscribe btn"
@@ -153,7 +172,7 @@ const loadResults = async () => {
                                         >
                                             <span class="material-icons"
                                                 >${
-                                                    userSubscribed
+                                                    userSubscribedToSubpage
                                                         ? REMOVE_NOTIFICATION_ICON
                                                         : ADD_NOTIFICATION_ICON
                                                 }
@@ -284,7 +303,9 @@ const loadResults = async () => {
 
 loadResults();
 
-async function getUserSubscriptionPaths(userId) {
+// async function getUserData(params) {}
+
+async function getUserSubscriptions(userId) {
     try {
         if (!userId) {
             throw new Error("No logged in user, cannot get subscriptions");
@@ -300,12 +321,23 @@ async function getUserSubscriptionPaths(userId) {
             return [];
         }
 
-        const subscriptionPaths = userDoc
-            .data()
-            .subscriptions.map((subscriptionRef) => subscriptionRef.path);
+        const subscriptions = userDoc.data().subscriptions;
+
+        const subscriptionPaths = subscriptions.map((subscription) => {
+            if (subscription.path) {
+                return subscription.path;
+            }
+        });
         console.log(`user subscription paths for ${userId}`, subscriptionPaths);
 
-        return subscriptionPaths;
+        const sourceSearches = subscriptions.filter(
+            (subscription) => subscription.search && subscription.sourceRef
+        );
+        const noSourceSearches = subscriptions.filter(
+            (subscription) => subscription.search && !subscription.sourceRef
+        );
+
+        return { subscriptionPaths, sourceSearches, noSourceSearches };
     } catch (error) {
         console.error(error);
         return [];
