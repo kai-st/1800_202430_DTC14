@@ -63,7 +63,7 @@
                 </h1>
             </div>
 
-            <div class="results-controls">
+            <div class="results-controls d-flex flex-column">
                 <div class="location-filter">
                     <div class="hide-on-login">
                         <a href="/login.html">Sign In</a> to filter results for
@@ -85,14 +85,67 @@
                         </option>
                     </select>
                 </div>
-                <ul class="location-tabs">
-                    <li>Sources:</li>
-                    <li class="location-tab" aria-selected="true">National</li>
-                    <li class="location-tab" aria-selected="false">
-                        Provincial
-                    </li>
-                    <li class="location-tab" aria-selected="false">Local</li>
-                </ul>
+                <div
+                    class="d-flex flex-row justify-content-between align-items-end"
+                >
+                    <div>
+                        <div class="mb-1">Sources:</div>
+                        <ul class="location-tabs d-flex" role="tablist">
+                            <li
+                                class="location-tab"
+                                tabindex="0"
+                                aria-selected="true"
+                            >
+                                National
+                            </li>
+                            <li
+                                class="location-tab"
+                                tabindex="0"
+                                aria-selected="false"
+                            >
+                                Provincial
+                            </li>
+                            <li
+                                class="location-tab"
+                                tabindex="0"
+                                aria-selected="false"
+                            >
+                                Local
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <!-- Logged Out subscribe button -->
+                        <div class="btn-group dropup hide-on-login">
+                            <div
+                                id="topic-subscribe-label"
+                                class="d-none d-md-inline-block align-self-end pb-2"
+                            >
+                                Subscribe to all updates for
+                                <span class="topic-span">Topic</span>
+                            </div>
+                            <button
+                                type="button"
+                                class="logged-out subpage-subscribe subscribe btn pb-1"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                aria-labelledby="topic-subscribe-label"
+                            >
+                                <span class="material-icons">&#xe399;</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a
+                                        class="subscribe-login dropdown-item"
+                                        href="/login.html"
+                                    >
+                                        Sign in to add subscriptions
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="" id="results-wrapper">
                 <p class="no-results fs-5 text-center mt-3">
