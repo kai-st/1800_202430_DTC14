@@ -4,15 +4,15 @@ function populateKeywords(keywords) {
         console.log(keywords[i]);
 
         // create local name variable for dropdown option
-        let name = keywords[i].name
-        let nameItems = document.createElement('li')
-        nameItems.innerHTML = `
-        <a class="dropdown-item" href="/results.html?topic=${name}">${name}</a>
-        `
+        let name = keywords[i].name;
+        let nameItems = document.createElement("li");
 
         // create local category variable for the button with dropdown
-        let category = keywords[i].category
-        let categoryItems = document.createElement('div')
+        let category = keywords[i].category;
+        nameItems.innerHTML = `
+        <a class="dropdown-item" href="/results.html?category=${category}&topic=${name}">${name}</a>
+        `;
+        let categoryItems = document.createElement("div");
         // create HTML element of button with dropdown
         // note the charAt to UpperCase is for proper formatting
         categoryItems.innerHTML = `
@@ -25,18 +25,19 @@ function populateKeywords(keywords) {
                 ${nameItems.innerHTML}
                 </ul>
         </div>
-        `
+        `;
         // append categoryItems HTML to topics.html under id "keywordCategory"
-        document.getElementById("keywordCategory").append(categoryItems)
+        document.getElementById("keywordCategory").append(categoryItems);
     }
 }
 
 async function getKeywords() {
-    const snapshot = await db.collection("keywords")
+    const snapshot = await db
+        .collection("keywords")
         .get()
-        .then(data => {
-            let keywords = data.docs.map(doc => doc.data())
-            populateKeywords(keywords)
-        })
+        .then((data) => {
+            let keywords = data.docs.map((doc) => doc.data());
+            populateKeywords(keywords);
+        });
 }
 getKeywords();

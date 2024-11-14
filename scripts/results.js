@@ -2,7 +2,45 @@ const ADD_NOTIFICATION_ICON = "&#xe399;";
 const REMOVE_NOTIFICATION_ICON = "&#xe7f6;";
 const EDIT_NOTIFICATION_ICON = "&#xe525;";
 
-let topic = "COVID-19";
+function setBackLink(category) {
+    document.querySelector(".back").href = `/topics?category=${category}`;
+    document.querySelector(
+        "#previous-page"
+    ).innerText = `Topics: ${category.replaceAll("+", " ")}`;
+}
+
+function setResultsTitle(topic, search = false) {
+    const titleHeader = document.querySelector("#results-title");
+    titleHeader.innerText = search
+        ? `Search Results for "${topic}"`
+        : `${topic}`;
+}
+
+function getQueryTopic() {
+    try {
+        const params = new URL(window.location.href).searchParams;
+        if (params.has("category")) {
+            setBackLink(params.get("category"));
+            const topic = params.get("topic");
+            setResultsTitle(topic);
+            return {
+                queryKeywords: [topic?.toLowerCase().split(" ")],
+                textTopic: topic?.replaceAll("+", " "),
+            };
+        }
+        if (params.has("query")) {
+            const query = params.get("query");
+            setResultsTitle(query, true);
+            return {
+                queryKeywords: [query?.toLowerCase().split("+")],
+                textTopic: `"${query?.replaceAll("+", " ")}"`,
+            };
+        }
+        throw new Error("No valid search params");
+    } catch (error) {
+        console.error("Error getting topic", error);
+    }
+}
 
 let currentUser;
 
@@ -127,6 +165,8 @@ const dummyResults = [
 // TODO: rework with template and handle source subscriptions
 const loadResults = async () => {
     console.log("loading");
+
+    const queryTopic = getQueryTopic();
 
     firebase.auth().onAuthStateChanged(async (user) => {
         currentUser = user;
@@ -279,6 +319,8 @@ const loadResults = async () => {
             $("#results-wrapper").append(sourceAccordionItem);
         });
 
+        loadTopicSpans(queryTopic?.textTopic);
+
         if (loggedIn) {
             $("#results-wrapper").on(
                 "click",
@@ -296,7 +338,12 @@ const loadResults = async () => {
 
 loadResults();
 
-// async function getUserData(params) {}
+function loadTopicSpans(topicText) {
+    const topicSpans = document.querySelectorAll(".topic-span");
+    for (const span of topicSpans) {
+        span.innerText = topicText;
+    }
+}
 
 async function getUserSubscriptions(userId) {
     try {
