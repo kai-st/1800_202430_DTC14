@@ -1,34 +1,71 @@
-async function getNewsArticles()
+var currentUser
+
+firebase.auth().onAuthStateChanged(user => {
+    currentUser = user
+})
+
+
+
+async function getNewsArticles(isFederal, isProvincial, isMunicipal)
 {
-  const sources = db.collection("sources")
-  const sourcesSnapshot = await sources.get()
+    const sources = db.collection("sources")
+    
+    if (currentUser){
+    const userRef = db.collection("users").doc(currentUser.uid)
+    const userSnapshot = await userRef.get()
+    const userProvince = userSnapshot.data().province
+    const userCity = userSnapshot.data().city
+    }
+    // const sourcesFederalSnapshot = await sources.get()
+    // const sourcesProvincialSnapshot = await sources.where("jurisdiction.governmentLevel", "==", "province").where("jurisdiction.location", "==", `${userProvince}`).get()
+    // const sourcesMunicipalSnapshot = await sources.where("jurisdiction.governmentLevel", "==", "municipal").where("jurisdiction.location", "==", `${userCity}`).get()
+    
+    newsArticles = []
+    allNewsArticles = []
+    uniqueNewsArticles = []
+
+    if (isFederal)
+    {
+        const sourcesFederalSnapshot = await sources.get()
+        allNewsArticles.push(...sourcesFederalSnapshot.docs)
+    }
+    if (isProvincial)
+    {
+        const sourcesProvincialSnapshot = await sources.where("jurisdiction.governmentLevel", "==", "province").where("jurisdiction.location", "==", `${userProvince}`).get()
+        allNewsArticles.push(...sourcesProvincialSnapshot.docs)
+    }
+    if (isMunicipal)
+    {
+        const sourcesMunicipalSnapshot = await sources.where("jurisdiction.governmentLevel", "==", "municipal").where("jurisdiction.location", "==", `${userCity}`).get()
+        allNewsArticles.push(...sourcesMunicipalSnapshot.docs)
+    }
+    
+    uniqueNewsArticles = [...new Set(allNewsArticles)]
+
+    for(sourceDoc of allNewsArticles)
+    {
+      subpages = sourceDoc.ref.collection("subpages")
+      subpagesFiltered = subpages.where("news", "==", true)
+      subpagesFilteredData = await subpagesFiltered.get()
   
-  newsArticles = []
-
-  for(sourceDoc of sourcesSnapshot.docs)
-  {
-    subpages = sourceDoc.ref.collection("subpages")
-    subpagesFiltered = subpages.where("news", "==", true)
-    subpagesFilteredData = await subpagesFiltered.get()
-
-    subpagesFilteredData.forEach(article => {
-      newsArticles.push({...article.data(), id: article.id})
-    });
-  }
-
-  newsArticles.sort((a,b) => b.updatedAt - a.updatedAt)
+      subpagesFilteredData.forEach(article => {
+        newsArticles.push({...article.data(), id: article.id})
+      });
+    }
   
-  for (article of newsArticles)
-  {
-    printNewsArticle(article)
-  }
-      
+    newsArticles.sort((a,b) => b.updatedAt - a.updatedAt)
+    
+    for (article of newsArticles)
+    {
+      printNewsArticle(article)
+    }
 }
 
 async function printNewsArticle(doc)
 {
     sourceID = doc.sourceID
     source = await db.collection("sources").doc(sourceID).get()
+    console.log()
     sourceData = source.data()
 
     logo_URL = sourceData.sourceLogoUrl
@@ -66,7 +103,15 @@ async function printNewsArticle(doc)
 
 function setup()
 {
-  getNewsArticles()
+  if (currentUser)
+  {
+    getNewsArticles(true, true, true)
+    console.log("user is logged in")
+  }
+  else
+  {
+    getNewsArticles(true, false, false)
+  }
 }
 
 setup()
