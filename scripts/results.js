@@ -21,18 +21,18 @@ function getQueryTopic() {
         const params = new URL(window.location.href).searchParams;
         if (params.has("category")) {
             setBackLink(params.get("category"));
-            const topic = params.get("topic");
+            const topic = params.get("topic").replaceAll("+", " ");
             setResultsTitle(topic);
             return {
-                queryKeywords: [topic?.toLowerCase().split(" ")],
-                textTopic: topic?.replaceAll("+", " "),
+                queryKeywords: topic?.toLowerCase().split(" "),
+                textTopic: topic,
             };
         }
         if (params.has("query")) {
             const query = params.get("query");
             setResultsTitle(query, true);
             return {
-                queryKeywords: [query?.toLowerCase().split("+")],
+                queryKeywords: query?.toLowerCase().split("+"),
                 textTopic: `"${query?.replaceAll("+", " ")}"`,
             };
         }
@@ -167,27 +167,39 @@ const loadResults = async () => {
     console.log("loading");
 
     const queryTopic = getQueryTopic();
+    console.log(queryTopic);
 
     firebase.auth().onAuthStateChanged(async (user) => {
-        currentUser = user;
         let loggedIn = !!user;
 
-        let userSubscriptions = {};
+        const resultsWrapper = document.querySelector("#results-wrapper");
+        resultsWrapper?.replaceChildren();
+        // let currentUserDoc;
+        // let userSubscriptions = {};
 
         if (loggedIn) {
-            userSubscriptions = await getUserSubscriptions(user.uid);
+            db.collection("users")
+                .doc(user.uid)
+                .onSnapshot((currentUserDoc) => {
+                    const userSubscriptions =
+                        getUserSubscriptions(currentUserDoc);
+                    getResultsForTab(
+                        resultsWrapper,
+                        queryTopic?.queryKeywords,
+                        "province",
+                        "BC"
+                    );
+                });
         }
-
-        $("#results-wrapper").empty();
 
         dummyResults.forEach((result) => {
             let subpages = "";
 
             result.subpages.forEach((subpage) => {
-                const userSubscribedToSubpage =
-                    userSubscriptions.subscriptionPaths.includes(
-                        subpage.path.substring(1)
-                    );
+                const userSubscribedToSubpage = false;
+                // userSubscriptions.subscriptionPaths.includes(
+                //     subpage.path.substring(1)
+                // );
                 console.log("userSubscribedToSubpage", userSubscribedToSubpage);
                 const subpageAccordionItem = `<div class="subpage-item accordion-item">
                                     <div class="subpage-header accordion-header">
@@ -322,6 +334,8 @@ const loadResults = async () => {
         loadTopicSpans(queryTopic?.textTopic);
 
         if (loggedIn) {
+            hideOnLogin();
+            showOnLogin();
             $("#results-wrapper").on(
                 "click",
                 ".not-subscribed",
@@ -332,6 +346,13 @@ const loadResults = async () => {
                 ".subscribed",
                 removeSubscriptionHandler
             );
+
+            if (location) {
+                hideIfLocation();
+            }
+        } else {
+            hideOnLogout();
+            showOnLogout();
         }
     });
 };
@@ -345,18 +366,126 @@ function loadTopicSpans(topicText) {
     }
 }
 
-async function getUserSubscriptions(userId) {
+function hideOnLogin() {
+    const loggedOutElements = document.querySelectorAll("hide-on-login");
+    for (const element of loggedOutElements) {
+        element.classList.add("d-none");
+    }
+}
+
+function hideIfLocation() {
+    const loggedOutElements = document.querySelectorAll("hide-if-location");
+    for (const element of loggedOutElements) {
+        element.classList.add("d-none");
+    }
+}
+
+function showOnLogin() {
+    const loggedOutElements = document.querySelectorAll("show-on-login");
+    for (const element of loggedOutElements) {
+        element.classList.remove("d-none");
+    }
+}
+
+function hideOnLogout() {
+    const loggedOutElements = document.querySelectorAll("show-on-login");
+    for (const element of loggedOutElements) {
+        element.classList.add("d-none");
+    }
+}
+
+function showOnLogout() {
+    const loggedOutElements = document.querySelectorAll("hide-on-login");
+    for (const element of loggedOutElements) {
+        element.classList.remove("d-none");
+    }
+}
+
+async function getResultsForTab(
+    tabWrapperElement,
+    queryKeywords,
+    govLevel,
+    location
+) {
+    let sourcesQuery = db
+        .collection("sources")
+        .where("keywords", "array-contains-any", queryKeywords)
+        .where("jurisdiction.governmentLevel", "==", `${govLevel}`);
+
+    if (location && govLevel === "provincial") {
+        sourcesQuery = db
+            .collection("sources")
+            .where("keywords", "array-contains-any", queryKeywords)
+            .where("jurisdiction.governmentLevel", "==", `${govLevel}`)
+            .where("jurisdiction.location", "==", location);
+    }
+    if (location && govLevel === "local") {
+        sourcesQuery = db
+            .collection("sources")
+            .where("keywords", "array-contains-any", queryKeywords)
+            .where("jurisdiction.governmentLevel", "==", `city`)
+            .where("jurisdiction.location", "array-conatins", location);
+    }
+
+    sourcesQuery
+        .get()
+        .then((sourcesSnapshot) => {
+            if (sourcesSnapshot.empty) {
+                console.log(
+                    "no results for query",
+                    queryKeywords,
+                    sourcesSnapshot
+                );
+                return [];
+            }
+            sourcesSnapshot.forEach((sourceDoc) => {
+                const sourceData = {
+                    sourceUrl: sourceDoc.data().sourceUrl,
+                    sourceLogoUrl: sourceDoc.data().sourceLogoUrl,
+                    sourceName: sourceDoc.data().sourceName,
+                    id: sourceDoc.id,
+                    path: `/sources/${sourceDoc.id}`,
+                };
+                console.log(sourceData);
+                //create source block
+
+                sourceDoc.ref
+                    .collection("subpages")
+                    .where("keywords", "array-contains-any", queryKeywords)
+                    .get()
+                    .then((subpagesSnapshot) => {
+                        if (subpagesSnapshot.empty) {
+                            console.log(
+                                "no subpage results for query",
+                                queryKeywords,
+                                subpagesSnapshot
+                            );
+                        }
+                        subpagesSnapshot.forEach((subpageDoc) => {
+                            const subpageData = {
+                                subpageTitle: subpageDoc.data().subpageTitle,
+                                subpageUrl: subpageDoc.data().subpageUrl,
+                                path: `/sources/${sourceDoc.id}/subpages/${subpageDoc.id}`,
+                                content: subpageDoc.data().content,
+                                id: subpageDoc.id,
+                            };
+
+                            console.log(subpageData);
+                            // create subpage accordion item
+                            // append to source block
+                            // append source block to results wrapper
+                        });
+                    })
+                    .catch((error) =>
+                        console.error("Error getting subpages", error)
+                    );
+            });
+        })
+        .catch((error) => console.error("Error getting sources"));
+}
+
+function getUserSubscriptions(userDoc) {
     try {
-        if (!userId) {
-            throw new Error("No logged in user, cannot get subscriptions");
-        }
-
-        const userDoc = await db.collection("users").doc(userId).get();
-
-        if (!userDoc.exists) {
-            throw new Error("No user found in db");
-        }
-
         if (!userDoc.data().subscriptions) {
             return [];
         }
@@ -368,7 +497,10 @@ async function getUserSubscriptions(userId) {
                 return subscription.path;
             }
         });
-        console.log(`user subscription paths for ${userId}`, subscriptionPaths);
+        console.log(
+            `user subscription paths for ${userDoc.id}`,
+            subscriptionPaths
+        );
 
         const sourceSearches = subscriptions.filter(
             (subscription) => subscription.search && subscription.sourceRef
