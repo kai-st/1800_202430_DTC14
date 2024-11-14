@@ -63,6 +63,37 @@
                 </h1>
             </div>
 
+            <div class="results-controls">
+                <div class="location-filter">
+                    <div class="hide-on-login">
+                        <a href="/login.html">Sign In</a> to filter results for
+                        your location
+                    </div>
+                    <div class="show-on-login hide-if-location d-none">
+                        <a href="/settings.html">Sign In</a> to filter results
+                        for your location
+                    </div>
+                    <select
+                        class="form-select form-select-sm d-none show-on-login"
+                        aria-label="location filter"
+                    >
+                        <option selected value="local">
+                            Results filtered for your location
+                        </option>
+                        <option value="not-local">
+                            Results from all Provinces/Cities
+                        </option>
+                    </select>
+                </div>
+                <ul class="location-tabs">
+                    <li>Sources:</li>
+                    <li class="location-tab" aria-selected="true">National</li>
+                    <li class="location-tab" aria-selected="false">
+                        Provincial
+                    </li>
+                    <li class="location-tab" aria-selected="false">Local</li>
+                </ul>
+            </div>
             <div class="" id="results-wrapper">
                 <p class="no-results fs-5 text-center mt-3">
                     No results found for
