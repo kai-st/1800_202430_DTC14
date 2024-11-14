@@ -53,12 +53,10 @@
                                     <p class="text-muted mb-0">You will receive the latest news based on your provided
                                         postal code.
                                     </p>
+                                    <p id="userUpdateLocation"></p>
                                 </div>
                                 <div class="col-auto">
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" role="switch"
-                                            id="flexSwitchCheckDefault">
-                                    </div>
+                                    <button class="btn border-black" onclick=toggleUpdateLocation()>Change</button>
                                 </div>
                             </div>
                         </div>
@@ -76,14 +74,10 @@
                                     <p class="text-muted mb-0">You will receive notifications to your email based on
                                         your subscribed topics and/or categories.
                                     </p>
+                                    <p id="userEmailNotifications"></p>
                                 </div>
                                 <div class="col-auto">
-                                    <div class="custom-control custom-switch">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" role="switch"
-                                                id="flexSwitchCheckDefault">
-                                        </div>
-                                    </div>
+                                    <button class="btn border-black" onclick=toggleEmailNotifications()>Change</button>
                                 </div>
                             </div>
                         </div>
@@ -123,7 +117,7 @@
     <script src="./scripts/firebaseAPI_DTC14.js"></script>
     <script src="./scripts/script.js"></script>
     <script src="./scripts/skeleton.js"></script>
-    <script src="./scripts/deleteButton.js"></script>
+    <script src="./scripts/settings.js"></script>
 
 </body>
 
