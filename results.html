@@ -57,21 +57,21 @@
                 <span class="material-icons">&#xe317;</span>Back to
                 <span id="previous-page">News</span>
             </a>
-            <div class="py-5 px-3">
+            <div class="py-4 px-3">
                 <h1 id="results-title" class="pb-3 text-center">
                     Search Results
                 </h1>
             </div>
 
             <div class="results-controls d-flex flex-column">
-                <div class="location-filter">
+                <div class="location-filter align-self-start">
                     <div class="hide-on-login">
                         <a href="/login.html">Sign In</a> to filter results for
                         your location
                     </div>
                     <div class="show-on-login hide-if-location d-none">
-                        <a href="/settings.html">Sign In</a> to filter results
-                        for your location
+                        <a href="/settings.html">Set your location</a> to filter
+                        results
                     </div>
                     <select
                         class="form-select form-select-sm d-none show-on-login"
@@ -118,18 +118,34 @@
                         </ul>
                     </div>
                     <div>
+                        <div
+                            id="topic-subscribe-label"
+                            class="d-none d-md-inline-block align-bottom pb-2"
+                        >
+                            Subscribe to all updates for
+                            <span class="topic-span">Topic</span>
+                        </div>
+                        <!-- Logged in user, not subscribed. data-subpage-path should be set to the firestore reference path for the subpage when loading results -->
+                        <!-- Event listener should add the data-subpage-path to the user's subscriptions using arrayUnion  -->
+                        <button
+                            type="button"
+                            class="not-subscribed topic-subscribe subscribe btn pb-1 d-none"
+                        >
+                            <span class="material-icons">&#xe399; </span>
+                        </button>
+                        <!-- Logged in user, already subscribed. If user subscribed to source or search, show this button, but disabled. data-subpage-path should be set to the firestore reference path for the subpage when loading results -->
+                        <!-- Event listener should remove the data-subpage-path from the user's subscriptions using arrayRemove  -->
+                        <button
+                            type="button"
+                            class="subscribed topic-unsubscribe subscribe btn pb-1 d-none"
+                        >
+                            <span class="material-icons">&#xe7f6; </span>
+                        </button>
                         <!-- Logged Out subscribe button -->
                         <div class="btn-group dropup hide-on-login">
-                            <div
-                                id="topic-subscribe-label"
-                                class="d-none d-md-inline-block align-self-end pb-2"
-                            >
-                                Subscribe to all updates for
-                                <span class="topic-span">Topic</span>
-                            </div>
                             <button
                                 type="button"
-                                class="logged-out subpage-subscribe subscribe btn pb-1"
+                                class="logged-out topic-subscribe subscribe btn pb-1"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
                                 aria-labelledby="topic-subscribe-label"
@@ -157,7 +173,7 @@
                         <span class="topic-span">Topic</span>
                     </p>
                 </div>
-                <div id="provine-tab" role="tabpanel" class="gov-panel d-none">
+                <div id="province-tab" role="tabpanel" class="gov-panel d-none">
                     <p class="no-results fs-5 text-center mt-3">
                         No provincial results found for
                         <span class="topic-span">Topic</span>
@@ -171,6 +187,285 @@
                 </div>
             </div>
         </main>
+
+        <template id="source-block-template">
+            <section class="source-block">
+                <div class="source">
+                    <h2>
+                        <span class="d-none d-sm-inline">From: </span>
+                        <!-- Set href to source domain homepage and innerText to source name -->
+                        <a class="source-link" href="#">
+                            <!-- set src to source logo url -->
+                            <img src="#" class="source-logo" /><span
+                                class="source-name"
+                            >
+                                Source Domain Name
+                            </span></a
+                        >
+                    </h2>
+                    <div class="results-tag">
+                        <!-- Set number of results with js -->
+                        (<span class="results-length">0</span> results)
+                    </div>
+
+                    <!-- Show only one of these button groups at a time depending on user state. Remove these button groups to not include subscription functionality -->
+
+                    <!-- Logged in user, not subscribed to this source, or this source with this search. -->
+                    <div class="btn-group dropup d-none no-source-subs">
+                        <button
+                            type="button"
+                            class="subscribed source-subscribe subscribe btn dropdown-toggle"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            <span class="material-icons">&#xe399;</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <!-- Set data-source-path to firestore reference path for the source. Event listener should add an object (firestore map) {soureRef: data-source-path, search: "all search terms"} to the user's subscriptions with arrayUnion  -->
+                                <button
+                                    class="subscribed subscribe-topic dropdown-item"
+                                    data-sourse-path="/sources/{id}"
+                                    type="button"
+                                >
+                                    Subscribe to updates on
+                                    <span class="topic-span">Topic</span> from
+                                    <span class="source-name">Source Name</span>
+                                </button>
+                            </li>
+                            <li>
+                                <!-- Set data-source-path to firestore reference path for the source. Event listener should add data-source-path to the user's subscriptions with arrayUnion  -->
+                                <button
+                                    class="subscribed subscribe-all dropdown-item"
+                                    data-sourse-path="/sources/{id}"
+                                    type="button"
+                                >
+                                    Subscribe to all updates from
+                                    <span class="source-name">Source Name</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Logged in user, already subscribed to this source with this search. -->
+                    <div
+                        class="btn-group dropup d-none source-search-subscribed"
+                    >
+                        <button
+                            type="button"
+                            class="subscribed source-subscribe subscribe btn dropdown-toggle"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            <span class="material-icons">&#xe525;</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <!-- Set topic-span span to the query topic and souce-name span innerText to souce name -->
+                            <li>
+                                <h6
+                                    class="subscribed-all-header dropdown-header"
+                                >
+                                    Subscribed to updates on
+                                    <span class="topic-span">Topic</span> from
+                                    <span class="source-name">Source Name</span>
+                                </h6>
+                            </li>
+                            <li>
+                                <!-- Set data-source-path to firestore reference path for the source. Event listener should remove the object (firestore map) {soureRef: data-source-path, search: "all search terms"} from the user's subscriptions with arrayRemove  -->
+                                <button
+                                    class="subscribed subscribe-topic dropdown-item"
+                                    data-sourse-path="/sources/{id}"
+                                    type="button"
+                                >
+                                    Unsubscribe from updates on
+                                    <span class="topic-span">Topic</span> from
+                                    <span class="source-name">Source Name</span>
+                                </button>
+                            </li>
+                            <li>
+                                <!-- Set data-source-path to firestore reference path for the source. Event listener should add data-source-path to the user's subscriptions with arrayUnion and remove the object (firestore map) {soureRef: data-source-path, search: "all search terms"} from the user's subscriptions with arrayRemove  -->
+                                <button
+                                    class="not-subscribed subscribe-all dropdown-item"
+                                    data-sourse-path="/sources/{id}"
+                                    type="button"
+                                >
+                                    Subscribe to all updates from
+                                    <span class="source-name">Source Name</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Logged in user, already subscribed to all updates from this source -->
+                    <div class="btn-group dropup d-none source-all-subscribed">
+                        <button
+                            type="button"
+                            class="subscribed source-subscribe subscribe btn dropdown-toggle"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            <span class="material-icons">&#xe525;</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <!-- set souce-name span innerText to souce name -->
+                            <li>
+                                <h6
+                                    class="subscribed-search-header dropdown-header"
+                                >
+                                    Subscribed to all updates from
+                                    <span class="source-name">Source Name</span>
+                                </h6>
+                            </li>
+
+                            <li>
+                                <!-- Set data-source-path to firestore reference path for the source. Event listener should add an object (firestore map) {soureRef: data-source-path, search: "all search terms"} to the user's subscriptions with arrayUnion and remove data-source-path from subscriptions with arrayRemove -->
+                                <button
+                                    class="not-subscribed subscribe-topic dropdown-item"
+                                    data-sourse-path="/sources/{id}"
+                                    type="button"
+                                >
+                                    Update subscription to only get updates on
+                                    <span class="query-topic">Topic</span> from
+                                    <span class="source-name">Source Name</span>
+                                </button>
+                            </li>
+                            <li>
+                                <!-- Set data-source-path to firestore reference path for the source. Event listener should remove data-source-path to the user's subscriptions with arrayArray  -->
+                                <button
+                                    class="subscribe-all dropdown-item"
+                                    data-sourse-path="/sources/{id}"
+                                    type="button"
+                                >
+                                    Unsubscribe from site-wide updates from
+                                    <span class="source-name">Source Name</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Logged Out subscribe button -->
+                    <div class="btn-group dropup hide-on-login">
+                        <button
+                            type="button"
+                            class="logged-out source-subscribe subscribe btn"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            <span class="material-icons">&#xe399; </span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="/login.html">
+                                    Sign in to add subscriptions
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- end of subscription buttons -->
+                </div>
+                <div class="subpages accordion accordion-flush ms-md-5">
+                    <!-- insert any number of accordion items. If not using View More button remove hide-over-five class -->
+                </div>
+            </section>
+        </template>
+
+        <template id="subpage-block-template">
+            <div class="subpage-block-wrapper">
+                <div class="subpage-item accordion-item hide-over-five">
+                    <div class="subpage-header accordion-header">
+                        <!-- insert subpage title from db -->
+                        <h3>Subpage Title</h3>
+                        <!-- Show only one of these buttons at a time depending on user state. Remove these buttons to not include subscription functionality -->
+
+                        <!-- Logged in user, not subscribed. data-subpage-path should be set to the firestore reference path for the subpage when loading results -->
+                        <!-- Event listener should add the data-subpage-path to the user's subscriptions using arrayUnion  -->
+                        <button
+                            type="button"
+                            class="not-subscribed subpage-subscribe subscribe btn d-none"
+                            data-subpage-path="/sources/{id}/subpages/{id}"
+                        >
+                            <span class="material-icons">&#xe399; </span>
+                        </button>
+                        <!-- Logged in user, already subscribed. If user subscribed to source or search, show this button, but disabled. data-subpage-path should be set to the firestore reference path for the subpage when loading results -->
+                        <!-- Event listener should remove the data-subpage-path from the user's subscriptions using arrayRemove  -->
+                        <button
+                            type="button"
+                            class="subscribed subpage-subscribe subscribe btn d-none"
+                            data-subpage-path="/sources/{id}/subpages/{id}"
+                        >
+                            <span class="material-icons">&#xe7f6; </span>
+                        </button>
+                        <!-- Logged Out subscribe button -->
+                        <div class="btn-group dropup hide-on-login">
+                            <button
+                                type="button"
+                                class="logged-out subpage-subscribe subscribe btn"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                <span class="material-icons">&#xe399;</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a
+                                        class="subscribe-login dropdown-item"
+                                        href="/login.html"
+                                    >
+                                        Sign in to add subscriptions
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- end of subscription buttons -->
+                        <!-- data-bs-target and aria-controls must be updated to match id of content div below -->
+                        <button
+                            class="accordion-button custom collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#subpageId-content"
+                            aria-expanded="false"
+                            aria-controls="subpageId-content"
+                        ></button>
+                    </div>
+                    <!-- Update id to be unique for each copy of component -->
+                    <div
+                        id="subpageId-content"
+                        class="accordion-collapse collapse"
+                    >
+                        <!-- Replace things in here with whatever content -->
+                        <div class="embed">
+                            <div class="embed-content">
+                                Lorem ipsum dolor sit amet consectetur
+                                adipisicing elit. Aut reiciendis dolores
+                                architecto velit non ea perspiciatis, ipsa
+                                inventore deserunt illum optio. Reiciendis dolor
+                                eos dicta quibusdam autem quasi impedit sit
+                                laboriosam nam sapiente accusantium, facilis
+                                perferendis amet, rerum pariatur doloribus vel!
+                                Nisi quasi, quisquam numquam autem debitis natus
+                                vero quae, consequuntur magnam assumenda soluta,
+                                explicabo ab dolorum aut dolore expedita
+                                temporibus id reiciendis quam accusantium optio
+                                dolorem voluptatem architecto. Eligendi ducimus
+                                sequi a quam inventore quaerat, veritatis, rerum
+                                fugiat, beatae quia recusandae! Veritatis optio
+                                libero recusandae! Excepturi eius vitae ab
+                                ducimus inventore molestiae pariatur ad sit?
+                                Laudantium quaerat nisi eveniet?
+                            </div>
+                            <a href="#" class="subpage-link">Visit Page</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="view-more-template">
+            <!-- If there are more than 5 items the rest will be hidden and this button will be visible. Event listener should remove the hide-over-five class from the sibling accordion items -->
+            <button class="view-more-btn btn btn-info" type="button">
+                View More
+            </button></template
+        >
 
         <footer id="footerPlaceholder"></footer>
 

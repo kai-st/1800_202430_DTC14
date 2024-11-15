@@ -47,16 +47,21 @@ function attachTabListeners() {
     for (const tab of tabs) {
         tab.addEventListener("click", (event) => {
             const target = event.currentTarget;
-            const tabpanelId = target.getAttribute("aria-controls");
-            const tabPanel = document.querySelector(tabpanelId);
+            const tabpanelId = target.getAttribute("aria-controls") + "-tab";
+            const tabPanel = document.querySelector(`#${tabpanelId}`);
+            console.log("tabPanelID", tabpanelId);
+            console.log("tabPanel", tabPanel);
             const tabsArray = Array.from(
                 document.querySelectorAll(".location-tab")
             );
             const activeTab = tabsArray.find(
                 (tabLi) => tabLi.ariaSelected === "true"
             );
-            const activeTabpanelId = activeTab.getAttribute("aria-controls");
-            const activeTabpanel = document.querySelector(activeTabpanelId);
+            const activeTabpanelId =
+                activeTab.getAttribute("aria-controls") + "-tab";
+            const activeTabpanel = document.querySelector(
+                `#${activeTabpanelId}`
+            );
             activeTab.ariaSelected = "false";
             target.ariaSelected = "true";
             activeTabpanel?.classList.add("d-none");
@@ -184,7 +189,7 @@ const dummyResults = [
     },
 ];
 
-// TODO: rework with template and handle source subscriptions
+// TODO: handle source/search subscriptions
 const loadResults = async () => {
     console.log("loading");
 
@@ -194,40 +199,300 @@ const loadResults = async () => {
     firebase.auth().onAuthStateChanged(async (user) => {
         let loggedIn = !!user;
 
-        const resultsWrapper = document.querySelector("#results-wrapper");
-        resultsWrapper?.replaceChildren();
-        // let currentUserDoc;
-        // let userSubscriptions = {};
+        const nationalTab = document.querySelector("#national-tab");
+        const provinceTab = document.querySelector("#province-tab");
+        const cityTab = document.querySelector("#city-tab");
 
         if (loggedIn) {
             db.collection("users")
                 .doc(user.uid)
                 .onSnapshot((currentUserDoc) => {
-                    const userSubscriptions =
-                        getUserSubscriptions(currentUserDoc);
-                    getResultsForTab(
-                        resultsWrapper,
-                        queryTopic?.queryKeywords,
+                    loadResultsForTab(
+                        nationalTab,
+                        queryTopic,
+                        "national",
+                        currentUserDoc
+                    );
+                    loadResultsForTab(
+                        provinceTab,
+                        queryTopic,
                         "province",
-                        "BC"
+                        currentUserDoc
+                    );
+                    loadResultsForTab(
+                        cityTab,
+                        queryTopic,
+                        "city",
+                        currentUserDoc
                     );
                 });
+        } else {
+            loadResultsForTab(nationalTab, queryTopic, "national");
+            loadResultsForTab(provinceTab, queryTopic, "province");
+            loadResultsForTab(cityTab, queryTopic, "city");
         }
+    });
+};
 
-        dummyResults.forEach((result) => {
-            let subpages = "";
+loadResults();
 
-            result.subpages.forEach((subpage) => {
-                const userSubscribedToSubpage = false;
-                // userSubscriptions.subscriptionPaths.includes(
-                //     subpage.path.substring(1)
-                // );
-                console.log("userSubscribedToSubpage", userSubscribedToSubpage);
-                const subpageAccordionItem = `<div class="subpage-item accordion-item">
+function loadTopicSpans(topicText) {
+    const topicSpans = document.querySelectorAll(".topic-span");
+    for (const span of topicSpans) {
+        span.innerText = topicText;
+    }
+}
+function loadSourceNameSpans(sourceName) {
+    const sourceNameSpans = document.querySelectorAll(".source-name");
+    for (const span of sourceNameSpans) {
+        span.innerText = sourceName;
+    }
+}
+
+function hideOnLogin() {
+    const loggedOutElements = document.querySelectorAll(".hide-on-login");
+    for (const element of loggedOutElements) {
+        element.classList.add("d-none");
+    }
+}
+
+function hideIfLocation() {
+    const loggedOutElements = document.querySelectorAll(".hide-if-location");
+    for (const element of loggedOutElements) {
+        element.classList.add("d-none");
+    }
+}
+
+function showOnLogin() {
+    const loggedOutElements = document.querySelectorAll(".show-on-login");
+    for (const element of loggedOutElements) {
+        element.classList.remove("d-none");
+    }
+}
+
+function hideOnLogout() {
+    const loggedOutElements = document.querySelectorAll(".show-on-login");
+    for (const element of loggedOutElements) {
+        element.classList.add("d-none");
+    }
+}
+
+function showOnLogout() {
+    const loggedOutElements = document.querySelectorAll(".hide-on-login");
+    for (const element of loggedOutElements) {
+        element.classList.remove("d-none");
+    }
+}
+
+async function loadResultsForTab(
+    tabWrapperElement,
+    queryTopic,
+    govLevel,
+    currentUserDoc
+) {
+    const sourceBlockTemplate = document.querySelector(
+        "#source-block-template"
+    );
+    const subpageBlockTemplate = document.querySelector(
+        "#subpage-block-template"
+    );
+
+    let location;
+    if (currentUserDoc) {
+        location = {
+            postalCode: currentUserDoc.data().postalCode,
+            city: currentUserDoc.data().city,
+            province: currentUserDoc.data().province,
+        };
+    }
+    console.log(location);
+    const userSubscriptions = getUserSubscriptions(currentUserDoc);
+
+    let sourcesQuery = db
+        .collection("sources")
+        .where("keywords", "array-contains-any", queryTopic.queryKeywords)
+        .where("jurisdiction.governmentLevel", "==", `${govLevel}`);
+
+    if (location && govLevel === "provincial") {
+        sourcesQuery = db
+            .collection("sources")
+            .where("keywords", "array-contains-any", queryTopic.queryKeywords)
+            .where("jurisdiction.governmentLevel", "==", `${govLevel}`)
+            .where("jurisdiction.location", "==", location.province);
+    }
+    if (location && govLevel === "local") {
+        sourcesQuery = db
+            .collection("sources")
+            .where("keywords", "array-contains-any", queryTopic.queryKeywords)
+            .where("jurisdiction.governmentLevel", "==", `${govLevel}`)
+            .where("jurisdiction.location", "array-conatins", location.city);
+    }
+
+    sourcesQuery
+        .get()
+        .then((sourcesSnapshot) => {
+            if (sourcesSnapshot.empty) {
+                console.log(
+                    "no results for query",
+                    queryTopic.queryKeywords,
+                    sourcesSnapshot
+                );
+                return;
+            }
+            tabWrapperElement.replaceChildren();
+
+            sourcesSnapshot.forEach((sourceDoc) => {
+                const sourceData = {
+                    sourceUrl: sourceDoc.data().sourceUrl,
+                    sourceLogoUrl: sourceDoc.data().sourceLogoUrl,
+                    sourceName: sourceDoc.data().sourceName,
+                    id: sourceDoc.id,
+                    path: `/sources/${sourceDoc.id}`,
+                };
+                console.log(sourceData);
+                //create source block
+                let sourceBlock = sourceBlockTemplate.content.cloneNode(true);
+
+                sourceBlock.querySelector(".source-link").href =
+                    sourceData.sourceUrl;
+                sourceBlock.querySelector(".source-logo").src =
+                    sourceData.sourceLogoUrl;
+                sourceBlock
+                    .querySelectorAll(".subscribe-topic")
+                    .forEach((element) => {
+                        element.dataset.sourcePath = sourceData.path;
+                    });
+
+                sourceBlock
+                    .querySelectorAll(".subscribe-all")
+                    .forEach((element) => {
+                        element.dataset.sourcePath = sourceData.path;
+                    });
+                const subpageWrapper = sourceBlock.querySelector(".subpages");
+
+                // TODO parse source subscriptions and handle these
+                sourceBlock.querySelector(".no-source-subs");
+                sourceBlock.querySelector(".source-all-subscribed");
+
+                sourceDoc.ref
+                    .collection("subpages")
+                    .where(
+                        "keywords",
+                        "array-contains-any",
+                        queryTopic.queryKeywords
+                    )
+                    .get()
+                    .then((subpagesSnapshot) => {
+                        if (subpagesSnapshot.empty) {
+                            console.log(
+                                "no subpage results for query",
+                                queryTopic.queryKeywords,
+                                subpagesSnapshot
+                            );
+                        }
+                        sourceBlock.querySelector(".results-length").innerText =
+                            subpagesSnapshot.size;
+
+                        subpagesSnapshot.forEach((subpageDoc) => {
+                            const subpageData = {
+                                subpageTitle: subpageDoc.data().subpageTitle,
+                                subpageUrl: subpageDoc.data().subpageUrl,
+                                path: `/sources/${sourceDoc.id}/subpages/${subpageDoc.id}`,
+                                content: subpageDoc.data().content,
+                                id: subpageDoc.id,
+                            };
+
+                            console.log(subpageData);
+
+                            const userSubscribedToSubpage = userSubscriptions
+                                ? userSubscriptions.subscriptionPaths.includes(
+                                      subpageData.path.substring(1)
+                                  )
+                                : false;
+                            console.log(
+                                "userSubscribedToSubpage",
+                                userSubscribedToSubpage
+                            );
+
+                            // create subpage accordion item
+                            let subpageBlock =
+                                subpageBlockTemplate.content.cloneNode(true);
+                            subpageBlock.querySelector("h3").innerText =
+                                subpageData.subpageTitle;
+                            subpageBlock
+                                .querySelectorAll(".subpage-subscribe")
+                                .forEach((element) => {
+                                    element.dataset.subpagePath =
+                                        subpageData.path;
+                                });
+                            const subbedBtn =
+                                subpageBlock.querySelector(".subscribed");
+                            subbedBtn.id = `${subpageData.id}-subscribed`;
+                            const subBtn =
+                                subpageBlock.querySelector(".not-subscribed");
+                            subBtn.id = `${subpageData.id}-not-subscribed`;
+
+                            // TODO: fix event attaching
+                            if (userSubscribedToSubpage) {
+                                subbedBtn.classList.remove("d-none");
+                                subbedBtn.addEventListener(
+                                    "click",
+                                    removeSubscriptionHandler
+                                );
+                                console.log("in if", subbedBtn);
+                            } else if (currentUserDoc) {
+                                subBtn.classList.remove("d-none");
+                                subBtn.addEventListener(
+                                    "click",
+                                    addSubscriptionHandler
+                                );
+                            }
+
+                            subpageBlock.querySelector(
+                                ".accordion-button"
+                            ).dataset.bsTarget = `#${subpageData.id}-content`;
+                            subpageBlock.querySelector(
+                                ".accordion-button"
+                            ).ariaControls = `${subpageData.id}-content`;
+                            subpageBlock.querySelector(
+                                ".accordion-collapse"
+                            ).id = `${subpageData.id}-content`;
+                            subpageBlock.querySelector(
+                                ".embed-content"
+                            ).innerHTML = subpageData.content;
+
+                            // append to source block
+                            subpageWrapper.append(subpageBlock);
+                        });
+                        // append source block to results wrapper
+                        tabWrapperElement.append(sourceBlock);
+                        loadTopicSpans(queryTopic?.textTopic);
+                        loadSourceNameSpans(sourceData.sourceName);
+                        if (currentUserDoc) {
+                            hideOnLogin();
+                            showOnLogin();
+                            if (location) {
+                                hideIfLocation();
+                            }
+                        } else {
+                            hideOnLogout();
+                            showOnLogout();
+                        }
+                        // For now pad with old dummy data insert method
+                        dummyResults.forEach((result) => {
+                            let subpages = "";
+
+                            result.subpages.forEach((subpage) => {
+                                const userSubscribedToSubpage = false;
+                                // userSubscriptions.subscriptionPaths.includes(
+                                //     subpage.path.substring(1)
+                                // );
+
+                                const subpageAccordionItem = `<div class="subpage-item accordion-item">
                                     <div class="subpage-header accordion-header">
                                         <h3>${subpage.subpageTitle}</h3>
                                         ${
-                                            loggedIn
+                                            currentUserDoc
                                                 ? `<button
                                             type="button"
                                             class="${
@@ -280,12 +545,12 @@ const loadResults = async () => {
                                     </div>
                                 </div>`;
 
-                subpages += subpageAccordionItem;
-            });
+                                subpages += subpageAccordionItem;
+                            });
 
-            const sourceAccordionItem = `<section class="source-block" data-source-id="${
-                result.id
-            }">
+                            const sourceAccordionItem = `<section class="source-block" data-source-id="${
+                                result.id
+                            }">
                                     <div class="source">
                                         <h2>
                                             <span class="d-none d-sm-inline">From: </span
@@ -304,7 +569,7 @@ const loadResults = async () => {
                                             (${result.subpages.length} results)
                                         </div>
                                         ${
-                                            loggedIn
+                                            currentUserDoc
                                                 ? `<div class="btn-group dropup">
                                                     <button
                                                         type="button"
@@ -350,152 +615,7 @@ const loadResults = async () => {
                                     </div>
                                 </section>`;
 
-            $("#results-wrapper").append(sourceAccordionItem);
-        });
-
-        loadTopicSpans(queryTopic?.textTopic);
-
-        if (loggedIn) {
-            hideOnLogin();
-            showOnLogin();
-            $("#results-wrapper").on(
-                "click",
-                ".not-subscribed",
-                addSubscriptionHandler
-            );
-            $("#results-wrapper").on(
-                "click",
-                ".subscribed",
-                removeSubscriptionHandler
-            );
-
-            if (location) {
-                hideIfLocation();
-            }
-        } else {
-            hideOnLogout();
-            showOnLogout();
-        }
-    });
-};
-
-loadResults();
-
-function loadTopicSpans(topicText) {
-    const topicSpans = document.querySelectorAll(".topic-span");
-    for (const span of topicSpans) {
-        span.innerText = topicText;
-    }
-}
-
-function hideOnLogin() {
-    const loggedOutElements = document.querySelectorAll("hide-on-login");
-    for (const element of loggedOutElements) {
-        element.classList.add("d-none");
-    }
-}
-
-function hideIfLocation() {
-    const loggedOutElements = document.querySelectorAll("hide-if-location");
-    for (const element of loggedOutElements) {
-        element.classList.add("d-none");
-    }
-}
-
-function showOnLogin() {
-    const loggedOutElements = document.querySelectorAll("show-on-login");
-    for (const element of loggedOutElements) {
-        element.classList.remove("d-none");
-    }
-}
-
-function hideOnLogout() {
-    const loggedOutElements = document.querySelectorAll("show-on-login");
-    for (const element of loggedOutElements) {
-        element.classList.add("d-none");
-    }
-}
-
-function showOnLogout() {
-    const loggedOutElements = document.querySelectorAll("hide-on-login");
-    for (const element of loggedOutElements) {
-        element.classList.remove("d-none");
-    }
-}
-
-async function getResultsForTab(
-    tabWrapperElement,
-    queryKeywords,
-    govLevel,
-    location
-) {
-    let sourcesQuery = db
-        .collection("sources")
-        .where("keywords", "array-contains-any", queryKeywords)
-        .where("jurisdiction.governmentLevel", "==", `${govLevel}`);
-
-    if (location && govLevel === "provincial") {
-        sourcesQuery = db
-            .collection("sources")
-            .where("keywords", "array-contains-any", queryKeywords)
-            .where("jurisdiction.governmentLevel", "==", `${govLevel}`)
-            .where("jurisdiction.location", "==", location);
-    }
-    if (location && govLevel === "local") {
-        sourcesQuery = db
-            .collection("sources")
-            .where("keywords", "array-contains-any", queryKeywords)
-            .where("jurisdiction.governmentLevel", "==", `city`)
-            .where("jurisdiction.location", "array-conatins", location);
-    }
-
-    sourcesQuery
-        .get()
-        .then((sourcesSnapshot) => {
-            if (sourcesSnapshot.empty) {
-                console.log(
-                    "no results for query",
-                    queryKeywords,
-                    sourcesSnapshot
-                );
-                return [];
-            }
-            sourcesSnapshot.forEach((sourceDoc) => {
-                const sourceData = {
-                    sourceUrl: sourceDoc.data().sourceUrl,
-                    sourceLogoUrl: sourceDoc.data().sourceLogoUrl,
-                    sourceName: sourceDoc.data().sourceName,
-                    id: sourceDoc.id,
-                    path: `/sources/${sourceDoc.id}`,
-                };
-                console.log(sourceData);
-                //create source block
-
-                sourceDoc.ref
-                    .collection("subpages")
-                    .where("keywords", "array-contains-any", queryKeywords)
-                    .get()
-                    .then((subpagesSnapshot) => {
-                        if (subpagesSnapshot.empty) {
-                            console.log(
-                                "no subpage results for query",
-                                queryKeywords,
-                                subpagesSnapshot
-                            );
-                        }
-                        subpagesSnapshot.forEach((subpageDoc) => {
-                            const subpageData = {
-                                subpageTitle: subpageDoc.data().subpageTitle,
-                                subpageUrl: subpageDoc.data().subpageUrl,
-                                path: `/sources/${sourceDoc.id}/subpages/${subpageDoc.id}`,
-                                content: subpageDoc.data().content,
-                                id: subpageDoc.id,
-                            };
-
-                            console.log(subpageData);
-                            // create subpage accordion item
-                            // append to source block
-                            // append source block to results wrapper
+                            tabWrapperElement.innerHTML += sourceAccordionItem;
                         });
                     })
                     .catch((error) =>
@@ -503,13 +623,15 @@ async function getResultsForTab(
                     );
             });
         })
-        .catch((error) => console.error("Error getting sources"));
+        .catch((error) => {
+            console.error("Error getting sources", error);
+        });
 }
 
 function getUserSubscriptions(userDoc) {
     try {
-        if (!userDoc.data().subscriptions) {
-            return [];
+        if (!userDoc || !userDoc.data().subscriptions) {
+            return null;
         }
 
         const subscriptions = userDoc.data().subscriptions;
@@ -534,73 +656,129 @@ function getUserSubscriptions(userDoc) {
         return { subscriptionPaths, sourceSearches, noSourceSearches };
     } catch (error) {
         console.error(error);
-        return [];
     }
 }
 
-async function addUserSubscription(userId, subscriptionPath) {
-    const updated = await db
-        .collection("users")
-        .doc(userId)
-        .update({
-            subscriptions: firebase.firestore.FieldValue.arrayUnion(
-                db.doc(subscriptionPath)
-            ),
-        });
+// async function addUserSubscription(userId, subscriptionPath) {
+//     db
+//         .collection("users")
+//         .doc(userId)
+//         .update({
+//             subscriptions: firebase.firestore.FieldValue.arrayUnion(
+//                 db.doc(subscriptionPath)
+//             ),
+//         }).then(() => {
+//             console.log(`sub added for user ${userId}`);
+//             target
 
-    console.log(`sub added for user ${userId}`);
-}
+//         })
 
-// TODO make single handler
-async function addSubscriptionHandler(event) {
+// }
+
+function addSubscriptionHandler(event) {
     const target = event.currentTarget;
 
     const subscriptionPath = target.dataset.subpagePath;
+    const subpageId = target.id.split("-")[0];
 
     console.log("add path to sub", subscriptionPath);
 
-    console.log("add target", target);
-    target.classList.add("subscribed");
-    target.classList.remove("not-subscribed");
     // target.removeEventListener("click", addSubscriptionHandler);
-    console.log("icon span", target.querySelector(".material-icons"));
 
-    const removeNotificationSpan = document.createElement("span");
-    removeNotificationSpan.classList.add("material-icons");
-    removeNotificationSpan.innerHTML = REMOVE_NOTIFICATION_ICON;
-    target.querySelector(".material-icons").replaceWith(removeNotificationSpan);
+    // const removeNotificationSpan = document.createElement("span");
+    // removeNotificationSpan.classList.add("material-icons");
+    // removeNotificationSpan.innerHTML = REMOVE_NOTIFICATION_ICON;
+    // target.querySelector(".material-icons").replaceWith(removeNotificationSpan);
     // target.addEventListener("click", removeUserSubscription);
-    await addUserSubscription(currentUser.uid, subscriptionPath);
+
+    // Optimisticly update
+    target.classList.add("d-none");
+    document
+        .querySelector(`${subpageId}-not-subscribed`)
+        ?.classList.remove("d-none");
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            db.collection("users")
+                .doc(user.uid)
+                .update({
+                    subscriptions: firebase.firestore.FieldValue.arrayUnion(
+                        db.doc(subscriptionPath)
+                    ),
+                })
+                .then(() => {
+                    console.log(`sub added for user ${user.uid}`);
+                })
+                .catch((error) => {
+                    console.error(
+                        "Error adding subscription for user",
+                        user.uid
+                    );
+                    // revert to previous state
+                    target.classList.remove("d-none");
+                    document
+                        .querySelector(`${subpageId}-not-subscribed`)
+                        ?.classList.add("d-none");
+                    window.alert(
+                        "Unable to add subscription. Please try again."
+                    );
+                });
+        }
+    });
 }
 
-async function removeUserSubscription(userId, subscriptionPath) {
-    const updated = db
-        .collection("users")
-        .doc(userId)
-        .update({
-            subscriptions: firebase.firestore.FieldValue.arrayRemove(
-                db.doc(subscriptionPath)
-            ),
-        });
+// async function removeUserSubscription(userId, subscriptionPath) {
+//     const updated = db
+//         .collection("users")
+//         .doc(userId)
+//         .update({
+//             subscriptions: firebase.firestore.FieldValue.arrayRemove(
+//                 db.doc(subscriptionPath)
+//             ),
+//         });
 
-    console.log(`sub removed for user ${userId}`, updated);
-}
+//     console.log(`sub removed for user ${userId}`, updated);
+// }
 
-async function removeSubscriptionHandler(event) {
+function removeSubscriptionHandler(event) {
     const target = event.currentTarget;
     const subscriptionPath = target.dataset.subpagePath;
+    const subpageId = target.id.split("-")[0];
 
     console.log("remove path to sub", subscriptionPath);
-
-    console.log("remove target", target);
-    target.classList.remove("subscribed");
-    target.classList.add("not-subscribed");
-    // target.removeEventListener("click", removeSubscriptionHandler);
-    console.log("icon span", target.querySelector(".material-icons"));
-    const addNotificationSpan = document.createElement("span");
-    addNotificationSpan.classList.add("material-icons");
-    addNotificationSpan.innerHTML = ADD_NOTIFICATION_ICON;
-    target.querySelector(".material-icons").replaceWith(addNotificationSpan);
-    // target.addEventListener("click", addUserSubscription);
-    await removeUserSubscription(currentUser.uid, subscriptionPath);
+    // Optimisticly update
+    target.classList.add("d-none");
+    document
+        .querySelector(`${subpageId}-subscribed`)
+        ?.classList.remove("d-none");
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            db.collection("users")
+                .doc(user.uid)
+                .update({
+                    subscriptions: firebase.firestore.FieldValue.arrayRemove(
+                        db.doc(subscriptionPath)
+                    ),
+                })
+                .then(() => {
+                    console.log(`sub removed for user ${user.uid}`);
+                })
+                .catch((error) => {
+                    console.error(
+                        "Error adding subscription for user",
+                        user.uid
+                    );
+                    // revert to previous state
+                    target.classList.remove("d-none");
+                    document
+                        .querySelector(`${subpageId}-subscribed`)
+                        ?.classList.add("d-none");
+                    window.alert(
+                        "Unable to remove subscription. Please try again."
+                    );
+                });
+        } else {
+        }
+    });
 }
+
+// TODO add and handle view more button & handle location filter
