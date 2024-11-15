@@ -6,6 +6,10 @@ body {
     min-height: 100svh;
 }
 
+main {
+    width: min(100%, 1000px);
+}
+
 a {
     color: inherit;
 }
