@@ -1,4 +1,10 @@
 /* Global Styles */
+body {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+    min-height: 100svh;
+}
 
 a {
     color: inherit;
@@ -52,7 +58,7 @@ a {
     font-size: 58px;
 }
 
-.bottom-bar-placeholder {
+.bottom-bar-placeholder a {
     color: white;
 }
 
