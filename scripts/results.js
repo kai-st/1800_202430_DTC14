@@ -3,7 +3,7 @@ const REMOVE_NOTIFICATION_ICON = "&#xe7f6;";
 const EDIT_NOTIFICATION_ICON = "&#xe525;";
 
 function setBackLink(category) {
-    document.querySelector(".back").href = `/topics?category=${category}`;
+    document.querySelector(".back").href = `/topics.html?category=${category}`;
     document.querySelector(
         "#previous-page"
     ).innerText = `Topics: ${category.replaceAll("+", " ")}`;
