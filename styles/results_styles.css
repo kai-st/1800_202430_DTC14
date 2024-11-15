@@ -83,15 +83,13 @@
 
 .location-tab {
     padding-inline: 16px;
-    border: 3px solid #009bb3;
+    border: 5px solid #009bb3;
     border-radius: 16px 16px 0 0;
     border-bottom: none;
     cursor: pointer;
 }
 
 .location-tab[aria-selected="true"] {
-    border: 5px solid #009bb3;
-    border-bottom: none;
     background-color: #e4faff;
 }
 

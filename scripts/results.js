@@ -42,7 +42,29 @@ function getQueryTopic() {
     }
 }
 
-let currentUser;
+function attachTabListeners() {
+    const tabs = document.querySelectorAll(".location-tab");
+    for (const tab of tabs) {
+        tab.addEventListener("click", (event) => {
+            const target = event.currentTarget;
+            const tabpanelId = target.getAttribute("aria-controls");
+            const tabPanel = document.querySelector(tabpanelId);
+            const tabsArray = Array.from(
+                document.querySelectorAll(".location-tab")
+            );
+            const activeTab = tabsArray.find(
+                (tabLi) => tabLi.ariaSelected === "true"
+            );
+            const activeTabpanelId = activeTab.getAttribute("aria-controls");
+            const activeTabpanel = document.querySelector(activeTabpanelId);
+            activeTab.ariaSelected = "false";
+            target.ariaSelected = "true";
+            activeTabpanel?.classList.add("d-none");
+            tabPanel?.classList.remove("d-none");
+        });
+    }
+}
+attachTabListeners();
 
 const dummyResults = [
     {

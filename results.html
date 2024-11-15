@@ -95,6 +95,7 @@
                                 class="location-tab"
                                 tabindex="0"
                                 aria-selected="true"
+                                aria-controls="national"
                             >
                                 National
                             </li>
@@ -102,6 +103,7 @@
                                 class="location-tab"
                                 tabindex="0"
                                 aria-selected="false"
+                                aria-controls="province"
                             >
                                 Provincial
                             </li>
@@ -109,6 +111,7 @@
                                 class="location-tab"
                                 tabindex="0"
                                 aria-selected="false"
+                                aria-controls="city"
                             >
                                 Local
                             </li>
@@ -148,10 +151,24 @@
                 </div>
             </div>
             <div class="" id="results-wrapper">
-                <p class="no-results fs-5 text-center mt-3">
-                    No results found for
-                    <span id="empty-query" class="topic-span">Topic</span>
-                </p>
+                <div id="national-tab" role="tabpanel" class="gov-panel">
+                    <p class="no-results fs-5 text-center mt-3">
+                        No national results found for
+                        <span class="topic-span">Topic</span>
+                    </p>
+                </div>
+                <div id="provine-tab" role="tabpanel" class="gov-panel d-none">
+                    <p class="no-results fs-5 text-center mt-3">
+                        No provincial results found for
+                        <span class="topic-span">Topic</span>
+                    </p>
+                </div>
+                <div id="city-tab" role="tabpanel" class="gov-panel d-none">
+                    <p class="no-results fs-5 text-center mt-3">
+                        No local results found for
+                        <span class="topic-span">Topic</span>
+                    </p>
+                </div>
             </div>
         </main>
 
