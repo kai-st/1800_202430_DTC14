@@ -152,6 +152,11 @@
 .subpage-item.accordion-item,
 .subpage-item.accordion {
     --bs-accordion-active-bg: #e4faff;
+}
+
+.subpage-block-wrapper:not(:first-child),
+.subpage-item.accordion-item:not(:first-child),
+.subpage-item.accordion {
     border-top: 3px solid #009bb3;
 }
 
@@ -175,6 +180,12 @@
     border: 3px solid #009bb3;
     border-radius: 24px;
     max-height: 75vh;
+    overflow: scroll;
+}
+
+.embed-content img {
+    max-width: 100%;
+    object-fit: contain;
 }
 .source-block {
     position: relative;
