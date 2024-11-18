@@ -2,6 +2,7 @@ const ADD_NOTIFICATION_ICON = "&#xe399;";
 const REMOVE_NOTIFICATION_ICON = "&#xe7f6;";
 const EDIT_NOTIFICATION_ICON = "&#xe525;";
 
+// TODO: make sure id is set on categories on topics page
 function setBackLink(category) {
     document.querySelector(".back").href = `/topics.html?category=${category}`;
     document.querySelector(
@@ -199,37 +200,39 @@ const loadResults = async () => {
     firebase.auth().onAuthStateChanged(async (user) => {
         let loggedIn = !!user;
 
-        const nationalTab = document.querySelector("#national-tab");
-        const provinceTab = document.querySelector("#province-tab");
-        const cityTab = document.querySelector("#city-tab");
+        const nationalTabpanel = document.querySelector("#national-tab");
+        const provinceTabpanel = document.querySelector("#province-tab");
+        const cityTabpanel = document.querySelector("#city-tab");
 
         if (loggedIn) {
             db.collection("users")
                 .doc(user.uid)
                 .onSnapshot((currentUserDoc) => {
+                    personalizeTabs(currentUserDoc);
                     loadResultsForTab(
-                        nationalTab,
+                        nationalTabpanel,
                         queryTopic,
                         "national",
                         currentUserDoc
                     );
                     loadResultsForTab(
-                        provinceTab,
+                        provinceTabpanel,
                         queryTopic,
                         "province",
                         currentUserDoc
                     );
                     loadResultsForTab(
-                        cityTab,
+                        cityTabpanel,
                         queryTopic,
                         "city",
                         currentUserDoc
                     );
                 });
         } else {
-            loadResultsForTab(nationalTab, queryTopic, "national");
-            loadResultsForTab(provinceTab, queryTopic, "province");
-            loadResultsForTab(cityTab, queryTopic, "city");
+            unpersonalizeTabs();
+            loadResultsForTab(nationalTabpanel, queryTopic, "national");
+            loadResultsForTab(provinceTabpanel, queryTopic, "province");
+            loadResultsForTab(cityTabpanel, queryTopic, "city");
         }
     });
 };
@@ -284,6 +287,44 @@ function showOnLogout() {
     }
 }
 
+function getLocation(currentUserDoc) {
+    if (currentUserDoc.data().postalCode) {
+        return {
+            postalCode: currentUserDoc.data().postalCode,
+            city: currentUserDoc.data().city,
+            province: currentUserDoc.data().province,
+        };
+    } else {
+        return null;
+    }
+}
+
+function personalizeTabs(currentUserDoc) {
+    const userLocation = getLocation(currentUserDoc);
+    if (!userLocation) {
+        return;
+    }
+    const provinceTab = document.querySelector(
+        ".location-tab[aria-controls = 'province']"
+    );
+    provinceTab.innerText = userLocation.province;
+    const cityTab = document.querySelector(
+        ".location-tab[aria-controls = 'city']"
+    );
+    cityTab.innerText = userLocation.city;
+}
+
+function unpersonalizeTabs() {
+    const provinceTab = document.querySelector(
+        ".location-tab[aria-controls = 'province']"
+    );
+    provinceTab.innerText = "Provincial";
+    const cityTab = document.querySelector(
+        ".location-tab[aria-controls = 'city']"
+    );
+    cityTab.innerText = "Local";
+}
+
 async function loadResultsForTab(
     tabWrapperElement,
     queryTopic,
@@ -299,11 +340,7 @@ async function loadResultsForTab(
 
     let location;
     if (currentUserDoc) {
-        location = {
-            postalCode: currentUserDoc.data().postalCode,
-            city: currentUserDoc.data().city,
-            province: currentUserDoc.data().province,
-        };
+        location = getLocation(currentUserDoc);
     }
     console.log(location);
     const userSubscriptions = getUserSubscriptions(currentUserDoc);
@@ -437,14 +474,14 @@ async function loadResultsForTab(
                                 subbedBtn.classList.remove("d-none");
                                 subbedBtn.addEventListener(
                                     "click",
-                                    removeSubscriptionHandler
+                                    removeSubpageSubscriptionHandler
                                 );
                                 console.log("in if", subbedBtn);
                             } else if (currentUserDoc) {
                                 subBtn.classList.remove("d-none");
                                 subBtn.addEventListener(
                                     "click",
-                                    addSubscriptionHandler
+                                    addSubpageSubscriptionHandler
                                 );
                             }
 
@@ -675,7 +712,7 @@ function getUserSubscriptions(userDoc) {
 
 // }
 
-function addSubscriptionHandler(event) {
+function addSubpageSubscriptionHandler(event) {
     const target = event.currentTarget;
 
     const subscriptionPath = target.dataset.subpagePath;
@@ -739,7 +776,7 @@ function addSubscriptionHandler(event) {
 //     console.log(`sub removed for user ${userId}`, updated);
 // }
 
-function removeSubscriptionHandler(event) {
+function removeSubpageSubscriptionHandler(event) {
     const target = event.currentTarget;
     const subscriptionPath = target.dataset.subpagePath;
     const subpageId = target.id.split("-")[0];
