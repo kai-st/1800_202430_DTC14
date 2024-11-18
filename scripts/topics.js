@@ -31,15 +31,16 @@ function populateKeywords(keywords) {
 
     // create HTML element of button with dropdown
     // note the charAt to UpperCase is for proper formatting
+    // and replace(' ', '') is to remove any spaces found in category
     categoryItems.innerHTML = `
     <div class="mb-5" id="results-wrapper">
         <div id="single-accordion-template" class="accordion accordion-flush">
             <div class="subpage-header accordion-item">
                 <h3>${category.charAt(0).toUpperCase() + category.slice(1)}</h3>
-                <button class="accordion-button custom collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#content" aria-expanded="false" aria-controls="content"></button>
+                <button class="accordion-button custom collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#content-${category.replace(' ', '')}" aria-expanded="false" aria-controls="content-${category.replace(' ', '')}"></button>
             </div>
 
-            <div id="content" class="accordion-collapse collapse" style="">
+            <div id="content-${category.replace(' ', '')}" class="accordion-collapse collapse" style="">
                 <div class="">
                     <ul>
                         ${nameItems.innerHTML}
