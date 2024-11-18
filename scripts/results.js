@@ -344,6 +344,21 @@ async function loadResultsForTab(
     }
     console.log(location);
     const userSubscriptions = getUserSubscriptions(currentUserDoc);
+    const userSuscribedToSearch = userSubscriptions
+        ? userSubscriptions.noSourceSearches.some((search) => {
+              return search.search === queryTopic.textTopic.toLowerCase();
+          })
+        : false;
+
+    console.log("subbed to search", userSuscribedToSearch);
+
+    if (userSuscribedToSearch) {
+        document
+            .querySelector(".topic-unsubscribe")
+            ?.classList.remove("d-none");
+    } else if (currentUserDoc) {
+        document.querySelector(".topic-subscribe")?.classList.remove("d-none");
+    }
 
     let sourcesQuery = db
         .collection("sources")
@@ -387,9 +402,28 @@ async function loadResultsForTab(
                     path: `/sources/${sourceDoc.id}`,
                 };
                 console.log(sourceData);
+
+                const userSubscribedToSourceWithSearch = userSubscriptions
+                    ? userSubscriptions?.sourceSearches.some((sourceSearch) => {
+                          return (
+                              sourceSearch.sourceRef.path ===
+                                  sourceData.path.substring(1) &&
+                              sourceSearch.search ===
+                                  queryTopic.textTopic.toLowerCase()
+                          );
+                      })
+                    : false;
+                const userSubscribedToAllSource = userSubscriptions
+                    ? userSubscriptions.subscriptionPaths.includes(
+                          sourceData.path.substring(1)
+                      )
+                    : false;
+
                 //create source block
                 let sourceBlock = sourceBlockTemplate.content.cloneNode(true);
 
+                sourceBlock.querySelector(".source-block").id = sourceData.id;
+                sourceData.sourceUrl;
                 sourceBlock.querySelector(".source-link").href =
                     sourceData.sourceUrl;
                 sourceBlock.querySelector(".source-logo").src =
@@ -398,6 +432,9 @@ async function loadResultsForTab(
                     .querySelectorAll(".subscribe-topic")
                     .forEach((element) => {
                         element.dataset.sourcePath = sourceData.path;
+                        if (userSuscribedToSearch) {
+                            element.setAttribute("disabled", "");
+                        }
                     });
 
                 sourceBlock
@@ -407,9 +444,27 @@ async function loadResultsForTab(
                     });
                 const subpageWrapper = sourceBlock.querySelector(".subpages");
 
+                const allSubbedBtnGroup = sourceBlock.querySelector(
+                    ".source-all-subscribed"
+                );
+                allSubbedBtnGroup.id = `${sourceData.id}-all`;
+                const withSearchSubbedBtnGroup = sourceBlock.querySelector(
+                    ".source-search-subscribed"
+                );
+                withSearchSubbedBtnGroup.id = `${sourceData.id}-with-search`;
+                const noSubsBtnGroup =
+                    sourceBlock.querySelector(".no-source-subs");
+                withSearchSubbedBtnGroup.id = `${sourceData.id}-no-subs`;
+
                 // TODO parse source subscriptions and handle these
-                sourceBlock.querySelector(".no-source-subs");
-                sourceBlock.querySelector(".source-all-subscribed");
+
+                if (userSubscribedToAllSource) {
+                    allSubbedBtnGroup.classList.remove("d-none");
+                } else if (userSubscribedToSourceWithSearch) {
+                    withSearchSubbedBtnGroup.classList.remove("d-none");
+                } else if (currentUserDoc) {
+                    noSubsBtnGroup.classList.remove("d-none");
+                }
 
                 sourceDoc.ref
                     .collection("subpages")
@@ -469,20 +524,19 @@ async function loadResultsForTab(
                                 subpageBlock.querySelector(".not-subscribed");
                             subBtn.id = `${subpageData.id}-not-subscribed`;
 
-                            // TODO: fix event attaching
                             if (userSubscribedToSubpage) {
                                 subbedBtn.classList.remove("d-none");
-                                subbedBtn.addEventListener(
-                                    "click",
-                                    removeSubpageSubscriptionHandler
-                                );
-                                console.log("in if", subbedBtn);
                             } else if (currentUserDoc) {
                                 subBtn.classList.remove("d-none");
-                                subBtn.addEventListener(
-                                    "click",
-                                    addSubpageSubscriptionHandler
-                                );
+                            }
+
+                            if (
+                                userSuscribedToSearch ||
+                                userSubscribedToAllSource ||
+                                userSubscribedToSourceWithSearch
+                            ) {
+                                subbedBtn.setAttribute("disabled", "");
+                                subBtn.setAttribute("disabled", "");
                             }
 
                             subpageBlock.querySelector(
@@ -505,6 +559,37 @@ async function loadResultsForTab(
                         tabWrapperElement.append(sourceBlock);
                         loadTopicSpans(queryTopic?.textTopic);
                         loadSourceNameSpans(sourceData.sourceName);
+
+                        $(`#${govLevel}-tab`).on(
+                            "click",
+                            ".subpage-subscribe.not-subscribed",
+                            addSubpageSubscriptionHandler
+                        );
+                        $(`#${govLevel}-tab`).on(
+                            "click",
+                            ".subpage-subscribe.subscribed",
+                            removeSubpageSubscriptionHandler
+                        );
+                        $(`#${govLevel}-tab`).on(
+                            "click",
+                            ".subscribe-topic.not-subscribed",
+                            addSourceWithSearchSubscriptionHandler
+                        );
+                        $(`#${govLevel}-tab`).on(
+                            "click",
+                            ".subscribe-topic.subscribed",
+                            removeSourceWithSearchSubscriptionHandler
+                        );
+                        $(`#${govLevel}-tab`).on(
+                            "click",
+                            ".subscribe-all.not-subscribed",
+                            addSourceAllSubscriptionHandler
+                        );
+                        $(`#${govLevel}-tab`).on(
+                            "click",
+                            ".subscribe-all.subscribed",
+                            removeAllSourceSubscriptionHandler
+                        );
                         if (currentUserDoc) {
                             hideOnLogin();
                             showOnLogin();
@@ -515,6 +600,7 @@ async function loadResultsForTab(
                             hideOnLogout();
                             showOnLogout();
                         }
+
                         // For now pad with old dummy data insert method
                         dummyResults.forEach((result) => {
                             let subpages = "";
@@ -540,47 +626,47 @@ async function loadResultsForTab(
                                             data-subpage-path="${subpage.path}"
                                         >
                                             <span class="material-icons"
-                                                >${
-                                                    userSubscribedToSubpage
-                                                        ? REMOVE_NOTIFICATION_ICON
-                                                        : ADD_NOTIFICATION_ICON
-                                                }
+                                            >${
+                                                userSubscribedToSubpage
+                                                    ? REMOVE_NOTIFICATION_ICON
+                                                    : ADD_NOTIFICATION_ICON
+                                            }
                                             </span>
                                         </button>`
                                                 : `<button
                                             type="button"
                                             class="logged-out subpage-subscribe subscribe btn"
-                                        >
+                                            >
                                             <span class="material-icons"
-                                                >&#xe399;
+                                            >&#xe399;
                                             </span>
-                                        </button>`
+                                            </button>`
                                         }
                                         <button
-                                            class="accordion-button custom collapsed"
-                                            type="button"
-                                            data-bs-toggle="collapse"
-                                            data-bs-target="#embed${subpage.id}"
-                                            aria-expanded="false"
+                                        class="accordion-button custom collapsed"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#embed${subpage.id}"
+                                        aria-expanded="false"
                                             aria-controls="embed${subpage.id}"
                                         ></button>
                                     </div>
                                     <div
-                                        id="embed${subpage.id}"
-                                        class="accordion-collapse collapse"
+                                    id="embed${subpage.id}"
+                                    class="accordion-collapse collapse"
                                     >
-                                        <div class="embed">
-                                            <div class="embed-content">
-                                                ${subpage.content}
-                                            </div>
-                                            <a
-                                                href="${subpage.subpageUrl}"
-                                                class="subpage-link"
-                                                >Visit Page</a
-                                            >
-                                        </div>
+                                    <div class="embed">
+                                    <div class="embed-content">
+                                    ${subpage.content}
                                     </div>
-                                </div>`;
+                                    <a
+                                    href="${subpage.subpageUrl}"
+                                    class="subpage-link"
+                                    >Visit Page</a
+                                    >
+                                    </div>
+                                    </div>
+                                    </div>`;
 
                                 subpages += subpageAccordionItem;
                             });
@@ -588,13 +674,11 @@ async function loadResultsForTab(
                             const sourceAccordionItem = `<section class="source-block" data-source-id="${
                                 result.id
                             }">
-                                    <div class="source">
-                                        <h2>
-                                            <span class="d-none d-sm-inline">From: </span
-                                            ><a class="source-link" href="${
-                                                result.sourceUrl
-                                            }"
-                                                ><img
+                            <div class="source">
+                            <h2>
+                            <span class="d-none d-sm-inline">From: </span
+                            ><a class="source-link" href="${result.sourceUrl}"
+                                            ><img
                                                     src="${
                                                         result.sourceLogoUrl
                                                     }"
@@ -603,54 +687,54 @@ async function loadResultsForTab(
                                             >
                                         </h2>
                                         <div class="results-tag">
-                                            (${result.subpages.length} results)
+                                        (${result.subpages.length} results)
                                         </div>
                                         ${
                                             currentUserDoc
                                                 ? `<div class="btn-group dropup">
-                                                    <button
-                                                        type="button"
-                                                        class="source-subscribe subscribe btn dropdown-toggle"
+                                            <button
+                                            type="button"
+                                            class="source-subscribe subscribe btn dropdown-toggle"
                                                         data-bs-toggle="dropdown"
                                                         aria-expanded="false"
                                                     >
-                                                        <span class="material-icons">&#xe399; </span>
+                                                    <span class="material-icons">&#xe399; </span>
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-end">
-                                                        <li>
-                                                            <button
-                                                                class="subscribe-topic dropdown-item"
-                                                                type="button"
-                                                                >
-                                                                Subscribe to updates on ${result.topic}
-                                                                </button>
-                                                                </li>
-                                                                <li>
-                                                                <button
-                                                                class="subscribe-all dropdown-item"
+                                                    <li>
+                                                    <button
+                                                    class="subscribe-topic dropdown-item"
+                                                    type="button"
+                                                    >
+                                                    Subscribe to updates on ${result.topic}
+                                                    </button>
+                                                    </li>
+                                                    <li>
+                                                    <button
+                                                    class="subscribe-all dropdown-item"
                                                                 data-sourse-path="${result.path}"
                                                                 type="button"
-                                                            >
+                                                                >
                                                                 Subscribe to all updates from ${result.sourceName}
                                                             </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>`
+                                                            </li>
+                                                            </ul>
+                                                            </div>`
                                                 : ""
                                         }                                    
                                     </div>
                                     <div
-                                        class="subpages accordion accordion-flush ms-md-5"
+                                    class="subpages accordion accordion-flush ms-md-5"
                                     >
                                     ${subpages}
                                     <button
-                                        class="view-more-btn btn btn-info"
-                                        type="button"
+                                    class="view-more-btn btn btn-info"
+                                    type="button"
                                     >
-                                        View More
+                                    View More
                                     </button>
                                     </div>
-                                </section>`;
+                                    </section>`;
 
                             tabWrapperElement.innerHTML += sourceAccordionItem;
                         });
@@ -696,21 +780,16 @@ function getUserSubscriptions(userDoc) {
     }
 }
 
-// async function addUserSubscription(userId, subscriptionPath) {
-//     db
-//         .collection("users")
-//         .doc(userId)
-//         .update({
-//             subscriptions: firebase.firestore.FieldValue.arrayUnion(
-//                 db.doc(subscriptionPath)
-//             ),
-//         }).then(() => {
-//             console.log(`sub added for user ${userId}`);
-//             target
+function attachSearchSubscriptionListeners() {
+    document
+        .querySelector(".topic-subscribe")
+        ?.addEventListener("click", addSearchSubscriptionHandler);
+    document
+        .querySelector(".topic-unsubscribe")
+        ?.addEventListener("click", removeSearchSubscriptionHandler);
+}
 
-//         })
-
-// }
+attachSearchSubscriptionListeners();
 
 function addSubpageSubscriptionHandler(event) {
     const target = event.currentTarget;
@@ -719,14 +798,6 @@ function addSubpageSubscriptionHandler(event) {
     const subpageId = target.id.split("-")[0];
 
     console.log("add path to sub", subscriptionPath);
-
-    // target.removeEventListener("click", addSubscriptionHandler);
-
-    // const removeNotificationSpan = document.createElement("span");
-    // removeNotificationSpan.classList.add("material-icons");
-    // removeNotificationSpan.innerHTML = REMOVE_NOTIFICATION_ICON;
-    // target.querySelector(".material-icons").replaceWith(removeNotificationSpan);
-    // target.addEventListener("click", removeUserSubscription);
 
     // Optimisticly update
     target.classList.add("d-none");
@@ -748,7 +819,8 @@ function addSubpageSubscriptionHandler(event) {
                 .catch((error) => {
                     console.error(
                         "Error adding subscription for user",
-                        user.uid
+                        user.uid,
+                        error
                     );
                     // revert to previous state
                     target.classList.remove("d-none");
@@ -762,19 +834,6 @@ function addSubpageSubscriptionHandler(event) {
         }
     });
 }
-
-// async function removeUserSubscription(userId, subscriptionPath) {
-//     const updated = db
-//         .collection("users")
-//         .doc(userId)
-//         .update({
-//             subscriptions: firebase.firestore.FieldValue.arrayRemove(
-//                 db.doc(subscriptionPath)
-//             ),
-//         });
-
-//     console.log(`sub removed for user ${userId}`, updated);
-// }
 
 function removeSubpageSubscriptionHandler(event) {
     const target = event.currentTarget;
@@ -802,7 +861,8 @@ function removeSubpageSubscriptionHandler(event) {
                 .catch((error) => {
                     console.error(
                         "Error adding subscription for user",
-                        user.uid
+                        user.uid,
+                        error
                     );
                     // revert to previous state
                     target.classList.remove("d-none");
@@ -813,7 +873,324 @@ function removeSubpageSubscriptionHandler(event) {
                         "Unable to remove subscription. Please try again."
                     );
                 });
-        } else {
+        }
+    });
+}
+
+function addSourceAllSubscriptionHandler(event) {
+    const target = event.currentTarget;
+
+    const subscriptionPath = target.dataset.sourcePath;
+    const sourceId = subscriptionPath.split("/")[-1];
+
+    console.log("add path to sub", subscriptionPath);
+
+    // optimistically update
+    const noSubs = document.querySelector(`${sourceId}-no-subs`);
+    const hidNoSubs = !noSubs?.classList.contains("d-none");
+    noSubs?.classList.add("d-none");
+    const withSearch = document.querySelector(`${sourceId}-with-search`);
+    const hidWithSearch = !withSearch?.classList.contains("d-none");
+    withSearch?.classList.add("d-none");
+    document.querySelector(`${sourceId}-all`)?.classList.remove("d-none");
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            db.collection("users")
+                .doc(user.uid)
+                .update({
+                    subscriptions: firebase.firestore.FieldValue.arrayUnion(
+                        db.doc(subscriptionPath)
+                    ),
+                })
+                .then(() => {
+                    console.log(`sub added for user ${user.uid}`);
+                })
+                .catch((error) => {
+                    console.error(
+                        "Error adding subscription for user",
+                        user.uid,
+                        error
+                    );
+                    // revert to previous state
+                    if (hidNoSubs) {
+                        noSubs.classList.remove("d-none");
+                    }
+                    if (hidWithSearch) {
+                        withSearch.classList.remove("d-none");
+                    }
+                    document
+                        .querySelector(`${sourceId}-all`)
+                        ?.classList.add("d-none");
+                    window.alert(
+                        "Unable to add subscription. Please try again."
+                    );
+                });
+        }
+    });
+}
+
+function removeAllSourceSubscriptionHandler(event) {
+    const target = event.currentTarget;
+    const subscriptionPath = target.dataset.sourcePath;
+    const sourceId = subscriptionPath.split("/")[-1];
+
+    console.log("remove path to sub", subscriptionPath);
+    // Optimisticly update
+    document.querySelector(`${sourceId}-all`)?.classList.add("d-none");
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            db.collection("users")
+                .doc(user.uid)
+                .update({
+                    subscriptions: firebase.firestore.FieldValue.arrayRemove(
+                        db.doc(subscriptionPath)
+                    ),
+                })
+                .then(() => {
+                    console.log(`sub removed for user ${user.uid}`);
+                })
+                .catch((error) => {
+                    console.error(
+                        "Error adding subscription for user",
+                        user.uid,
+                        error
+                    );
+                    // revert to previous state
+                    document
+                        .querySelector(`${sourceId}-all`)
+                        ?.classList.remove("d-none");
+                    window.alert(
+                        "Unable to remove subscription. Please try again."
+                    );
+                });
+        }
+    });
+}
+
+function addSourceWithSearchSubscriptionHandler(event) {
+    const target = event.currentTarget;
+
+    const subscriptionPath = target.dataset.sourcePath;
+    const sourceId = subscriptionPath.split("/")[-1];
+
+    const queryTopic = getQueryTopic();
+
+    console.log("add path to sub", subscriptionPath);
+
+    // optimistically update
+    const noSubs = document.querySelector(`${sourceId}-no-subs`);
+    const hidNoSubs = !noSubs?.classList.contains("d-none");
+    noSubs?.classList.add("d-none");
+    const allSource = document.querySelector(`${sourceId}-all`);
+    const hidAllSource = !allSource?.classList.contains("d-none");
+    allSource?.classList.add("d-none");
+    document
+        .querySelector(`${sourceId}-with-search`)
+        ?.classList.remove("d-none");
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            db.collection("users")
+                .doc(user.uid)
+                .update({
+                    subscriptions: firebase.firestore.FieldValue.arrayUnion({
+                        sourceRef: db.doc(subscriptionPath),
+                        search: queryTopic?.textTopic.toLowerCase(),
+                    }),
+                })
+                .then(() => {
+                    db.collection("users")
+                        .doc(user.uid)
+                        .get()
+                        .then((userDoc) => {
+                            const subscriptions = getUserSubscriptions(userDoc);
+                            const userSuscribedToSearch = subscriptions
+                                ? subscriptions.subscriptionPaths.includes(
+                                      subscriptionPath.substring(1)
+                                  )
+                                : false;
+                            if (userSuscribedToSearch) {
+                                db.collection("users")
+                                    .doc(user.uid)
+                                    .update({
+                                        subscriptions:
+                                            firebase.firestore.FieldValue.arrayRemove(
+                                                db.doc(subscriptionPath)
+                                            ),
+                                    })
+                                    .then(() => {
+                                        console.log(
+                                            `Removed overriding search sub for user ${user.uid}`
+                                        );
+                                    })
+                                    .catch((error) => {
+                                        console.error(
+                                            "Error removing overriding search sub for user",
+                                            user.uid,
+                                            error
+                                        );
+                                    });
+                            }
+                        })
+                        .catch((error) => {
+                            console.error(
+                                "Error getting subs for user",
+                                user.uid,
+                                error
+                            );
+                        });
+                })
+                .then(() => {
+                    console.log(`sub added for user ${user.uid}`);
+                })
+                .catch((error) => {
+                    console.error(
+                        "Error adding subscription for user",
+                        user.uid,
+                        error
+                    );
+                    // revert to previous state
+                    if (hidNoSubs) {
+                        noSubs.classList.remove("d-none");
+                    }
+                    if (hidAllSource) {
+                        allSource.classList.remove("d-none");
+                    }
+                    document
+                        .querySelector(`${sourceId}-with-search`)
+                        ?.classList.add("d-none");
+                    window.alert(
+                        "Unable to add subscription. Please try again."
+                    );
+                });
+        }
+    });
+}
+
+function removeSourceWithSearchSubscriptionHandler(event) {
+    const target = event.currentTarget;
+    const subscriptionPath = target.dataset.sourcePath;
+    const sourceId = subscriptionPath.split("/")[-1];
+
+    const queryTopic = getQueryTopic();
+
+    console.log("remove path to sub", subscriptionPath);
+    // Optimisticly update
+    document.querySelector(`${sourceId}-with-search`)?.classList.add("d-none");
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            db.collection("users")
+                .doc(user.uid)
+                .update({
+                    subscriptions: firebase.firestore.FieldValue.arrayRemove({
+                        sourceRef: db.doc(subscriptionPath),
+                        search: queryTopic?.textTopic.toLowerCase(),
+                    }),
+                })
+                .then(() => {
+                    console.log(`sub removed for user ${user.uid}`);
+                })
+                .catch((error) => {
+                    console.error(
+                        "Error removing subscription for user",
+                        user.uid,
+                        error
+                    );
+                    // revert to previous state
+                    document
+                        .querySelector(`${sourceId}-with-search`)
+                        ?.classList.remove("d-none");
+                    window.alert(
+                        "Unable to remove subscription. Please try again."
+                    );
+                });
+        }
+    });
+}
+
+function addSearchSubscriptionHandler(event) {
+    const target = event.currentTarget;
+
+    const queryTopic = getQueryTopic();
+    // TODO: When handling location filter update this to reflect state of filter
+    const local = true;
+
+    console.log("add path to sub", queryTopic?.textTopic);
+
+    // optimistically update
+    target.classList.add("d-none");
+    document.querySelector("topic-unsubscribe")?.classList.remove("d-none");
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            db.collection("users")
+                .doc(user.uid)
+                .update({
+                    subscriptions: firebase.firestore.FieldValue.arrayUnion({
+                        search: queryTopic?.textTopic.toLowerCase(),
+                        local,
+                    }),
+                })
+                .then(() => {
+                    console.log(`search sub added for user ${user.uid}`);
+                })
+                .catch((error) => {
+                    console.error(
+                        "Error adding search subscription for user",
+                        user.uid,
+                        error
+                    );
+                    // revert to previous state
+                    target.classList.remove("d-none");
+                    document
+                        .querySelector("topic-unsubscribe")
+                        ?.classList.add("d-none");
+                    window.alert(
+                        "Unable to add subscription. Please try again."
+                    );
+                });
+        }
+    });
+}
+
+function removeSearchSubscriptionHandler(event) {
+    const target = event.currentTarget;
+
+    const queryTopic = getQueryTopic();
+    // TODO: When handling location filter update this to reflect state of filter
+    const local = true;
+
+    console.log("add path to sub", queryTopic?.textTopic);
+
+    // optimistically update
+    target.classList.add("d-none");
+    document.querySelector("topic-subscribe")?.classList.remove("d-none");
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            db.collection("users")
+                .doc(user.uid)
+                .update({
+                    subscriptions: firebase.firestore.FieldValue.arrayRemove({
+                        search: queryTopic?.textTopic.toLowerCase(),
+                        local,
+                    }),
+                })
+                .then(() => {
+                    console.log(`search sub removed for user ${user.uid}`);
+                })
+                .catch((error) => {
+                    console.error(
+                        "Error removing search subscription for user",
+                        user.uid,
+                        error
+                    );
+                    // revert to previous state
+                    target.classList.remove("d-none");
+                    document
+                        .querySelector("topic-subscribe")
+                        ?.classList.add("d-none");
+                    window.alert(
+                        "Unable to remove subscription. Please try again."
+                    );
+                });
         }
     });
 }
