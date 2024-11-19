@@ -2,44 +2,38 @@ var currentUser
 
 firebase.auth().onAuthStateChanged(user => {
     currentUser = user
+    setup()
 })
 
 
 
-async function getNewsArticles(isFederal, isProvincial, isMunicipal)
+async function getNewsArticles()
 {
     const sources = db.collection("sources")
-    
-    if (currentUser){
-    const userRef = db.collection("users").doc(currentUser.uid)
-    const userSnapshot = await userRef.get()
-    const userProvince = userSnapshot.data().province
-    const userCity = userSnapshot.data().city
-    }
-    // const sourcesFederalSnapshot = await sources.get()
-    // const sourcesProvincialSnapshot = await sources.where("jurisdiction.governmentLevel", "==", "province").where("jurisdiction.location", "==", `${userProvince}`).get()
-    // const sourcesMunicipalSnapshot = await sources.where("jurisdiction.governmentLevel", "==", "municipal").where("jurisdiction.location", "==", `${userCity}`).get()
     
     newsArticles = []
     allNewsArticles = []
     uniqueNewsArticles = []
+   
+    const sourcesFederalSnapshot = await sources.where("jurisdiction.governmentLevel", "==", `federal`).get()
+    allNewsArticles.push(...sourcesFederalSnapshot.docs)
 
-    if (isFederal)
+    if (currentUser)
     {
-        const sourcesFederalSnapshot = await sources.get()
-        allNewsArticles.push(...sourcesFederalSnapshot.docs)
+    const userRef = db.collection("users").doc(currentUser.uid)
+    const userSnapshot = await userRef.get()
+    const userProvince = userSnapshot.data().province
+    const userCity = userSnapshot.data().city
+
+    const sourcesProvincialSnapshot = await sources.where("jurisdiction.governmentLevel", "==", "province").where("jurisdiction.location", "==", `${userProvince}`).get()
+    allNewsArticles.push(...sourcesProvincialSnapshot.docs)
+
+    const sourcesMunicipalSnapshot = await sources.where("jurisdiction.governmentLevel", "==", "municipal").where("jurisdiction.location", "==", `${userCity}`).get()
+    allNewsArticles.push(...sourcesMunicipalSnapshot.docs)
     }
-    if (isProvincial)
+
+    if (allNewsArticles.length > 0)
     {
-        const sourcesProvincialSnapshot = await sources.where("jurisdiction.governmentLevel", "==", "province").where("jurisdiction.location", "==", `${userProvince}`).get()
-        allNewsArticles.push(...sourcesProvincialSnapshot.docs)
-    }
-    if (isMunicipal)
-    {
-        const sourcesMunicipalSnapshot = await sources.where("jurisdiction.governmentLevel", "==", "municipal").where("jurisdiction.location", "==", `${userCity}`).get()
-        allNewsArticles.push(...sourcesMunicipalSnapshot.docs)
-    }
-    
     uniqueNewsArticles = [...new Set(allNewsArticles)]
 
     for(sourceDoc of allNewsArticles)
@@ -59,6 +53,24 @@ async function getNewsArticles(isFederal, isProvincial, isMunicipal)
     {
       printNewsArticle(article)
     }
+    }
+    else
+    {
+        news_section = document.getElementById("news")
+        news_section.innerHTML += `
+        <div class="news-action">
+            <p class="card-text fs-4">
+                We'll let you know when new information is added.
+                In the mean time, feel free to view our list of curated topics!
+            </p>
+            <a
+                href="./topics.html"
+                class="btn btn-info py-3 px-5 fs-5"
+                >View Topics</a
+            >
+        </div>
+        `
+    }
 }
 
 async function printNewsArticle(doc)
@@ -76,42 +88,47 @@ async function printNewsArticle(doc)
 
 
     title = doc.subpageTitle
-    byline = doc.subpageSummary
+    summary = doc.subpageSummary
     
     news_section = document.getElementById("news")
     
-    news_section.innerHTML += `<div class="article-preview">
-    <div class="article-preview-title" style="display: flex; flex-direction: row; gap: 20px;">
-      <img src="${logo_URL}" alt="logo" style="height: 28px; width: auto;">
-      <h3 style="">
-        ${title}
-      </h3>
-    </div>
-    <div class="article-preview-byline">
-        ${byline}
-    </div>
-    <div class="article-preview-read">
-      <a href="${new_URL}" style="">
-        Read more 
-          <span class="material-icons" style="text-decoration: none; vertical-align: bottom;">
-            chevron_right
-          </span>
-        </a>
-      </div>
-    </div>`
+    news_section.innerHTML += `
+    <div class="news-article">
+            <div id="single-accordion-template" class="subpage-item accordion">
+                <div class="subpage-header accordion-header">
+                    <h3>${title}</h3>
+                    <button
+                        class="accordion-button custom collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#${doc.id}"
+                        aria-expanded="false"
+                        aria-controls="${doc.id}"
+                    ></button>
+                </div>
+                <!-- Update id to be unique for each copy of component -->
+                <div id="${doc.id}" class="accordion-collapse collapse">
+                    <!-- Replace things in here with whatever content -->
+                    <div class="embed">
+                        <div class="embed-content">
+                           ${summary}
+                        </div>
+                        <a href="${new_URL}" class="subpage-link">Visit Page</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `
 }
 
 function setup()
 {
-  if (currentUser)
-  {
-    getNewsArticles(true, true, true)
-    console.log("user is logged in")
-  }
-  else
-  {
-    getNewsArticles(true, false, false)
-  }
+    if (currentUser)
+    {
+        getNewsArticles()
+    }
+    else
+    {
+        getNewsArticles()
+    }
 }
-
-setup()

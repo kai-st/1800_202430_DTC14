@@ -40,28 +40,30 @@
     <!-- Your HTML Layout go here -->
     <header id="headerPlaceholder"></header>
 
-    <div>
-        <h1 class="p-4 text-center">Enter Postal Code (ex. V6X3N2) to get Local News </h1>
-        <form>
-            <fieldset class="p-4 mb-3" id="personalInfoField">
-                <div class="form-group">
-                    <input type="text" id="postalCodeInput" class="form-control text-center" placeholder="Enter your postal code">
+    <main>
+        <div>
+            <h1 class="p-4 text-center">Enter Postal Code (ex. V6X3N2) to get Local News </h1>
+            <form>
+                <fieldset class="p-4 mb-3" id="personalInfoField">
+                    <div class="form-group">
+                        <input type="text" id="postalCodeInput" class="form-control text-center" placeholder="Enter your postal code">
+                    </div>
+                </fieldset>
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-secondary" onclick="editUserGeoInfo()">Edit</button>
+                    <span style="width: 10px"></span>
+                    <button type="button" class="btn btn-info" onclick="getUserGeoInfo()">Save</button>
                 </div>
-            </fieldset>
-            <div class="d-flex justify-content-center">
-                <button type="button" class="btn btn-secondary" onclick="editUserGeoInfo()">Edit</button>
-                <span style="width: 10px"></span>
-                <button type="button" class="btn btn-info" onclick="getUserGeoInfo()">Save</button>
-            </div>
-        </form>
-    </div>
-    <br>
-    <br>
-    <br>
-    <br>
-    <div class="news" id="news">
-        <h1>News</h1>
-    </div>
+            </form>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="news" id="news">
+            <h1>News</h1>
+        </div>
+    </main>
 
     <footer id="footerPlaceholder"></footer>
 
