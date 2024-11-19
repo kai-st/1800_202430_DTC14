@@ -83,49 +83,61 @@ function populateKeywords(keywords) {
     document.getElementById("keywordCategory").append(categoryItems);
 }
 
-async function getKeywords() {
+function getKeywords() {
     // get array of all documents with category "diseases"
-    const diseases = await db
+    const diseases = db
         .collection("keywords")
         .where("category", "==", "diseases");
 
-    diseases.get().then((data) => {
-        let keywords = data.docs.map((doc) => doc.data());
-        console.log(keywords);
-        populateKeywords(keywords);
-    });
+    diseases
+        .get()
+        .then((data) => {
+            let keywords = data.docs.map((doc) => doc.data());
+            console.log(keywords);
+            populateKeywords(keywords);
+        })
+        .catch((error) => console.error(error));
 
     // get array of all documents with category "healthcare services"
-    const healthcareServices = await db
+    const healthcareServices = db
         .collection("keywords")
         .where("category", "==", "healthcare services");
 
-    healthcareServices.get().then((data) => {
-        let keywords = data.docs.map((doc) => doc.data());
-        console.log(keywords);
-        populateKeywords(keywords);
-    });
+    healthcareServices
+        .get()
+        .then((data) => {
+            let keywords = data.docs.map((doc) => doc.data());
+            console.log(keywords);
+            populateKeywords(keywords);
+        })
+        .catch((error) => console.error(error));
 
     // get array of all documents with category "mental health"
-    const mentalHealth = await db
+    const mentalHealth = db
         .collection("keywords")
         .where("category", "==", "mental health");
 
-    mentalHealth.get().then((data) => {
-        let keywords = data.docs.map((doc) => doc.data());
-        console.log(keywords);
-        populateKeywords(keywords);
-    });
+    mentalHealth
+        .get()
+        .then((data) => {
+            let keywords = data.docs.map((doc) => doc.data());
+            console.log(keywords);
+            populateKeywords(keywords);
+        })
+        .catch((error) => console.error(error));
 
     // get array of all documents with category "vaccines"
-    const vaccines = await db
+    const vaccines = db
         .collection("keywords")
         .where("category", "==", "vaccines");
 
-    vaccines.get().then((data) => {
-        let keywords = data.docs.map((doc) => doc.data());
-        console.log(keywords);
-        populateKeywords(keywords);
-    });
+    vaccines
+        .get()
+        .then((data) => {
+            let keywords = data.docs.map((doc) => doc.data());
+            console.log(keywords);
+            populateKeywords(keywords);
+        })
+        .catch((error) => console.error(error));
 }
 getKeywords();
