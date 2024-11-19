@@ -27,17 +27,14 @@ async function loadNotifications()
     sources = db.collection("sources")
     sourcesSnapshot = await db.collection("sources").get()
 
-    for(source of sourcesSnapshot.docs)
-    {
-        sourcesSubpagesSnapshot = await source.ref.collection("subpages").get()
-        for(notificationId of notificationIds) {
-            
-            sourcesSubpagesSnapshot.forEach(subpage => {
-                if (subpage.id == notificationId )
-                {
-                    notifications.push(subpage)
+    for (source of sourcesSnapshot.docs) {
+        sourcesSubpagesSnapshot = await source.ref.collection("subpages").get();
+        for (notificationId of notificationIds) {
+            sourcesSubpagesSnapshot.forEach((subpage) => {
+                if (subpage.id == notificationId) {
+                    notifications.push(subpage);
                 }
-                });
+            });
         }
     }
 
@@ -91,15 +88,15 @@ async function displayNotification(doc)
     source = await db.collection("sources").doc(sourceID).get()
     sourceData = source.data()
 
-    logo_URL = sourceData.sourceLogoUrl
+    logo_URL = sourceData.sourceLogoUrl;
 
-    new_URL = new URL("article_template.html", window.location.href)
-    new_URL.searchParams.set('id', doc.id) 
+    new_URL = new URL("article_template.html", window.location.href);
+    new_URL.searchParams.set("id", doc.id);
 
     title = doc.subpageTitle
     summary = doc.subpageSummary
 
-    notifications_section = document.getElementById("notifications")
+    notifications_section = document.getElementById("notifications");
 
     notifications_section.innerHTML += `
     <div class="template-wrapper">

@@ -3,10 +3,10 @@ const dummyData = [
         sourceUrl: "sourceUrl",
         sourceLogoUrl: "sourceLogoUrl",
         sourceName: "Source",
-                        jurisdiction: {
-                            governmentLevel: "",
-                            location: "",
-                        }
+        jurisdiction: {
+            governmentLevel: "",
+            location: "",
+        },
         subpages: [
             {
                 subpageTitle: "subpageTitle",
@@ -109,12 +109,6 @@ function writeSourceAndSubpages(sourceData) {
                         .collection("subpages")
                         .get()
                         .then((querySnapshot) => {
-                            const existingSubpageUrls = querySnapshot.empty
-                                ? []
-                                : querySnapshot.docs.map((subpageDoc) => {
-                                      return subpageDoc.data().subpageUrl;
-                                  });
-
                             const subpagesCollectionRef =
                                 sourceDoc.ref.collection("subpages");
 

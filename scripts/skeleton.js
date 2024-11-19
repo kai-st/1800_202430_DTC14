@@ -16,6 +16,18 @@ function setLoginParams() {
     );
 }
 
+function redirectToHome(currentPath) {
+    if (currentPath == "/news.html") {
+        window.location.href = "/";
+    }
+}
+
+function redirectToNews(currentPath) {
+    if (currentPath == "/" || currentPath == "/index.html") {
+        window.location.href = "/news.html";
+    }
+}
+
 //---------------------------------------------------
 // This function loads the parts of your skeleton
 // (navbar, footer, and other things) into html doc.
@@ -26,6 +38,7 @@ function loadSkeleton() {
             // If the "user" variable is not null, then someone is logged in
             // User is signed in.
             // Do something for the user here.
+            redirectToNews(path);
             console.log(
                 $("#headerPlaceholder")
                     .load("./text/header_after_login.html")
@@ -34,6 +47,7 @@ function loadSkeleton() {
             console.log($("#footerPlaceholder").load("./text/footer.html"));
         } else {
             // No user is signed in.
+            redirectToHome(path);
             console.log(
                 $("#headerPlaceholder").load(
                     "./text/header_before_login.html",
