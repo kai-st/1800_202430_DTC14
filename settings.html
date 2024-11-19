@@ -48,36 +48,58 @@
         <header id="headerPlaceholder"></header>
 
         <main>
-            <section class="py-5 px-3 text-center">
+            <div class="py-5 px-3 text-center">
                 <h1 class="pb-3">Account Settings</h1>
-            </section>
+            </div>
 
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-12 col-lg-10 col-xl-8 mx-auto">
                         <strong class="mb-0">Location</strong>
-                        <p>Update your location.</p>
+                        <p>Update your location based on postal code.</p>
                         <div class="list-group mb-5 shadow">
                             <div class="list-group-item">
                                 <div class="row align-items-center">
                                     <div class="col">
-                                        <strong class="mb-0"
-                                            >Update your location based on
-                                            postal code</strong
+                                        <form
+                                            class="d-flex flex-column mb-3 gap-2"
                                         >
-                                        <p class="text-muted mb-0">
-                                            You will receive the latest news
-                                            based on your provided postal code.
-                                        </p>
-                                        <p id="userUpdateLocation"></p>
-                                    </div>
-                                    <div class="col-auto">
-                                        <button
-                                            class="btn border-black"
-                                            onclick="toggleUpdateLocation()"
-                                        >
-                                            Change
-                                        </button>
+                                            <label for="postalCodeInput">
+                                                <strong>Postal Code</strong>
+                                            </label>
+                                            <fieldset
+                                                class=""
+                                                id="personalInfoField"
+                                            >
+                                                <div class="form-group">
+                                                    <input
+                                                        type="text"
+                                                        id="postalCodeInput"
+                                                        class="form-control"
+                                                        placeholder="Enter your postal code"
+                                                    />
+                                                </div>
+                                            </fieldset>
+                                            <div
+                                                class="d-flex justify-content-end gap-2"
+                                            >
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-secondary"
+                                                    onclick="editUserGeoInfo()"
+                                                >
+                                                    Edit
+                                                </button>
+                                                <!-- <span style="width: 10px"></span> -->
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-info"
+                                                    onclick="getUserGeoInfo()"
+                                                >
+                                                    Save
+                                                </button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
