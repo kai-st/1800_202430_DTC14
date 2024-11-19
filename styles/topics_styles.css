@@ -1,0 +1,162 @@
+/* Topics styles */
+/* extra classes added in many places to increase specificity to override bootstrap styles */
+
+.back {
+    display: inline-block;
+}
+
+.back .material-icons {
+    vertical-align: bottom;
+    display: inline-block;
+    margin-inline-end: 4px;
+}
+
+.source-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.source-logo {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+}
+
+.dropup .dropdown-toggle.subscribe::after {
+    display: none;
+}
+
+ul {
+    padding-inline: 32px;
+    list-style: none;
+}
+
+.source {
+    border-bottom: 5px solid #009bb3;
+}
+
+.source-block:nth-child(n + 2) {
+    border-top: 5px solid #009bb3;
+}
+
+#results-wrapper,
+.category-wrapper {
+    border: 5px solid #009bb3;
+}
+
+.location-tabs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.location-tab {
+    padding-inline: 16px;
+    border: 5px solid #009bb3;
+    border-radius: 16px 16px 0 0;
+    border-bottom: none;
+    cursor: pointer;
+}
+
+.location-tab[aria-selected="true"] {
+    background-color: #e4faff;
+}
+
+.accordion-button:not(.collapsed) {
+    color: var(--bs-accordion-active-color);
+    background-color: var(--bs-accordion-active-bg);
+    box-shadow: inset 0 calc(-1 * var(--bs-accordion-border-width)) 0
+        var(--bs-accordion-border-color);
+}
+
+.source h2 {
+    font-size: 1.25rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.subpage-header h3 {
+    font-size: 1.125rem;
+    margin: 0;
+}
+
+.subscribe {
+    width: 5rem;
+    padding-block: 16px;
+}
+
+.accordion-button.focusable:focus-visible,
+.subpage-subscribe:focus-visible {
+    outline: 3px solid #1a606a;
+    outline-offset: -5px;
+}
+
+.results-tag {
+    margin-inline-end: auto;
+}
+
+.subpages {
+    margin-inline-start: 24px;
+    border-left: 3px solid #009bb3;
+}
+
+.subpage-item.accordion-item,
+.accordion-flush.accordion {
+    --bs-accordion-active-bg: #e4faff;
+}
+
+.subpage-block-wrapper:not(:first-child),
+.subpage-item.accordion-item:not(:first-child),
+.subpage-item.accordion {
+    border-top: 3px solid #009bb3;
+}
+
+.subpage-link {
+    display: inline-block;
+    color: #009bb3;
+    margin-inline-start: auto;
+    margin-top: 8px;
+    margin-inline-end: 15px;
+    font-size: 1.125rem;
+}
+
+.embed {
+    padding: 16px 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.embed-content {
+    padding: 12px;
+    border: 3px solid #009bb3;
+    border-radius: 24px;
+    max-height: 75vh;
+    overflow-y: auto;
+}
+
+.embed-content img {
+    max-width: 100%;
+    object-fit: contain;
+}
+.source-block {
+    position: relative;
+}
+
+.view-more-btn {
+    display: none;
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    translate: -50%;
+}
+
+.hide-over-five + .view-more-btn:nth-child(n + 6) {
+    display: block;
+}
+
+.accordion-item.hide-over-five:nth-child(n + 6) {
+    display: none;
+}

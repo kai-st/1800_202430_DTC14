@@ -1,17 +1,20 @@
-const ADD_NOTIFICATION_ICON = "&#xe399;";
-const REMOVE_NOTIFICATION_ICON = "&#xe7f6;";
-const EDIT_NOTIFICATION_ICON = "&#xe525;";
+function getCategoryToExpand() {
+    const hash = window.location.hash;
+    if (hash.includes("#category")) {
+        return hash.replace("#category-", "").replace("-", " ");
+    }
+}
 
 function populateKeywords(keywords) {
     // create local category variable for the button with dropdown
     let category = keywords[0].category;
     // create variable nameItems by creating ul
-    var nameItems = document.createElement('ul');
+    var nameItems = document.createElement("ul");
     // create nameItems innerHTML as container to append clickable name links
-    nameItems.innerHTML = ``
+    nameItems.innerHTML = ``;
 
     // loop through the keywords array
-    for (i = 0; i < keywords.length; i++) {
+    for (let i = 0; i < keywords.length; i++) {
         // check if array is returned
         console.log(keywords[i]);
 
@@ -19,28 +22,54 @@ function populateKeywords(keywords) {
         let name = keywords[i].name;
 
         // no horizontal bar needed if there's only one name in category or i is the last number in category
-        if (i == 1 || i == (keywords.length - 1)) {
-            nameItems.innerHTML += `<a class=" mt-4 dropdown-item" href="/results.html?category=${category}&topic=${name}">${name}</a>`
-        }
-        else {
-            nameItems.innerHTML += `<a class=" mt-3 dropdown-item" href="/results.html?category=${category}&topic=${name}">${name}</a> <hr>`
+        // Replace spaces with + in urls
+        if (i == 1 || i == keywords.length - 1) {
+            nameItems.innerHTML += `<li><a class=" mt-4 text-capitalize dropdown-item" href="/results.html?category=${category.replace(
+                " ",
+                "+"
+            )}&topic=${name.replace(" ", "+")}">${name}</a></li>`;
+        } else {
+            nameItems.innerHTML += `<li><a class=" mt-3 text-capitalize dropdown-item" href="/results.html?category=${category.replace(
+                " ",
+                "+"
+            )}&topic=${name.replace(" ", "+")}">${name}</a></li> <hr>`;
         }
     }
     // create local variable categoryItems to add to topics.html
-    let categoryItems = document.createElement('div');
+    let categoryItems = document.createElement("div");
+
+    // Determine if category accordion should be open based on url
+    const expand = category === getCategoryToExpand();
 
     // create HTML element of button with dropdown
     // note the charAt to UpperCase is for proper formatting
-    // and replace(' ', '') is to remove any spaces found in category
+    // and replace(' ', '-') is to remove any spaces found in category
     categoryItems.innerHTML = `
-    <div class="mb-5" id="results-wrapper">
+    <div class="mb-5 category-wrapper" id="category-${category.replace(
+        " ",
+        "-"
+    )}">
         <div id="single-accordion-template" class="accordion accordion-flush">
             <div class="subpage-header accordion-item">
-                <h3>${category.charAt(0).toUpperCase() + category.slice(1)}</h3>
-                <button class="accordion-button custom collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#content-${category.replace(' ', '')}" aria-expanded="false" aria-controls="content-${category.replace(' ', '')}"></button>
+                <h3>
+                <button class="accordion-button focusable text-capitalize ${
+                    expand ? "" : "collapsed"
+                }" type="button" data-bs-toggle="collapse" data-bs-target="#content-${category.replace(
+        " ",
+        "-"
+    )}" aria-expanded=${
+        expand ? "true" : "false"
+    } aria-controls="content-${category.replace(" ", "-")}">${
+        category.charAt(0).toUpperCase() + category.slice(1)
+    }</button></h3>
             </div>
 
-            <div id="content-${category.replace(' ', '')}" class="accordion-collapse collapse" style="">
+            <div id="content-${category.replace(
+                " ",
+                "-"
+            )}" class="accordion-collapse collapse ${
+        expand ? "show" : ""
+    }" style="">
                 <div class="">
                     <ul>
                         ${nameItems.innerHTML}
@@ -55,53 +84,48 @@ function populateKeywords(keywords) {
 }
 
 async function getKeywords() {
-
     // get array of all documents with category "diseases"
-    const diseases = await db.collection("keywords")
-        .where("category", "==", "diseases")
-    
-    diseases
-        .get()
-        .then((data) => {
-            let keywords = data.docs.map((doc) => doc.data());
-            console.log(keywords);
-            populateKeywords(keywords);
-        })
-    
+    const diseases = await db
+        .collection("keywords")
+        .where("category", "==", "diseases");
+
+    diseases.get().then((data) => {
+        let keywords = data.docs.map((doc) => doc.data());
+        console.log(keywords);
+        populateKeywords(keywords);
+    });
+
     // get array of all documents with category "healthcare services"
-    const healthcareServices = await db.collection("keywords")
-        .where("category", "==", "healthcare services")
-        
-        healthcareServices
-        .get()
-        .then((data) => {
-            let keywords = data.docs.map((doc) => doc.data());
-            console.log(keywords);
-            populateKeywords(keywords);
-        })
+    const healthcareServices = await db
+        .collection("keywords")
+        .where("category", "==", "healthcare services");
+
+    healthcareServices.get().then((data) => {
+        let keywords = data.docs.map((doc) => doc.data());
+        console.log(keywords);
+        populateKeywords(keywords);
+    });
 
     // get array of all documents with category "mental health"
-    const mentalHealth = await db.collection("keywords")
-        .where("category", "==", "mental health")
+    const mentalHealth = await db
+        .collection("keywords")
+        .where("category", "==", "mental health");
 
-    mentalHealth
-    .get()
-    .then((data) => {
+    mentalHealth.get().then((data) => {
         let keywords = data.docs.map((doc) => doc.data());
         console.log(keywords);
         populateKeywords(keywords);
-    })
-    
+    });
+
     // get array of all documents with category "vaccines"
-    const vaccines = await db.collection("keywords")
-        .where("category", "==", "vaccines")
+    const vaccines = await db
+        .collection("keywords")
+        .where("category", "==", "vaccines");
 
-    vaccines
-    .get()
-    .then((data) => {
+    vaccines.get().then((data) => {
         let keywords = data.docs.map((doc) => doc.data());
         console.log(keywords);
         populateKeywords(keywords);
-    })
+    });
 }
 getKeywords();

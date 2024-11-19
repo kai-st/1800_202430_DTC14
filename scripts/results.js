@@ -4,7 +4,9 @@ const EDIT_NOTIFICATION_ICON = "&#xe525;";
 
 // TODO: make sure id is set on categories on topics page
 function setBackLink(category) {
-    document.querySelector(".back").href = `/topics.html?category=${category}`;
+    document.querySelector(
+        ".back"
+    ).href = `/topics.html#category-${category.replace(" ", "-")}`;
     document.querySelector(
         "#previous-page"
     ).innerText = `Topics: ${category.replaceAll("+", " ")}`;
@@ -22,7 +24,7 @@ function getQueryTopic() {
         const params = new URL(window.location.href).searchParams;
         if (params.has("category")) {
             setBackLink(params.get("category"));
-            const topic = params.get("topic").replaceAll("+", " ");
+            const topic = params.get("topic");
             setResultsTitle(topic);
             return {
                 queryKeywords: topic?.toLowerCase().split(" "),
@@ -31,10 +33,11 @@ function getQueryTopic() {
         }
         if (params.has("query")) {
             const query = params.get("query");
+            console.log("raw query", query);
             setResultsTitle(query, true);
             return {
-                queryKeywords: query?.toLowerCase().split("+"),
-                textTopic: `"${query?.replaceAll("+", " ")}"`,
+                queryKeywords: query?.toLowerCase().split(" "),
+                textTopic: `"${query}"`,
             };
         }
         throw new Error("No valid search params");
@@ -227,12 +230,19 @@ const loadResults = async () => {
                         "city",
                         currentUserDoc
                     );
+                    hideOnLogin();
+                    showOnLogin();
+                    if (currentUserDoc.data().postalCode) {
+                        hideIfLocation();
+                    }
                 });
         } else {
             unpersonalizeTabs();
             loadResultsForTab(nationalTabpanel, queryTopic, "national");
             loadResultsForTab(provinceTabpanel, queryTopic, "province");
             loadResultsForTab(cityTabpanel, queryTopic, "city");
+            hideOnLogout();
+            showOnLogout();
         }
     });
 };
