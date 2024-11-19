@@ -1,62 +1,61 @@
-var currentUser
+var currentUser;
 
-firebase.auth().onAuthStateChanged(user => {
-    currentUser = user
-    setup()
-})
+firebase.auth().onAuthStateChanged((user) => {
+    currentUser = user;
+    setup();
+});
 
+async function getNewsArticles() {
+    const sources = db.collection("sources");
 
+    let newsArticles = [];
+    let allNewsArticles = [];
+    let uniqueNewsArticles = [];
 
-async function getNewsArticles()
-{
-    const sources = db.collection("sources")
-    
-    newsArticles = []
-    allNewsArticles = []
-    uniqueNewsArticles = []
-   
-    const sourcesFederalSnapshot = await sources.where("jurisdiction.governmentLevel", "==", `federal`).get()
-    allNewsArticles.push(...sourcesFederalSnapshot.docs)
+    const sourcesFederalSnapshot = await sources
+        .where("jurisdiction.governmentLevel", "==", `federal`)
+        .get();
+    allNewsArticles.push(...sourcesFederalSnapshot.docs);
 
-    if (currentUser)
-    {
-    const userRef = db.collection("users").doc(currentUser.uid)
-    const userSnapshot = await userRef.get()
-    const userProvince = userSnapshot.data().province
-    const userCity = userSnapshot.data().city
+    if (currentUser) {
+        const userRef = db.collection("users").doc(currentUser.uid);
+        const userSnapshot = await userRef.get();
+        const userProvince = userSnapshot.data().province;
+        const userCity = userSnapshot.data().city;
 
-    const sourcesProvincialSnapshot = await sources.where("jurisdiction.governmentLevel", "==", "province").where("jurisdiction.location", "==", `${userProvince}`).get()
-    allNewsArticles.push(...sourcesProvincialSnapshot.docs)
+        const sourcesProvincialSnapshot = await sources
+            .where("jurisdiction.governmentLevel", "==", "province")
+            .where("jurisdiction.location", "==", `${userProvince}`)
+            .get();
+        allNewsArticles.push(...sourcesProvincialSnapshot.docs);
 
-    const sourcesMunicipalSnapshot = await sources.where("jurisdiction.governmentLevel", "==", "municipal").where("jurisdiction.location", "==", `${userCity}`).get()
-    allNewsArticles.push(...sourcesMunicipalSnapshot.docs)
+        const sourcesMunicipalSnapshot = await sources
+            .where("jurisdiction.governmentLevel", "==", "municipal")
+            .where("jurisdiction.location", "==", `${userCity}`)
+            .get();
+        allNewsArticles.push(...sourcesMunicipalSnapshot.docs);
     }
 
-    if (allNewsArticles.length > 0)
-    {
-    uniqueNewsArticles = [...new Set(allNewsArticles)]
+    if (allNewsArticles.length > 0) {
+        uniqueNewsArticles = [...new Set(allNewsArticles)];
 
-    for(sourceDoc of allNewsArticles)
-    {
-      subpages = sourceDoc.ref.collection("subpages")
-      subpagesFiltered = subpages.where("news", "==", true)
-      subpagesFilteredData = await subpagesFiltered.get()
-  
-      subpagesFilteredData.forEach(article => {
-        newsArticles.push({...article.data(), id: article.id})
-      });
-    }
-  
-    newsArticles.sort((a,b) => b.updatedAt - a.updatedAt)
-    
-    for (article of newsArticles)
-    {
-      printNewsArticle(article)
-    }
-    }
-    else
-    {
-        news_section = document.getElementById("news")
+        for (sourceDoc of allNewsArticles) {
+            subpages = sourceDoc.ref.collection("subpages");
+            subpagesFiltered = subpages.where("news", "==", true);
+            subpagesFilteredData = await subpagesFiltered.get();
+
+            subpagesFilteredData.forEach((article) => {
+                newsArticles.push({ ...article.data(), id: article.id });
+            });
+        }
+
+        newsArticles.sort((a, b) => b.updatedAt - a.updatedAt);
+
+        for (article of newsArticles) {
+            printNewsArticle(article);
+        }
+    } else {
+        news_section = document.getElementById("news");
         news_section.innerHTML += `
         <div class="news-action">
             <p class="card-text fs-4">
@@ -69,29 +68,25 @@ async function getNewsArticles()
                 >View Topics</a
             >
         </div>
-        `
+        `;
     }
 }
 
-async function printNewsArticle(doc)
-{
-    sourceID = doc.sourceID
-    source = await db.collection("sources").doc(sourceID).get()
-    console.log()
-    sourceData = source.data()
+async function printNewsArticle(doc) {
+    sourceID = doc.sourceID;
+    source = await db.collection("sources").doc(sourceID).get();
+    console.log();
+    sourceData = source.data();
 
-    logo_URL = sourceData.sourceLogoUrl
-   
-   
-    new_URL = new URL("article_template.html", window.location.href)
-    new_URL.searchParams.set('id', doc.id) 
+    logo_URL = sourceData.sourceLogoUrl;
 
+    const subpageURL = doc.subpageUrl;
 
-    title = doc.subpageTitle
-    summary = doc.subpageSummary
-    
-    news_section = document.getElementById("news")
-    
+    title = doc.subpageTitle;
+    summary = doc.subpageSummary;
+
+    news_section = document.getElementById("news");
+
     news_section.innerHTML += `
     <div class="news-article">
             <div id="single-accordion-template" class="subpage-item accordion">
@@ -113,22 +108,18 @@ async function printNewsArticle(doc)
                         <div class="embed-content">
                            ${summary}
                         </div>
-                        <a href="${new_URL}" class="subpage-link">Visit Page</a>
+                        <a href="${subpageURL}" target="_blank" class="subpage-link">Visit Page</a>
                     </div>
                 </div>
             </div>
         </div>
-    `
+    `;
 }
 
-function setup()
-{
-    if (currentUser)
-    {
-        getNewsArticles()
-    }
-    else
-    {
-        getNewsArticles()
+function setup() {
+    if (currentUser) {
+        getNewsArticles();
+    } else {
+        getNewsArticles();
     }
 }

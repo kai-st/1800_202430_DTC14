@@ -466,8 +466,6 @@ async function loadResultsForTab(
                     sourceBlock.querySelector(".no-source-subs");
                 withSearchSubbedBtnGroup.id = `${sourceData.id}-no-subs`;
 
-                // TODO parse source subscriptions and handle these
-
                 if (userSubscribedToAllSource) {
                     allSubbedBtnGroup.classList.remove("d-none");
                 } else if (userSubscribedToSourceWithSearch) {
@@ -561,6 +559,8 @@ async function loadResultsForTab(
                             subpageBlock.querySelector(
                                 ".embed-content"
                             ).innerHTML = subpageData.content;
+                            subpageBlock.querySelector(".subpage-link").href =
+                                subpageData.subpageUrl;
 
                             // append to source block
                             subpageWrapper.append(subpageBlock);
