@@ -722,7 +722,7 @@ async function loadResultsForTab(
                                                     <li>
                                                     <button
                                                     class="subscribe-all dropdown-item"
-                                                                data-sourse-path="${result.path}"
+                                                                data-source-path="${result.path}"
                                                                 type="button"
                                                                 >
                                                                 Subscribe to all updates from ${result.sourceName}

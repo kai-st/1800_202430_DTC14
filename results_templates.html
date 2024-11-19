@@ -167,7 +167,7 @@
                                 <!-- Set data-source-path to firestore reference path for the source. Event listener should add an object (firestore map) {soureRef: data-source-path, search: "all search terms"} to the user's subscriptions with arrayUnion  -->
                                 <button
                                     class="subscribed subscribe-topic dropdown-item"
-                                    data-sourse-path="/sources/{id}"
+                                    data-source-path="/sources/{id}"
                                     type="button"
                                 >
                                     Subscribe to updates on ${result.topic} from
@@ -178,7 +178,7 @@
                                 <!-- Set data-source-path to firestore reference path for the source. Event listener should add data-source-path to the user's subscriptions with arrayUnion  -->
                                 <button
                                     class="subscribed subscribe-all dropdown-item"
-                                    data-sourse-path="/sources/{id}"
+                                    data-source-path="/sources/{id}"
                                     type="button"
                                 >
                                     Subscribe to all updates from
@@ -213,7 +213,7 @@
                                 <!-- Set data-source-path to firestore reference path for the source. Event listener should remove the object (firestore map) {soureRef: data-source-path, search: "all search terms"} from the user's subscriptions with arrayRemove  -->
                                 <button
                                     class="subscribed subscribe-topic dropdown-item"
-                                    data-sourse-path="/sources/{id}"
+                                    data-source-path="/sources/{id}"
                                     type="button"
                                 >
                                     Unsubscribe from updates on ${result.topic}
@@ -224,7 +224,7 @@
                                 <!-- Set data-source-path to firestore reference path for the source. Event listener should add data-source-path to the user's subscriptions with arrayUnion and remove the object (firestore map) {soureRef: data-source-path, search: "all search terms"} from the user's subscriptions with arrayRemove  -->
                                 <button
                                     class="not-subscribed subscribe-all dropdown-item"
-                                    data-sourse-path="/sources/{id}"
+                                    data-source-path="/sources/{id}"
                                     type="button"
                                 >
                                     Subscribe to all updates from
@@ -259,7 +259,7 @@
                                 <!-- Set data-source-path to firestore reference path for the source. Event listener should add an object (firestore map) {soureRef: data-source-path, search: "all search terms"} to the user's subscriptions with arrayUnion and remove data-source-path from subscriptions with arrayRemove -->
                                 <button
                                     class="not-subscribed subscribe-topic dropdown-item"
-                                    data-sourse-path="/sources/{id}"
+                                    data-source-path="/sources/{id}"
                                     type="button"
                                 >
                                     Update subscription to only get updates on
@@ -271,7 +271,7 @@
                                 <!-- Set data-source-path to firestore reference path for the source. Event listener should remove data-source-path to the user's subscriptions with arrayArray  -->
                                 <button
                                     class="subscribe-all dropdown-item"
-                                    data-sourse-path="/sources/{id}"
+                                    data-source-path="/sources/{id}"
                                     type="button"
                                 >
                                     Unsubscribe from site-wide updates from
@@ -353,7 +353,7 @@
                                 <!-- Set data-source-path to firestore reference path for the source. Event listener should add an object (firestore map) {soureRef: data-source-path, search: "all search terms"} to the user's subscriptions with arrayUnion  -->
                                 <button
                                     class="subscribed subscribe-topic dropdown-item"
-                                    data-sourse-path="/sources/{id}"
+                                    data-source-path="/sources/{id}"
                                     type="button"
                                 >
                                     Subscribe to updates on ${result.topic} from
@@ -364,7 +364,7 @@
                                 <!-- Set data-source-path to firestore reference path for the source. Event listener should add data-source-path to the user's subscriptions with arrayUnion  -->
                                 <button
                                     class="subscribed subscribe-all dropdown-item"
-                                    data-sourse-path="/sources/{id}"
+                                    data-source-path="/sources/{id}"
                                     type="button"
                                 >
                                     Subscribe to all updates from
@@ -399,7 +399,7 @@
                                 <!-- Set data-source-path to firestore reference path for the source. Event listener should remove the object (firestore map) {soureRef: data-source-path, search: "all search terms"} from the user's subscriptions with arrayRemove  -->
                                 <button
                                     class="subscribed subscribe-topic dropdown-item"
-                                    data-sourse-path="/sources/{id}"
+                                    data-source-path="/sources/{id}"
                                     type="button"
                                 >
                                     Unsubscribe from updates on ${result.topic}
@@ -410,7 +410,7 @@
                                 <!-- Set data-source-path to firestore reference path for the source. Event listener should add data-source-path to the user's subscriptions with arrayUnion and remove the object (firestore map) {soureRef: data-source-path, search: "all search terms"} from the user's subscriptions with arrayRemove  -->
                                 <button
                                     class="not-subscribed subscribe-all dropdown-item"
-                                    data-sourse-path="/sources/{id}"
+                                    data-source-path="/sources/{id}"
                                     type="button"
                                 >
                                     Subscribe to all updates from
@@ -445,7 +445,7 @@
                                 <!-- Set data-source-path to firestore reference path for the source. Event listener should add an object (firestore map) {soureRef: data-source-path, search: "all search terms"} to the user's subscriptions with arrayUnion and remove data-source-path from subscriptions with arrayRemove -->
                                 <button
                                     class="not-subscribed subscribe-topic dropdown-item"
-                                    data-sourse-path="/sources/{id}"
+                                    data-source-path="/sources/{id}"
                                     type="button"
                                 >
                                     Update subscription to only get updates on
@@ -457,7 +457,7 @@
                                 <!-- Set data-source-path to firestore reference path for the source. Event listener should remove data-source-path to the user's subscriptions with arrayArray  -->
                                 <button
                                     class="subscribe-all dropdown-item"
-                                    data-sourse-path="/sources/{id}"
+                                    data-source-path="/sources/{id}"
                                     type="button"
                                 >
                                     Unsubscribe from site-wide updates from
@@ -578,6 +578,33 @@
                                 <a href="#" class="subpage-link">Visit Page</a>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- If there are more than 5 items the rest will be hidden and this button will be visible. Event listener should remove the hide-over-five class from the sibling accordion items -->
+                    <button class="view-more-btn btn btn-info" type="button">
+                        View More
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <div class="template-wrapper">
+            <section class="source-block" id="12345">
+                <div class="source">
+                    <h2>
+                        <span class="d-none d-sm-inline">From: </span>
+                        <!-- Set href to source domain homepage and innerText to source name -->
+                        <a class="source-link" href="#">
+                            <!-- set src to source logo url -->
+                            <img src="#" class="source-logo" />Source Domain
+                            Name</a
+                        >
+                    </h2>
+                </div>
+                <div class="subpages accordion accordion-flush ms-md-5">
+                    <!-- insert any number of accordion items. If not using View More button remove hide-over-five class -->
+                    <div class="subpage-item accordion-item hide-over-five">
+                        Content
                     </div>
 
                     <!-- If there are more than 5 items the rest will be hidden and this button will be visible. Event listener should remove the hide-over-five class from the sibling accordion items -->

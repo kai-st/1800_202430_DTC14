@@ -1,14 +1,25 @@
 /* Global Styles */
+:root {
+    --primary-teal: #009bb3;
+    --dark-teal: #124047;
+    --medium-teal: #8edfeb;
+    --light-teal: #e4faff;
+    --logo-red: #de3a3d;
+}
+
 body {
     display: grid;
     grid-template-rows: auto 1fr auto;
     min-height: 100vh;
     min-height: 100svh;
+    background-color: var(--light-teal);
+    /* color: var(--dark-teal); */
 }
 
 main {
     width: min(100%, 1000px);
     margin-inline: auto;
+    background-color: #fff;
 }
 
 a {
@@ -16,15 +27,79 @@ a {
 }
 
 .card {
-    max-width: 1000px;
+    max-width: 800px;
+    margin-inline: auto;
 }
 
-/* Header Styeles */
+.banner {
+    background-color: var(--light-teal);
+    border: 20px solid var(--primary-teal);
+}
+
+.compass {
+    width: 4rem;
+}
+
+.btn {
+    --bs-btn-color: var(--dark-teal);
+    --bs-btn-bg: transparent;
+    --bs-btn-border-width: 3px;
+    --bs-btn-border-color: transparent;
+    --bs-btn-border-radius: var(--bs-border-radius);
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-active-border-color: var(--dark-teal);
+    --bs-btn-disabled-border-color: var(--dark-teal);
+}
+
+.material-icons {
+    color: var(--dark-teal);
+}
+
+.btn-info:not(:hover, :focus, :active, :disabled) .material-icons {
+    color: #fff;
+}
+
+.btn-info {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: var(--primary-teal);
+    --bs-btn-border-color: var(--primary-teal);
+    --bs-btn-hover-color: var(--dark-teal);
+    --bs-btn-hover-bg: var(--light-teal);
+    --bs-btn-hover-border-color: var(--primary-teal);
+    --bs-btn-focus-shadow-rgb: 11, 172, 204;
+    --bs-btn-active-color: var(--dark-teal);
+    --bs-btn-active-bg: var(--light-teal);
+    --bs-btn-active-border-color: var(--primary-teal);
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: var(--dark-teal);
+    --bs-btn-disabled-bg: var(--medium-teal);
+    --bs-btn-disabled-border-color: var(--primary-teal);
+    border-width: 3px;
+}
+
+/* Header Styles */
 
 .btn-group .dropdown-toggle.account::after {
     display: none;
 }
 
+.account .material-icons {
+    font-size: 48px;
+}
+
+.account-wrapper {
+    margin-left: auto;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+}
+
+.compass-logo {
+    max-width: 3rem;
+    margin-inline-end: 12px;
+}
 /* Footer Styles */
 
 .bottom-bar-placeholder,
@@ -60,7 +135,7 @@ a {
 .bottom-bar .material-icons,
 .bottom-bar-placeholder .material-icons {
     margin-inline: auto;
-    font-size: 58px;
+    font-size: 48px;
 }
 
 .bottom-bar-placeholder a {
@@ -71,5 +146,9 @@ a {
     .bottom-bar,
     .bottom-bar-placeholder {
         display: none;
+    }
+
+    .navbar {
+        padding: 0;
     }
 }
