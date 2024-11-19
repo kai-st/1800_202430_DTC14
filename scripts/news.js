@@ -13,36 +13,39 @@ async function getNewsArticles() {
     let uniqueNewsArticles = [];
 
     const sourcesFederalSnapshot = await sources
-        .where("jurisdiction.governmentLevel", "==", `federal`)
+        .where("jurisdiction.governmentLevel", "==", `national`)
         .get();
     allNewsArticles.push(...sourcesFederalSnapshot.docs);
 
     if (currentUser) {
         const userRef = db.collection("users").doc(currentUser.uid);
         const userSnapshot = await userRef.get();
-        const userProvince = userSnapshot.data().province;
-        const userCity = userSnapshot.data().city;
 
-        const sourcesProvincialSnapshot = await sources
-            .where("jurisdiction.governmentLevel", "==", "province")
-            .where("jurisdiction.location", "==", `${userProvince}`)
-            .get();
-        allNewsArticles.push(...sourcesProvincialSnapshot.docs);
+        if (userSnapshot.data().province) {
+            const userProvince = userSnapshot.data().province;
+            const userCity = userSnapshot.data().city;
 
-        const sourcesMunicipalSnapshot = await sources
-            .where("jurisdiction.governmentLevel", "==", "municipal")
-            .where("jurisdiction.location", "==", `${userCity}`)
-            .get();
-        allNewsArticles.push(...sourcesMunicipalSnapshot.docs);
+            const sourcesProvincialSnapshot = await sources
+                .where("jurisdiction.governmentLevel", "==", "province")
+                .where("jurisdiction.location", "==", userProvince)
+                .get();
+            allNewsArticles.push(...sourcesProvincialSnapshot.docs);
+
+            const sourcesMunicipalSnapshot = await sources
+                .where("jurisdiction.governmentLevel", "==", "city")
+                .where("jurisdiction.location", "array-contains", userCity)
+                .get();
+            allNewsArticles.push(...sourcesMunicipalSnapshot.docs);
+        }
     }
 
     if (allNewsArticles.length > 0) {
         uniqueNewsArticles = [...new Set(allNewsArticles)];
 
-        for (sourceDoc of allNewsArticles) {
-            subpages = sourceDoc.ref.collection("subpages");
-            subpagesFiltered = subpages.where("news", "==", true);
-            subpagesFilteredData = await subpagesFiltered.get();
+        for (const sourceDoc of allNewsArticles) {
+            const subpages = sourceDoc.ref.collection("subpages");
+            const subpagesFiltered = subpages.where("news", "==", true);
+            const subpagesFilteredData = await subpagesFiltered.get();
 
             subpagesFilteredData.forEach((article) => {
                 newsArticles.push({ ...article.data(), id: article.id });
@@ -51,13 +54,13 @@ async function getNewsArticles() {
 
         newsArticles.sort((a, b) => b.updatedAt - a.updatedAt);
 
-        for (article of newsArticles) {
+        for (const article of newsArticles) {
             printNewsArticle(article);
         }
     } else {
-        news_section = document.getElementById("news");
+        const news_section = document.getElementById("news");
         news_section.innerHTML += `
-        <div class="news-action">
+        <div class="news-action card">
             <p class="card-text fs-4">
                 We'll let you know when new information is added.
                 In the mean time, feel free to view our list of curated topics!
@@ -73,25 +76,32 @@ async function getNewsArticles() {
 }
 
 async function printNewsArticle(doc) {
-    sourceID = doc.sourceID;
-    source = await db.collection("sources").doc(sourceID).get();
+    const sourceID = doc.sourceID;
+    const source = await db.collection("sources").doc(sourceID).get();
     console.log();
-    sourceData = source.data();
+    const sourceData = source.data();
 
-    logo_URL = sourceData.sourceLogoUrl;
+    const logo_URL = sourceData.sourceLogoUrl;
 
     const subpageURL = doc.subpageUrl;
 
-    title = doc.subpageTitle;
-    summary = doc.subpageSummary;
+    const title = doc.subpageTitle;
+    const summary = doc.subpageSummary;
 
-    news_section = document.getElementById("news");
+    const news_section = document.getElementById("news");
 
     news_section.innerHTML += `
     <div class="news-article">
             <div id="single-accordion-template" class="subpage-item accordion">
                 <div class="subpage-header accordion-header">
-                    <h3>${title}</h3>
+                    <h3 class="pb-1 pb-sm-0"><span class="d-none d-sm-inline">From: </span>
+                        <a class="source-link" target="_blank" href="${sourceData.sourceUrl}">
+                            <img src="${logo_URL}" class="source-logo" /><span
+                                class="source-name"
+                            >
+                                ${sourceData.sourceName} 
+                            </span></a
+                        ><span> -  ${title}</span></h3>
                     <button
                         class="accordion-button custom collapsed"
                         type="button"
@@ -106,7 +116,7 @@ async function printNewsArticle(doc) {
                     <!-- Replace things in here with whatever content -->
                     <div class="embed">
                         <div class="embed-content">
-                           ${summary}
+                            ${summary}
                         </div>
                         <a href="${subpageURL}" target="_blank" class="subpage-link">Visit Page</a>
                     </div>

@@ -52,47 +52,46 @@
         <header id="headerPlaceholder"></header>
 
         <main>
-            <div>
-                <h1 class="p-4 text-center">
+            <div id="location-banner" class="banner mb-3 pb-3">
+                <h3 class="p-4 text-center">
                     Enter Postal Code (ex. V6X3N2) to get Local News
-                </h1>
-                <form>
-                    <fieldset class="p-4 mb-3" id="personalInfoField">
+                </h3>
+                <form
+                    class="d-flex justify-content-center align-items-center gap-3"
+                >
+                    <fieldset class="" id="personalInfoField">
                         <div class="form-group">
                             <input
                                 type="text"
                                 id="postalCodeInput"
-                                class="form-control text-center"
+                                class="form-control"
                                 placeholder="Enter your postal code"
                             />
                         </div>
                     </fieldset>
-                    <div class="d-flex justify-content-center">
-                        <button
-                            type="button"
-                            class="btn btn-secondary"
-                            onclick="editUserGeoInfo()"
-                        >
-                            Edit
-                        </button>
-                        <span style="width: 10px"></span>
-                        <button
-                            type="button"
-                            class="btn btn-info"
-                            onclick="getUserGeoInfo()"
-                        >
-                            Save
-                        </button>
-                    </div>
+                    <!-- <button
+                        type="button"
+                        class="btn btn-secondary"
+                        onclick="editUserGeoInfo()"
+                    >
+                        Edit
+                    </button> -->
+                    <!-- <span style="width: 10px"></span> -->
+                    <button
+                        type="button"
+                        class="btn btn-info"
+                        onclick="getUserGeoInfo()"
+                    >
+                        Save
+                    </button>
                 </form>
             </div>
-            <br />
-            <br />
-            <br />
-            <br />
-            <div class="news" id="news">
-                <h1>News</h1>
-            </div>
+            <section>
+                <div class="py-5 px-3 text-center">
+                    <h1 class="pb-3">News</h1>
+                </div>
+                <div class="news" id="news"></div>
+            </section>
         </main>
 
         <footer id="footerPlaceholder"></footer>

@@ -53,7 +53,8 @@
         <header id="headerPlaceholder"></header>
 
         <main>
-            <section class="py-5 px-3 bg-info-subtle text-center">
+            <section class="py-5 px-3 text-center banner">
+                <img src="images/compass.svg" class="compass d-lg-none mb-2" />
                 <h1 class="pb-3">Welcome to Care Compass!</h1>
                 <p class="fs-3">
                     Your go-to resource for Canadian healthcare information.
@@ -83,8 +84,11 @@
                 </div>
             </section>
 
-            <section class="news" id="news">
-                <h1>News</h1>
+            <section>
+                <div class="py-4 px-3 text-center">
+                    <h1 class="pb-3">National News</h1>
+                </div>
+                <div class="news" id="news"></div>
             </section>
         </main>
         <footer id="footerPlaceholder"></footer>
@@ -96,8 +100,8 @@
         <!-- Link to scripts of your own -->
         <script src="./scripts/firebaseAPI_DTC14.js"></script>
         <script src="./scripts/script.js"></script>
-        <script src="./scripts/news.js"></script>
         <script src="./scripts/skeleton.js"></script>
+        <script src="./scripts/news.js"></script>
         <script src="./scripts/crawler.js"></script>
     </body>
 </html>

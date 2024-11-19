@@ -1,53 +1,61 @@
-var currentUser
+var currentUser;
 
 firebase.auth().onAuthStateChanged((user) => {
-  currentUser = user  
-  loadNotifications()
-})
+    currentUser = user;
+    loadNotifications();
+});
 
+async function loadNotifications() {
+    if (currentUser) {
+        db.collection("users")
+            .doc(currentUser.uid)
+            .update("notificationsRead", true);
 
-async function loadNotifications()
-{
-    if (currentUser)
-    {db.collection("users").doc(currentUser.uid).update("notificationsRead", true)
+        const notifications_section = document.getElementById("notifications");
+        notifications_section.innerHTML = `<div class="py-5 px-3 text-center">
+            <h1 class="pb-3">Notifications</h1>
+        </div>`;
 
-    notifications_section = document.getElementById("notifications")
-    notifications_section.innerHTML = `<h1>Notifications</h1>`
-  
-    notificationCollection = await db.collection("users").doc(currentUser.uid).collection("notifications").get()
-    notificationIds = []
-    notifications = []
-    for(notification of notificationCollection.docs)
-    {
-        notificationData = await notification.data()
-        notificationIds.push(notificationData.subpages[0])
-    }
-    if (notificationIds.length > 0)
-    {
-    sources = db.collection("sources")
-    sourcesSnapshot = await db.collection("sources").get()
-
-    for (source of sourcesSnapshot.docs) {
-        sourcesSubpagesSnapshot = await source.ref.collection("subpages").get();
-        for (notificationId of notificationIds) {
-            sourcesSubpagesSnapshot.forEach((subpage) => {
-                if (subpage.id == notificationId) {
-                    notifications.push(subpage);
-                }
-            });
+        const notificationCollection = await db
+            .collection("users")
+            .doc(currentUser.uid)
+            .collection("notifications")
+            .get();
+        const notificationIds = [];
+        const notifications = [];
+        for (const notification of notificationCollection.docs) {
+            const notificationData = await notification.data();
+            notificationIds.push(notificationData.subpages[0]);
         }
-    }
+        if (notificationIds.length > 0) {
+            // const sources = db.collection("sources");
+            const sourcesSnapshot = await db.collection("sources").get();
 
-    for (notification of notifications)
-    {
-        displayNotification({...notification.data(), id: notification.id})
-    }
-    } 
-    else
-    {
-        notifications_section.innerHTML = `
-        <h1>Notifications</h1>
-        <div class="notification-action">
+            for (const source of sourcesSnapshot.docs) {
+                const sourcesSubpagesSnapshot = await source.ref
+                    .collection("subpages")
+                    .get();
+                for (const notificationId of notificationIds) {
+                    sourcesSubpagesSnapshot.forEach((subpage) => {
+                        if (subpage.id == notificationId) {
+                            notifications.push(subpage);
+                        }
+                    });
+                }
+            }
+
+            for (const notification of notifications) {
+                displayNotification({
+                    ...notification.data(),
+                    id: notification.id,
+                });
+            }
+        } else {
+            notifications_section.innerHTML = `
+        <div class="py-5 px-3 text-center">
+            <h1 class="pb-3">Notifications</h1>
+        </div>
+        <div class="notification-action banner">
             <p class="card-text fs-4">
                 Subscribe to a topic to receive personalized
                 notifications.
@@ -58,15 +66,15 @@ async function loadNotifications()
                 >View Topics</a
             >
         </div>
-        `
-    }
-    } 
-    else
-    {
-        notifications_section = document.getElementById("notifications")
+        `;
+        }
+    } else {
+        const notifications_section = document.getElementById("notifications");
         notifications_section.innerHTML = `
-        <h1>Notifications</h1>
-        <div class="notification-action">
+        <div class="py-5 px-3 text-center">
+            <h1 class="pb-3">Notifications</h1>
+        </div>
+        <div class="notification-action card">
             <p class="card-text fs-4">
                 Sign up or log in to view personalized
                 notifications.
@@ -77,30 +85,40 @@ async function loadNotifications()
                 >Sign Up</a
             >
         </div>
-        `
-  
+        `;
     }
 }
 
-async function displayNotification(doc)
-{
-    sourceID = doc.sourceID
-    source = await db.collection("sources").doc(sourceID).get()
-    sourceData = source.data()
+async function displayNotification(doc) {
+    const sourceID = doc.sourceID;
+    const source = await db.collection("sources").doc(sourceID).get();
+    const sourceData = source.data();
 
-    logo_URL = sourceData.sourceLogoUrl;
+    const logo_URL = sourceData.sourceLogoUrl;
 
-    new_URL = new URL("article_template.html", window.location.href);
-    new_URL.searchParams.set("id", doc.id);
+    const subpageUrl = doc.subpageUrl;
+    const updated_at = doc.updatedAt.toDate().toDateString();
+    const title = doc.subpageTitle;
+    const summary = doc.subpageSummary;
 
-    title = doc.subpageTitle
-    summary = doc.subpageSummary
-
-    notifications_section = document.getElementById("notifications");
+    const notifications_section = document.getElementById("notifications");
 
     notifications_section.innerHTML += `
     <div class="template-wrapper">
-            <div id="single-accordion-template" class="subpage-item accordion">
+                <div class="tab">Updated ${updated_at}</div>
+                <section class="source-block" id="${sourceID}">
+                <div class="source">
+                    <h2>
+                        <span class="d-none d-sm-inline">From: </span>
+                        <!-- Set href to source domain homepage and innerText to source name -->
+                        <a class="source-link" href="${sourceData.sourceUrl}">
+                            <!-- set src to source logo url -->
+                            <img src="${logo_URL}" class="source-logo" />${sourceData.sourceName}</a
+                        >
+                    </h2>
+                </div>
+                <div class="subpages accordion accordion-flush ms-md-5">
+            <div id="single-accordion-template" class="subpage-item accordion-item">
                 <div class="subpage-header accordion-header">
                     <h3>${title}</h3>
                     <button
@@ -117,12 +135,15 @@ async function displayNotification(doc)
                     <!-- Replace things in here with whatever content -->
                     <div class="embed">
                         <div class="embed-content">
-                           ${summary}
+                            ${summary}
                         </div>
-                        <a href="${new_URL}" class="subpage-link">Visit Page</a>
+                        <a href="${subpageUrl}" class="subpage-link">Visit Page</a>
                     </div>
                 </div>
             </div>
+            </div>
+            </section>
         </div>
-    `
+        </div>
+    `;
 }
