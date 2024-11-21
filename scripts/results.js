@@ -502,17 +502,11 @@ async function loadResultsForTab(
                                 id: subpageDoc.id,
                             };
 
-                            console.log(subpageData);
-
                             const userSubscribedToSubpage = userSubscriptions
                                 ? userSubscriptions.subscriptionPaths.includes(
                                       subpageData.path.substring(1)
                                   )
                                 : false;
-                            console.log(
-                                "userSubscribedToSubpage",
-                                userSubscribedToSubpage
-                            );
 
                             // create subpage accordion item
                             let subpageBlock =
@@ -570,36 +564,9 @@ async function loadResultsForTab(
                         loadTopicSpans(queryTopic?.textTopic);
                         loadSourceNameSpans(sourceData.sourceName);
 
-                        $(`#${govLevel}-tab`).on(
-                            "click",
-                            ".subpage-subscribe.not-subscribed",
-                            addSubpageSubscriptionHandler
-                        );
-                        $(`#${govLevel}-tab`).on(
-                            "click",
-                            ".subpage-subscribe.subscribed",
-                            removeSubpageSubscriptionHandler
-                        );
-                        $(`#${govLevel}-tab`).on(
-                            "click",
-                            ".subscribe-topic.not-subscribed",
-                            addSourceWithSearchSubscriptionHandler
-                        );
-                        $(`#${govLevel}-tab`).on(
-                            "click",
-                            ".subscribe-topic.subscribed",
-                            removeSourceWithSearchSubscriptionHandler
-                        );
-                        $(`#${govLevel}-tab`).on(
-                            "click",
-                            ".subscribe-all.not-subscribed",
-                            addSourceAllSubscriptionHandler
-                        );
-                        $(`#${govLevel}-tab`).on(
-                            "click",
-                            ".subscribe-all.subscribed",
-                            removeAllSourceSubscriptionHandler
-                        );
+                        attachSubscriptionListenersInTab(govLevel);
+
+                        // Show and hide UI element dependent user state
                         if (currentUserDoc) {
                             hideOnLogin();
                             showOnLogin();
@@ -760,46 +727,28 @@ async function loadResultsForTab(
 }
 
 function getUserSubscriptions(userDoc) {
-    try {
-        if (!userDoc || !userDoc.data().subscriptions) {
-            return null;
-        }
-
-        const subscriptions = userDoc.data().subscriptions;
-
-        const subscriptionPaths = subscriptions.map((subscription) => {
-            if (subscription.path) {
-                return subscription.path;
-            }
-        });
-        console.log(
-            `user subscription paths for ${userDoc.id}`,
-            subscriptionPaths
-        );
-
-        const sourceSearches = subscriptions.filter(
-            (subscription) => subscription.search && subscription.sourceRef
-        );
-        const noSourceSearches = subscriptions.filter(
-            (subscription) => subscription.search && !subscription.sourceRef
-        );
-
-        return { subscriptionPaths, sourceSearches, noSourceSearches };
-    } catch (error) {
-        console.error(error);
+    if (!userDoc || !userDoc.data().subscriptions) {
+        return null;
     }
-}
 
-function attachSearchSubscriptionListeners() {
-    document
-        .querySelector(".topic-subscribe")
-        ?.addEventListener("click", addSearchSubscriptionHandler);
-    document
-        .querySelector(".topic-unsubscribe")
-        ?.addEventListener("click", removeSearchSubscriptionHandler);
-}
+    const subscriptions = userDoc.data().subscriptions;
 
-attachSearchSubscriptionListeners();
+    const subscriptionPaths = subscriptions.map((subscription) => {
+        if (subscription.path) {
+            return subscription.path;
+        }
+    });
+    console.log(`user subscription paths for ${userDoc.id}`, subscriptionPaths);
+
+    const sourceSearches = subscriptions.filter(
+        (subscription) => subscription.search && subscription.sourceRef
+    );
+    const noSourceSearches = subscriptions.filter(
+        (subscription) => subscription.search && !subscription.sourceRef
+    );
+
+    return { subscriptionPaths, sourceSearches, noSourceSearches };
+}
 
 function addSubpageSubscriptionHandler(event) {
     const target = event.currentTarget;
@@ -814,6 +763,8 @@ function addSubpageSubscriptionHandler(event) {
     document
         .querySelector(`${subpageId}-not-subscribed`)
         ?.classList.remove("d-none");
+
+    // Add subscription to user subscription array in db
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
             db.collection("users")
@@ -851,11 +802,14 @@ function removeSubpageSubscriptionHandler(event) {
     const subpageId = target.id.split("-")[0];
 
     console.log("remove path to sub", subscriptionPath);
+
     // Optimisticly update
     target.classList.add("d-none");
     document
         .querySelector(`${subpageId}-subscribed`)
         ?.classList.remove("d-none");
+
+    // Remove subscription from user subscription array in db
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
             db.collection("users")
@@ -895,7 +849,7 @@ function addSourceAllSubscriptionHandler(event) {
 
     console.log("add path to sub", subscriptionPath);
 
-    // optimistically update
+    // Optimistically update
     const noSubs = document.querySelector(`${sourceId}-no-subs`);
     const hidNoSubs = !noSubs?.classList.contains("d-none");
     noSubs?.classList.add("d-none");
@@ -903,6 +857,8 @@ function addSourceAllSubscriptionHandler(event) {
     const hidWithSearch = !withSearch?.classList.contains("d-none");
     withSearch?.classList.add("d-none");
     document.querySelector(`${sourceId}-all`)?.classList.remove("d-none");
+
+    // Add subscription to user subscription array in db
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
             db.collection("users")
@@ -921,7 +877,7 @@ function addSourceAllSubscriptionHandler(event) {
                         user.uid,
                         error
                     );
-                    // revert to previous state
+                    // Revert to previous state
                     if (hidNoSubs) {
                         noSubs.classList.remove("d-none");
                     }
@@ -945,8 +901,11 @@ function removeAllSourceSubscriptionHandler(event) {
     const sourceId = subscriptionPath.split("/")[-1];
 
     console.log("remove path to sub", subscriptionPath);
+
     // Optimisticly update
     document.querySelector(`${sourceId}-all`)?.classList.add("d-none");
+
+    // Remove subscription from user subscription array in db
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
             db.collection("users")
@@ -987,7 +946,7 @@ function addSourceWithSearchSubscriptionHandler(event) {
 
     console.log("add path to sub", subscriptionPath);
 
-    // optimistically update
+    // Optimistically update
     const noSubs = document.querySelector(`${sourceId}-no-subs`);
     const hidNoSubs = !noSubs?.classList.contains("d-none");
     noSubs?.classList.add("d-none");
@@ -997,6 +956,8 @@ function addSourceWithSearchSubscriptionHandler(event) {
     document
         .querySelector(`${sourceId}-with-search`)
         ?.classList.remove("d-none");
+
+    // Add subscription to user subscription array in db
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
             db.collection("users")
@@ -1084,8 +1045,11 @@ function removeSourceWithSearchSubscriptionHandler(event) {
     const queryTopic = getQueryTopic();
 
     console.log("remove path to sub", subscriptionPath);
+
     // Optimisticly update
     document.querySelector(`${sourceId}-with-search`)?.classList.add("d-none");
+
+    // Remove subscription from user subscription array in db
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
             db.collection("users")
@@ -1126,9 +1090,11 @@ function addSearchSubscriptionHandler(event) {
 
     console.log("add path to sub", queryTopic?.textTopic);
 
-    // optimistically update
+    // Optimistically update
     target.classList.add("d-none");
     document.querySelector("topic-unsubscribe")?.classList.remove("d-none");
+
+    // Add subscription to user subscription array in db
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
             db.collection("users")
@@ -1170,9 +1136,11 @@ function removeSearchSubscriptionHandler(event) {
 
     console.log("add path to sub", queryTopic?.textTopic);
 
-    // optimistically update
+    // Optimistically update
     target.classList.add("d-none");
     document.querySelector("topic-subscribe")?.classList.remove("d-none");
+
+    // Remove subscription from user subscription array in db
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
             db.collection("users")
@@ -1203,6 +1171,52 @@ function removeSearchSubscriptionHandler(event) {
                 });
         }
     });
+}
+
+function attachSearchSubscriptionListeners() {
+    // Attach listeners to full search subscription buttons
+    document
+        .querySelector(".topic-subscribe")
+        ?.addEventListener("click", addSearchSubscriptionHandler);
+    document
+        .querySelector(".topic-unsubscribe")
+        ?.addEventListener("click", removeSearchSubscriptionHandler);
+}
+
+attachSearchSubscriptionListeners();
+
+function attachSubscriptionListenersInTab(govLevel) {
+    // Attach listeners to subscription buttons within a tab
+    $(`#${govLevel}-tab`).on(
+        "click",
+        ".subpage-subscribe.not-subscribed",
+        addSubpageSubscriptionHandler
+    );
+    $(`#${govLevel}-tab`).on(
+        "click",
+        ".subpage-subscribe.subscribed",
+        removeSubpageSubscriptionHandler
+    );
+    $(`#${govLevel}-tab`).on(
+        "click",
+        ".subscribe-topic.not-subscribed",
+        addSourceWithSearchSubscriptionHandler
+    );
+    $(`#${govLevel}-tab`).on(
+        "click",
+        ".subscribe-topic.subscribed",
+        removeSourceWithSearchSubscriptionHandler
+    );
+    $(`#${govLevel}-tab`).on(
+        "click",
+        ".subscribe-all.not-subscribed",
+        addSourceAllSubscriptionHandler
+    );
+    $(`#${govLevel}-tab`).on(
+        "click",
+        ".subscribe-all.subscribed",
+        removeAllSourceSubscriptionHandler
+    );
 }
 
 // TODO add and handle view more button & handle location filter
