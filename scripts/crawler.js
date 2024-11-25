@@ -1,6 +1,7 @@
 const dummyData = [
     {
         sourceUrl: "sourceUrl",
+        // Try to find the favicon in page head, look for <link rel="icon" .../>
         sourceLogoUrl: "sourceLogoUrl",
         sourceName: "Source",
         jurisdiction: {
@@ -13,21 +14,20 @@ const dummyData = [
             {
                 subpageTitle: "subpageTitle",
                 subpageUrl: "subpageUrl",
+                // Include any keyword it would be useful to find this page with
+                // If page is an article from the sources news page, include "news" in keywords
                 keywords: [""],
+                // Copy about one short paragraph of text that best summarizes page or otherwise summarize
                 subpageSummary: "",
+                // from inspector copy the main or main equivalent section of the html, don't include navigation, sidebars, etc.
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
             },
         ],
     },
     {
+        // If a source exists in the db, only need sourceUrl and subpages
         sourceUrl: "https://immunizebc.ca",
-        sourceLogoUrl: "sourceLogoUrl",
-        sourceName: "Immunize BC",
-        jurisdiction: {
-            governmentLevel: "",
-            location: "",
-        },
         subpages: [
             {
                 subpageTitle: "subpageTitle",
