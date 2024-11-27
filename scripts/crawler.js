@@ -1,8 +1,9 @@
 const dummyData = [
     {
         sourceUrl: "sourceUrl",
-        // Try to find the favicon in page head, look for <link rel="icon" .../>
-        sourceLogoUrl: "sourceLogoUrl",
+        // Replace the domain in this link with the source domain>
+        sourceLogoUrl:
+            "https://www.google.com/s2/favicons?domain=immunizebc.ca&sz=32",
         sourceName: "Source",
         jurisdiction: {
             // "national", "province", "city"
@@ -26,51 +27,88 @@ const dummyData = [
         ],
     },
     {
+        sourceUrl: "https://www.canada.ca/en/health-canada",
+        sourceLogoUrl:
+            "https://www.google.com/s2/favicons?domain=immunizebc.ca&sz=32",
+        sourceName: "Health Canada",
+        jurisdiction: {
+            governmentLevel: "national",
+        },
+        subpages: [
+            {
+                subpageTitle: "subpageTitle",
+                subpageUrl: "subpageUrl",
+                // Include any keyword it would be useful to find this page with
+                // If page is an article from the sources news page, include "news" in keywords
+                keywords: [""],
+                // Copy about one short paragraph of text that best summarizes page or otherwise summarize
+                subpageSummary: "",
+                // from inspector copy the main or main equivalent section of the html, don't include navigation, sidebars, etc.
+                content:
+                    "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
+            },
+        ],
+    },
+    {
+        sourceUrl: "https://news.gov.bc.ca",
+        // Replace the domain in this link with the source domain>
+        sourceLogoUrl:
+            "https://www.google.com/s2/favicons?domain=news.gov.bc.ca&sz=32",
+        sourceName: "BC Gov News",
+        jurisdiction: {
+            // "national", "province", "city"
+            governmentLevel: "province",
+            // no location if national, two letter abbreviation if province eg "BC", array with all applicable cities if city eg ["Vancouver"] or ["Vancouver", "Burnaby"]
+            location: "BC",
+        },
+        subpages: [
+            {
+                subpageTitle:
+                    "PHO's statement on ensuring childrens' vaccinations are up to date",
+                subpageUrl:
+                    "https://news.gov.bc.ca/releases/2024HLTH0126-001324",
+                keywords: ["vaccines", "news"],
+                subpageSummary:
+                    "Dr. Bonnie Henry, British Columbia's provincial health officer, has issued the following statement to make sure children in B.C. are up to date on all their vaccines as part of back-to-school preparations:",
+                content: `<article><p>Dr. Bonnie Henry, British Columbia's provincial health officer, has issued the following statement to make sure children in B.C. are up to date on all their vaccines as part of back-to-school preparations:</p><p>“As the summer holidays draw to a close, many families are starting to think about their back-to-school tasks. Buy school supplies. Take their children for haircuts. Help their kids pick out the perfect outfit for the first day of school.</p><p>“This year, I’m urging you to add another important item to your to-do list: Ensure that your children are up to date on their routine vaccinations and&nbsp;they get vaccinated against common illnesses, such as measles, mumps and rubella, polio, pertussis (whooping cough) and chickenpox.</p><p>“August is the perfect time to take your children for any outstanding vaccines. As kids start or return to child care or school, they’ll be interacting with many friends, caregivers and teachers, increasing their chances of being exposed to these and other infectious diseases. And we know respiratory-illness season will soon be here, bringing COVID-19, influenza and other viruses.</p><p>“Getting your children vaccinated is the best way to protect them from vaccine-preventable illnesses that can cause serious illness, long-term disability and even death.</p><p>“Children six and under are eligible for free vaccines to protect them from more than a dozen diseases, such as COVID-19, influenza, polio, measles and chickenpox. We also provide children with free vaccines at school clinics beginning in Grade 6, including the human papillomavirus and meningitis vaccines, and booster doses of vaccines they received in early childhood.</p><p>“To get your infant or young child vaccinated, visit HealthLinkBC for full details. You can book an appointment at a health unit or at your doctor’s or nurse practitioner’s office if they do immunizations. If your child is older than five, you can also book an appointment to get them vaccinated at some pharmacies.</p><p>“School-aged children and teens typically receive their vaccines at clinics held at schools. However, they can also get vaccinated at health units, some doctors' and nurse practitioners' offices and some pharmacies.</p><p>“As many young adults begin mixing in new social groups this fall, pursue post-secondary opportunities or move into campus housing, vaccines against influenza and meningitis are recommended, along with an updated dose of the COVID-19 vaccine.</p><p>“I encourage everyone to visit HealthLinkBC for more information about childhood and young adult vaccines, and use the online tool to find a health unit close to home. You can also see your children's immunization schedule via HealthLinkBC or view immunization records through the Health Gateway.</p><p>“Whether the young people in your life are infants or young adults, now is the time to protect them through immunizations. Just like packing healthy lunches for your kids and encouraging them to get enough exercise and sleep, getting them vaccinated is one of the most important things you can do to help them have a happy and healthy school year.”</p><p><strong>Learn More:</strong></p><p>Unsure which vaccines your child is due for? You can check their immunization records through the Health Gateway: <a href="https://www.healthgateway.gov.bc.ca/">https://www.healthgateway.gov.bc.ca/</a></p><p>To learn more about COVID-19 vaccines for children, visit:&nbsp;<a href="https://www2.gov.bc.ca/gov/content/covid-19/vaccine/children">https://www2.gov.bc.ca/gov/content/covid-19/vaccine/children</a></p><p>View your children’s immunization schedule:&nbsp;<a href="https://www.healthlinkbc.ca/childhoodvaccines">https://www.healthlinkbc.ca/childhoodvaccines</a></p><p>For people who notice a record is missing, they can update records here: <a href="https://immunizationrecord.gov.bc.ca/">https://immunizationrecord.gov.bc.ca/</a></p><p>Register for a COVID-19 vaccine through the provincial Get Vaccinated system at:&nbsp;<a href="https://www2.gov.bc.ca/gov/content/covid-19/vaccine/register">https://www2.gov.bc.ca/gov/content/covid-19/vaccine/register</a> &nbsp;<br>After you do so, you’ll receive an invitation to book an appointment at a child-friendly clinic in your community.</p><p>Learn more about the provincial immunization program:&nbsp;<a href="https://immunizebc.ca/">https://immunizebc.ca/</a></p><div> </div></article>`,
+            },
+        ],
+    },
+    {
         // If a source exists in the db, only need sourceUrl and subpages
         sourceUrl: "https://immunizebc.ca",
         subpages: [
             {
                 subpageTitle: "subpageTitle",
                 subpageUrl: "subpageUrl",
+                // Include any keyword it would be useful to find this page with
+                // If page is an article from the sources news page, include "news" in keywords
                 keywords: [""],
+                // Copy about one short paragraph of text that best summarizes page or otherwise summarize
                 subpageSummary: "",
+                // from inspector copy the main or main equivalent section of the html, don't include navigation, sidebars, etc.
                 content:
                     "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
-            },
-            {
-                subpageTitle: "PHO's statement on ensuring childrens' vaccinations are up to date",
-                subpageUrl: "https://news.gov.bc.ca/releases/2024HLTH0126-001324",
-                keywords: ["vaccines, news"],
-                subpageSummary: "Dr. Bonnie Henry, British Columbia's provincial health officer, has issued the following statement to make sure children in B.C. are up to date on all their vaccines as part of back-to-school preparations:",
-                content:
-                    `<article><p>Dr. Bonnie Henry, British Columbia's provincial health officer, has issued the following statement to make sure children in B.C. are up to date on all their vaccines as part of back-to-school preparations:</p><p>“As the summer holidays draw to a close, many families are starting to think about their back-to-school tasks. Buy school supplies. Take their children for haircuts. Help their kids pick out the perfect outfit for the first day of school.</p><p>“This year, I’m urging you to add another important item to your to-do list: Ensure that your children are up to date on their routine vaccinations and&nbsp;they get vaccinated against common illnesses, such as measles, mumps and rubella, polio, pertussis (whooping cough) and chickenpox.</p><p>“August is the perfect time to take your children for any outstanding vaccines. As kids start or return to child care or school, they’ll be interacting with many friends, caregivers and teachers, increasing their chances of being exposed to these and other infectious diseases. And we know respiratory-illness season will soon be here, bringing COVID-19, influenza and other viruses.</p><p>“Getting your children vaccinated is the best way to protect them from vaccine-preventable illnesses that can cause serious illness, long-term disability and even death.</p><p>“Children six and under are eligible for free vaccines to protect them from more than a dozen diseases, such as COVID-19, influenza, polio, measles and chickenpox. We also provide children with free vaccines at school clinics beginning in Grade 6, including the human papillomavirus and meningitis vaccines, and booster doses of vaccines they received in early childhood.</p><p>“To get your infant or young child vaccinated, visit HealthLinkBC for full details. You can book an appointment at a health unit or at your doctor’s or nurse practitioner’s office if they do immunizations. If your child is older than five, you can also book an appointment to get them vaccinated at some pharmacies.</p><p>“School-aged children and teens typically receive their vaccines at clinics held at schools. However, they can also get vaccinated at health units, some doctors' and nurse practitioners' offices and some pharmacies.</p><p>“As many young adults begin mixing in new social groups this fall, pursue post-secondary opportunities or move into campus housing, vaccines against influenza and meningitis are recommended, along with an updated dose of the COVID-19 vaccine.</p><p>“I encourage everyone to visit HealthLinkBC for more information about childhood and young adult vaccines, and use the online tool to find a health unit close to home. You can also see your children's immunization schedule via HealthLinkBC or view immunization records through the Health Gateway.</p><p>“Whether the young people in your life are infants or young adults, now is the time to protect them through immunizations. Just like packing healthy lunches for your kids and encouraging them to get enough exercise and sleep, getting them vaccinated is one of the most important things you can do to help them have a happy and healthy school year.”</p><p><strong>Learn More:</strong></p><p>Unsure which vaccines your child is due for? You can check their immunization records through the Health Gateway: <a href="https://www.healthgateway.gov.bc.ca/">https://www.healthgateway.gov.bc.ca/</a></p><p>To learn more about COVID-19 vaccines for children, visit:&nbsp;<a href="https://www2.gov.bc.ca/gov/content/covid-19/vaccine/children">https://www2.gov.bc.ca/gov/content/covid-19/vaccine/children</a></p><p>View your children’s immunization schedule:&nbsp;<a href="https://www.healthlinkbc.ca/childhoodvaccines">https://www.healthlinkbc.ca/childhoodvaccines</a></p><p>For people who notice a record is missing, they can update records here: <a href="https://immunizationrecord.gov.bc.ca/">https://immunizationrecord.gov.bc.ca/</a></p><p>Register for a COVID-19 vaccine through the provincial Get Vaccinated system at:&nbsp;<a href="https://www2.gov.bc.ca/gov/content/covid-19/vaccine/register">https://www2.gov.bc.ca/gov/content/covid-19/vaccine/register</a> &nbsp;<br>After you do so, you’ll receive an invitation to book an appointment at a child-friendly clinic in your community.</p><p>Learn more about the provincial immunization program:&nbsp;<a href="https://immunizebc.ca/">https://immunizebc.ca/</a></p><div> </div></article>`
             },
         ],
     },
     {
-        sourceUrl: "",
-        sourceLogoUrl: "sourceLogoUrl",
-        sourceName: "Health Canada",
+        sourceUrl: "https://www.canada.ca/en/public-health",
+        sourceLogoUrl:
+            "https://www.google.com/s2/favicons?domain=immunizebc.ca&sz=32",
+        sourceName: "Public Health Agency of Canada",
         jurisdiction: {
-            governmentLevel: "",
-            location: "",
+            governmentLevel: "national",
         },
         subpages: [
             {
-                subpageTitle: "subpageTitle",
-                subpageUrl: "subpageUrl",
-                keywords: [""],
-                subpageSummary: "",
-                content:
-                    "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
-            },
-            {
                 subpageTitle: "About Mental Health",
-                subpageUrl: "https://www.canada.ca/en/public-health/services/about-mental-health.html#a4",
+                subpageUrl:
+                    "https://www.canada.ca/en/public-health/services/about-mental-health.html#a4",
                 keywords: ["mental health"],
-                subpageSummary: "Everyone's mental health is important. It needs to be taken care of to make sure you stay healthy overall. Learn about your mental health, how to improve it and the resulting benefits.",
-                content:
-                    `<div><div class="mwsbodytext text parbase section">
+                subpageSummary:
+                    "Everyone's mental health is important. It needs to be taken care of to make sure you stay healthy overall. Learn about your mental health, how to improve it and the resulting benefits.",
+                content: `<div><div class="mwsbodytext text parbase section">
                     <p>Everyone's mental health is important. It needs to be taken care of to make sure you stay healthy overall. Learn about your mental health, how to improve it and the resulting benefits.</p>  
                     </div>
                     <div class="mwsbodytext text parbase section">
@@ -171,15 +209,17 @@ const dummyData = [
                     <li><a href="http://www.mentalhealthcommission.ca/" rel="external">Mental Health Commission of Canada</a></li> 
                     </ul>  
                     </div>
-                    </div>`
+                    </div>`,
             },
             {
-                subpageTitle: "COVID-19: Symptoms, treatment, what to do if you feel sick",
-                subpageUrl: "https://www.canada.ca/en/public-health/services/diseases/2019-novel-coronavirus-infection/symptoms.html",
+                subpageTitle:
+                    "COVID-19: Symptoms, treatment, what to do if you feel sick",
+                subpageUrl:
+                    "https://www.canada.ca/en/public-health/services/diseases/2019-novel-coronavirus-infection/symptoms.html",
                 keywords: ["covid-19, covid"],
-                subpageSummary: "This page contains information about Covid-19 symptoms, what to do if you're sick or exposed, how to care for others who have Covid-19, how to treat Covid-19, and what long-term symptoms might occur",
-                content:
-                    `<div class="mwsgeneric-base-html parbase section">
+                subpageSummary:
+                    "This page contains information about Covid-19 symptoms, what to do if you're sick or exposed, how to care for others who have Covid-19, how to treat Covid-19, and what long-term symptoms might occur",
+                content: `<div class="mwsgeneric-base-html parbase section">
 
 
 
@@ -394,34 +434,40 @@ const dummyData = [
                         </ul>
 
 
-                        </div>`
+                        </div>`,
             },
         ],
     },
     {
-        sourceUrl: "",
-        sourceLogoUrl: "sourceLogoUrl",
+        sourceUrl: "https://www.vch.ca",
+        sourceLogoUrl: `https://www.google.com/s2/favicons?domain=www.vch.ca&sz=32`,
         sourceName: "Vancouver Coastal Health",
         jurisdiction: {
-            governmentLevel: "",
-            location: "",
+            governmentLevel: "city",
+            location: [
+                "Vancouver",
+                "Richmond",
+                "North Vancouver",
+                "Powell River",
+                "Bella Bella",
+                "Bella Coola",
+                "Bowen Island",
+                "Gibsons",
+                "Lions Bay",
+                "Sechelt",
+                "Squamish",
+                "West Vancouver",
+                "Whistler",
+            ],
         },
         subpages: [
-            {
-                subpageTitle: "subpageTitle",
-                subpageUrl: "subpageUrl",
-                keywords: [""],
-                subpageSummary: "",
-                content:
-                    "<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos iste sapiente fugit, recusandae quae neque vitae provident nobis sequi saepe tempora quo vero tenetur facere, ipsa voluptas non repellat quasi. Sequi rem velit totam consequuntur accusamus quos vitae soluta iure necessitatibus autem delectus facere assumenda ut distinctio ab, fuga enim, itaque suscipit inventore est et dolorem illum veritatis atque! Laborum quos pariatur minus quod. Explicabo eveniet odit eaque quis nisi neque voluptates, autem ex modi fugit corrupti quisquam maiores libero eum repudiandae doloremque aliquam voluptatum! Cum ducimus, amet ratione error sunt ab eveniet, harum, quaerat voluptate suscipit vero optio.</p>",
-            },
             {
                 subpageTitle: "COVID-19",
                 subpageUrl: "https://www.vch.ca/en/health-topics/covid-19",
                 keywords: ["covid-19"],
-                subpageSummary: "Coronaviruses are a large family of viruses found mostly in animals. In humans, they can cause diseases ranging from the common cold to more severe diseases such as Severe Acute Respiratory Syndrome (SARS) and Middle East Respiratory Syndrome (MERS-CoV). The illness caused by the 2019 coronavirus has been named COVID-19. Learn more about COVID-19, including information on testing and prevention.",
-                content:
-                `<div class="page-content">
+                subpageSummary:
+                    "Coronaviruses are a large family of viruses found mostly in animals. In humans, they can cause diseases ranging from the common cold to more severe diseases such as Severe Acute Respiratory Syndrome (SARS) and Middle East Respiratory Syndrome (MERS-CoV). The illness caused by the 2019 coronavirus has been named COVID-19. Learn more about COVID-19, including information on testing and prevention.",
+                content: `<div class="page-content">
                 <div class="page-header" data-bundle="topic" data-page-has-image="true" data-is-location="false">
                 <div class="container ">
 
@@ -449,15 +495,6 @@ const dummyData = [
                         </div>
                             </div>
                 </div>
-
-
-                        
-                    
-                        
-                    
-
-                    
-                            
                                             <div class="section-module container">
                             <div class="col-12 col-tb-8">
                                     
@@ -592,15 +629,17 @@ const dummyData = [
 
                     
                     
-                </div>`
+                </div>`,
             },
             {
-                subpageTitle: "Vancouver Mental Health and Substance Use Family Advisory Committee",
-                subpageUrl: "https://www.vch.ca/en/vancouver-mental-health-and-substance-use-family-advisory-committee",
+                subpageTitle:
+                    "Vancouver Mental Health and Substance Use Family Advisory Committee",
+                subpageUrl:
+                    "https://www.vch.ca/en/vancouver-mental-health-and-substance-use-family-advisory-committee",
                 keywords: ["mental health", "substance abuse"],
-                subpageSummary: "The Vancouver Mental Health and Substance Use Family Advisory Committee represents the diverse voices of families within Vancouver Mental Health and Substance Use Services and acts in advisory, advocacy, and educational roles to improve the care experience.",
-                content:
-                    `<article lang="en" class="node-type--article full clearfix">
+                subpageSummary:
+                    "The Vancouver Mental Health and Substance Use Family Advisory Committee represents the diverse voices of families within Vancouver Mental Health and Substance Use Services and acts in advisory, advocacy, and educational roles to improve the care experience.",
+                content: `<article lang="en" class="node-type--article full clearfix">
                     <div class="container center-modules">
                         <div class="section-module col-12 col-tb-8">
                         
@@ -618,14 +657,7 @@ const dummyData = [
 
                         </div>
                     </div>
-
-                        
-                        
-                    
-
-                        
-                        
-                                                <div class="container center-modules">
+                    <div class="container center-modules">
                                 <div class="section-module col-12 col-tb-8">
                                         <div class="image-with-caption" id="image-with-caption--23616">
                             
@@ -762,10 +794,7 @@ const dummyData = [
 
                             </div>
                                 </div>
-                                
-
-                        
-                        </article>`
+                </article>`,
             },
         ],
     },
@@ -830,6 +859,28 @@ function writeSourceAndSubpages(sourceData) {
                                     "Wrote new source and subpages for",
                                     sourceData.sourceUrl
                                 );
+
+                                // get all the new subpages in order to add aliases for keywords
+                                subpagesCollectionRef
+                                    .get()
+                                    .then((newSubpageSnapshot) => {
+                                        newSubpageSnapshot.forEach(
+                                            (subpageDoc) => {
+                                                const keywords =
+                                                    sourceData.subpages.find(
+                                                        (page) =>
+                                                            page.subpageUrl ===
+                                                            subpageDoc.data()
+                                                                .subpageUrl
+                                                    ).keywords;
+                                                updateKeywords(
+                                                    keywords,
+                                                    sourceDocRef,
+                                                    subpageDoc.ref
+                                                );
+                                            }
+                                        );
+                                    });
                             })
                             .catch((error) => {
                                 console.error(
@@ -852,12 +903,18 @@ function writeSourceAndSubpages(sourceData) {
                     batch.update(sourceDoc.ref, {
                         crawledAt:
                             firebase.firestore.FieldValue.serverTimestamp(),
-                        keywords: sourceKeywords,
+                        keywords: firebase.firestore.FieldValue.arrayUnion(
+                            ...sourceKeywords
+                        ),
                     });
 
                     // Get existing subpages
+                    const subpageUrls = sourceData.subpages.map(
+                        (subpage) => subpage.subpageUrl
+                    );
                     sourceDoc.ref
                         .collection("subpages")
+                        .where("subpageUrl", "in", subpageUrls)
                         .get()
                         .then((querySnapshot) => {
                             const subpagesCollectionRef =
@@ -906,6 +963,48 @@ function writeSourceAndSubpages(sourceData) {
                                             "Updated source and subpages for",
                                             sourceData.sourceUrl
                                         );
+
+                                        // const subpageUrls =
+                                        //     sourceData.subpages.map(
+                                        //         (subpage) => subpage.subpageUrl
+                                        //     );
+
+                                        // get all the new and updated subpages in order to add aliases for keywords
+                                        subpagesCollectionRef
+                                            .where(
+                                                "subpageUrl",
+                                                "in",
+                                                subpageUrls
+                                            )
+                                            .get()
+                                            .then(
+                                                (
+                                                    newOrUpdatedSubpagesSnapshot
+                                                ) => {
+                                                    newOrUpdatedSubpagesSnapshot.forEach(
+                                                        (subpageDoc) => {
+                                                            const keywords =
+                                                                sourceData.subpages.find(
+                                                                    (page) =>
+                                                                        page.subpageUrl ===
+                                                                        subpageDoc.data()
+                                                                            .subpageUrl
+                                                                ).keywords;
+                                                            updateKeywords(
+                                                                keywords,
+                                                                sourceDoc.ref,
+                                                                subpageDoc.ref
+                                                            );
+                                                        }
+                                                    );
+                                                }
+                                            )
+                                            .catch((error) => {
+                                                console.error(
+                                                    "Error getting new or updated subpages",
+                                                    error
+                                                );
+                                            });
                                     })
                                     .catch((error) => {
                                         console.error(
@@ -923,6 +1022,67 @@ function writeSourceAndSubpages(sourceData) {
                         });
                 });
             }
+        });
+}
+
+function updateKeywords(subpageKeywords, sourceRef, subpageRef) {
+    for (const keyword of subpageKeywords) {
+        findOrCreateKeywordRecord(keyword, sourceRef, subpageRef);
+    }
+}
+
+function findOrCreateKeywordRecord(keyword, sourceRef, subpageRef) {
+    const lowercaseKeyword = keyword.toLowerCase();
+
+    db.collection("keywords")
+        .where("aliases", "array-contains", lowercaseKeyword)
+        .get()
+        .then((keywordSnapshot) => {
+            if (keywordSnapshot.size > 0) {
+                let allAliases = [];
+                keywordSnapshot.forEach((keywordDoc) => {
+                    allAliases = [...allAliases, ...keywordDoc.data().aliases];
+                });
+                updateKeywordsForRef(allAliases, sourceRef);
+                updateKeywordsForRef(allAliases, subpageRef);
+            } else {
+                addNewKeyword(lowercaseKeyword);
+            }
+        })
+        .catch((error) => {
+            console.error("Error checking if keyword exists", error);
+        });
+}
+
+function updateKeywordsForRef(aliases, firestoreRef) {
+    firestoreRef.update({
+        keywords: firebase.firestore.FieldValue.arrayUnion(...aliases),
+    });
+}
+
+function addNewKeyword(lowercaseKeyword) {
+    const categories = [
+        "diseases",
+        "healthcare services",
+        "mental health",
+        "vaccines",
+    ];
+
+    db.collection("keywords")
+        .add({
+            aliases: [lowercaseKeyword],
+            name:
+                lowercaseKeyword[0].toUpperCase() +
+                lowercaseKeyword.substring(1),
+            category:
+                categories.find((category) => category === lowercaseKeyword) ??
+                "uncategorized",
+        })
+        .then(() => {
+            console.log("added keyword", lowercaseKeyword);
+        })
+        .catch((error) => {
+            console.error("Error adding keyword", error);
         });
 }
 
