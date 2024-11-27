@@ -356,7 +356,7 @@ async function loadResultsForTab(
     const userSubscriptions = getUserSubscriptions(currentUserDoc);
     const userSuscribedToSearch = userSubscriptions
         ? userSubscriptions.noSourceSearches.some((search) => {
-              return search.search === queryTopic.textTopic.toLowerCase();
+              return search.search === queryTopic.queryKeywords.join();
           })
         : false;
 
@@ -419,7 +419,7 @@ async function loadResultsForTab(
                               sourceSearch.sourceRef.path ===
                                   sourceData.path.substring(1) &&
                               sourceSearch.search ===
-                                  queryTopic.textTopic.toLowerCase()
+                                  queryTopic.queryKeywords.join()
                           );
                       })
                     : false;
@@ -965,7 +965,7 @@ function addSourceWithSearchSubscriptionHandler(event) {
                 .update({
                     subscriptions: firebase.firestore.FieldValue.arrayUnion({
                         sourceRef: db.doc(subscriptionPath),
-                        search: queryTopic?.textTopic.toLowerCase(),
+                        search: queryTopic?.queryKeywords?.join(),
                     }),
                 })
                 .then(() => {
@@ -974,12 +974,12 @@ function addSourceWithSearchSubscriptionHandler(event) {
                         .get()
                         .then((userDoc) => {
                             const subscriptions = getUserSubscriptions(userDoc);
-                            const userSuscribedToSearch = subscriptions
+                            const userSuscribedToAllSource = subscriptions
                                 ? subscriptions.subscriptionPaths.includes(
                                       subscriptionPath.substring(1)
                                   )
                                 : false;
-                            if (userSuscribedToSearch) {
+                            if (userSuscribedToAllSource) {
                                 db.collection("users")
                                     .doc(user.uid)
                                     .update({
@@ -1057,7 +1057,7 @@ function removeSourceWithSearchSubscriptionHandler(event) {
                 .update({
                     subscriptions: firebase.firestore.FieldValue.arrayRemove({
                         sourceRef: db.doc(subscriptionPath),
-                        search: queryTopic?.textTopic.toLowerCase(),
+                        search: queryTopic?.queryKeywords?.join(),
                     }),
                 })
                 .then(() => {
@@ -1101,7 +1101,7 @@ function addSearchSubscriptionHandler(event) {
                 .doc(user.uid)
                 .update({
                     subscriptions: firebase.firestore.FieldValue.arrayUnion({
-                        search: queryTopic?.textTopic.toLowerCase(),
+                        search: queryTopic?.queryKeywords?.join(),
                         local,
                     }),
                 })
@@ -1134,7 +1134,7 @@ function removeSearchSubscriptionHandler(event) {
     // TODO: When handling location filter update this to reflect state of filter
     const local = true;
 
-    console.log("add path to sub", queryTopic?.textTopic);
+    console.log("add path to sub", queryTopic?.queryKeywords);
 
     // Optimistically update
     target.classList.add("d-none");
@@ -1147,7 +1147,7 @@ function removeSearchSubscriptionHandler(event) {
                 .doc(user.uid)
                 .update({
                     subscriptions: firebase.firestore.FieldValue.arrayRemove({
-                        search: queryTopic?.textTopic.toLowerCase(),
+                        search: queryTopic?.queryKeywords?.join(),
                         local,
                     }),
                 })
