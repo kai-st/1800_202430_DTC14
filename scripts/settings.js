@@ -44,6 +44,7 @@ function saveUserGeoInfo(resp) {
             province: resp.standard.prov,
         })
         .then(() => {
+            window.confirm("Your postal code has been successfully updated.")
             console.log("Document successfully updated!");
         });
 
@@ -290,7 +291,7 @@ function deleteConfirmation() {
                 if (userAccount != null) {
                     if (
                         window.confirm(
-                            "Are you sure you would like to delete your account?"
+                            "Are you sure you would like to delete your account data?"
                         )
                     ) {
                         // user chooses "OK", their account document gets deleted from Firestore
@@ -299,9 +300,14 @@ function deleteConfirmation() {
                             .then(() => {
                                 // pop-up window confirming deletion
                                 window.confirm(
-                                    "Your account has been successfully deleted."
+                                    "Your account data has been successfully deleted."
                                 );
                                 console.log("Account successfully deleted");
+                                // pop-up window giving user instruction to confirm deleted account
+                                window.confirm(
+                                    "Please sign out of your account to finish the deletion process."
+                                );
+                                console.log("Give user instructions to confirm deletion of account");
                                 // user is redirected to index.html signed-out
                                 window.location.replace(
                                     "index.html",
