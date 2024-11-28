@@ -36,6 +36,13 @@ async function getNewsArticles() {
                 .where("jurisdiction.location", "array-contains", userCity)
                 .get();
             allNewsArticles.push(...sourcesMunicipalSnapshot.docs);
+
+            const newsForCity = document.getElementById("newsForCity")
+            newsForCity.innerHTML = `
+            <div class="py-5 px-3 text-center">
+                    <h1 class="pb-3">News for ${userCity}</h1>
+                </div>
+            `
         }
     }
 
