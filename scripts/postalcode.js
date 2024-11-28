@@ -41,6 +41,7 @@ function saveUserGeoInfo(resp) {
             province: resp.standard.prov,
         })
         .then(() => {
+            window.confirm("Please refresh this page to succesfully update your location.")
             console.log("Document successfully updated!");
         });
 
