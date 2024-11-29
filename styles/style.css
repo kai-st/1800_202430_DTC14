@@ -29,8 +29,10 @@ a {
 .card {
     max-width: 800px;
     margin-inline: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
-
+ 
 .banner {
     background-color: var(--light-teal);
     border: 20px solid var(--primary-teal);

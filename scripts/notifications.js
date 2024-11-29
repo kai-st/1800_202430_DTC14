@@ -21,41 +21,25 @@ async function loadNotifications() {
             .doc(currentUser.uid)
             .collection("notifications")
             .get();
-        const notificationIds = [];
-        const notifications = [];
-        for (const notification of notificationCollection.docs) {
-            const notificationData = await notification.data();
-            notificationIds.push(notificationData.subpages[0]);
+        
+        
+        if (notificationCollection.docs.length > 0)
+        {    
+        for (notification of notificationCollection.docs)
+        {
+            notificationData = notification.data()
+            sourceRef = notificationData.source
+            source = await sourceRef.get()
+            sourceSubpages = notificationData.subpages
+            subpageDocs = await sourceRef.collection("subpages").where(firebase.firestore.FieldPath.documentId(), "in", sourceSubpages).get()
+            displayNotification(source, subpageDocs, notificationData.createdAt)
         }
-        if (notificationIds.length > 0) {
-            // const sources = db.collection("sources");
-            const sourcesSnapshot = await db.collection("sources").get();
-
-            for (const source of sourcesSnapshot.docs) {
-                const sourcesSubpagesSnapshot = await source.ref
-                    .collection("subpages")
-                    .get();
-                for (const notificationId of notificationIds) {
-                    sourcesSubpagesSnapshot.forEach((subpage) => {
-                        if (subpage.id == notificationId) {
-                            notifications.push(subpage);
-                        }
-                    });
-                }
-            }
-
-            for (const notification of notifications) {
-                displayNotification({
-                    ...notification.data(),
-                    id: notification.id,
-                });
-            }
         } else {
             notifications_section.innerHTML = `
-        <div class="py-5 px-3 text-center">
-            <h1 class="pb-3">Notifications</h1>
-        </div>
-        <div class="notification-action banner">
+            <div class="py-5 px-3 text-center">
+                <h1 class="pb-3">Notifications</h1>
+            </div>
+            <div class="notification-action card">
             <p class="card-text fs-4">
                 Subscribe to a topic to receive personalized
                 notifications.
@@ -66,7 +50,7 @@ async function loadNotifications() {
                 >View Topics</a
             >
         </div>
-        `;
+        `
         }
     } else {
         const notifications_section = document.getElementById("notifications");
@@ -85,65 +69,69 @@ async function loadNotifications() {
                 >Sign Up</a
             >
         </div>
-        `;
+        `
     }
 }
 
-async function displayNotification(doc) {
-    const sourceID = doc.sourceID;
-    const source = await db.collection("sources").doc(sourceID).get();
-    const sourceData = source.data();
-
-    const logo_URL = sourceData.sourceLogoUrl;
-
-    const subpageUrl = doc.subpageUrl;
-    const updated_at = doc.updatedAt.toDate().toDateString();
-    const title = doc.subpageTitle;
-    const summary = doc.subpageSummary;
-
-    const notifications_section = document.getElementById("notifications");
-
-    notifications_section.innerHTML += `
+async function displayNotification(source, subpages, date) {
+    const sourceData = source.data()
+    const notification_section = document.getElementById("notifications")
+    wrapper = document.createElement("div")
+    wrapper.classList.add(`wrapper-${source.id}`)
+    wrapper.innerHTML = `
     <div class="template-wrapper">
-                <div class="tab">Updated ${updated_at}</div>
-                <section class="source-block" id="${sourceID}">
+                <div class="tab">Updated ${date.toDate().toDateString()}</div>
+                <section class="source-block" id="${source.id}">
                 <div class="source">
                     <h2>
                         <span class="d-none d-sm-inline">From: </span>
                         <!-- Set href to source domain homepage and innerText to source name -->
                         <a class="source-link" href="${sourceData.sourceUrl}">
                             <!-- set src to source logo url -->
-                            <img src="${logo_URL}" class="source-logo" />${sourceData.sourceName}</a
+                            <img src="${sourceData.sourceLogoUrl}" class="source-logo" />${sourceData.sourceName}</a
                         >
                     </h2>
                 </div>
-                <div class="subpages accordion accordion-flush ms-md-5">
-            <div id="single-accordion-template" class="subpage-item accordion-item">
-                <div class="subpage-header accordion-header">
-                    <h3>${title}</h3>
-                    <button
-                        class="accordion-button custom collapsed"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#${doc.id}"
-                        aria-expanded="false"
-                        aria-controls="${doc.id}"
-                    ></button>
+                <div class="subpages accordion accordion-flush ms-md-5" id="subpages-${source.id}">
                 </div>
-                <!-- Update id to be unique for each copy of component -->
-                <div id="${doc.id}" class="accordion-collapse collapse">
-                    <!-- Replace things in here with whatever content -->
-                    <div class="embed">
-                        <div class="embed-content">
-                            ${summary}
-                        </div>
-                        <a href="${subpageUrl}" class="subpage-link">Visit Page</a>
-                    </div>
-                </div>
-            </div>
-            </div>
             </section>
         </div>
         </div>
-    `;
+    `
+    notification_section.appendChild(wrapper)
+    subpage_section = document.getElementById(`subpages-${source.id}`)
+    
+    subpages.forEach(subpage => {
+        subpageData = subpage.data()
+
+        console.log("subpage: ", subpage)
+        console.log("subpage data: ", subpageData)
+
+        subpageElement = document.createElement("div")
+        subpageElement.class = "subpage-item accordion-item"
+        subpageElement.id = "single-accordion-template"
+        subpageElement.innerHTML = 
+        `<div class="subpage-header accordion-header">
+                        <h3>${subpageData.subpageTitle}</h3>
+                        <button
+                            class="accordion-button custom collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#${subpage.id}"
+                            aria-expanded="false"
+                            aria-controls="${subpage.id}"
+                        ></button>
+                    </div>
+                    <!-- Update id to be unique for each copy of component -->
+                    <div id="${subpage.id}" class="accordion-collapse collapse">
+                        <!-- Replace things in here with whatever content -->
+                        <div class="embed">
+                            <div class="embed-content">
+                                ${subpageData.subpageSummary}
+                            </div>
+                            <a href="${subpageData.subpageUrl}" class="subpage-link">Visit Page</a>
+                        </div>
+                    </div>`
+        subpage_section.appendChild(subpageElement)
+    })
 }

@@ -66,6 +66,7 @@ async function getNewsArticles() {
         }
     } else {
         const news_section = document.getElementById("news");
+        news_section.classList.add("p-4")
         news_section.innerHTML += `
         <div class="news-action card">
             <p class="card-text fs-4">
@@ -96,7 +97,7 @@ async function printNewsArticle(doc) {
     const summary = doc.subpageSummary;
 
     const news_section = document.getElementById("news");
-
+    news_section.classList.remove("p-4")
     news_section.innerHTML += `
     <div class="news-article">
             <div id="single-accordion-template" class="subpage-item accordion">
@@ -134,9 +135,5 @@ async function printNewsArticle(doc) {
 }
 
 function setup() {
-    if (currentUser) {
-        getNewsArticles();
-    } else {
-        getNewsArticles();
-    }
+    getNewsArticles()
 }
