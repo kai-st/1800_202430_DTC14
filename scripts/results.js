@@ -25,15 +25,21 @@ function getQueryTopic() {
         if (params.has("category")) {
             setBackLink(params.get("category"));
             const topic = params.get("topic");
+            if (!topic) {
+                throw new Error("No topic found");
+            }
             setResultsTitle(topic);
             return {
-                queryKeywords: topic?.toLowerCase().split(" "),
+                queryKeywords: [topic?.toLowerCase()],
                 textTopic: topic,
             };
         }
         if (params.has("query")) {
             const query = params.get("query");
             console.log("raw query", query);
+            if (!query) {
+                throw new Error("No query found");
+            }
             setResultsTitle(query, true);
             return {
                 queryKeywords: query?.toLowerCase().split(" "),
@@ -255,12 +261,6 @@ function loadTopicSpans(topicText) {
         span.innerText = topicText;
     }
 }
-function loadSourceNameSpans(sourceName) {
-    const sourceNameSpans = document.querySelectorAll(".source-name");
-    for (const span of sourceNameSpans) {
-        span.innerText = sourceName;
-    }
-}
 
 function hideOnLogin() {
     const loggedOutElements = document.querySelectorAll(".hide-on-login");
@@ -474,6 +474,12 @@ async function loadResultsForTab(
                     noSubsBtnGroup.classList.remove("d-none");
                 }
 
+                const sourceNameSpans =
+                    sourceBlock.querySelectorAll(".source-name");
+                for (const span of sourceNameSpans) {
+                    span.innerText = sourceData.sourceName;
+                }
+
                 sourceDoc.ref
                     .collection("subpages")
                     .where(
@@ -562,7 +568,6 @@ async function loadResultsForTab(
                         // append source block to results wrapper
                         tabWrapperElement.append(sourceBlock);
                         loadTopicSpans(queryTopic?.textTopic);
-                        loadSourceNameSpans(sourceData.sourceName);
 
                         attachSubscriptionListenersInTab(govLevel);
 
@@ -577,144 +582,6 @@ async function loadResultsForTab(
                             hideOnLogout();
                             showOnLogout();
                         }
-
-                        // For now pad with old dummy data insert method
-                        dummyResults.forEach((result) => {
-                            let subpages = "";
-
-                            result.subpages.forEach((subpage) => {
-                                const userSubscribedToSubpage = false;
-                                // userSubscriptions.subscriptionPaths.includes(
-                                //     subpage.path.substring(1)
-                                // );
-
-                                const subpageAccordionItem = `<div class="subpage-item accordion-item">
-                                    <div class="subpage-header accordion-header">
-                                        <h3>${subpage.subpageTitle}</h3>
-                                        ${
-                                            currentUserDoc
-                                                ? `<button
-                                            type="button"
-                                            class="${
-                                                userSubscribedToSubpage
-                                                    ? "subscribed"
-                                                    : "not-subscribed"
-                                            } subpage-subscribe subscribe btn"
-                                            data-subpage-path="${subpage.path}"
-                                        >
-                                            <span class="material-icons"
-                                            >${
-                                                userSubscribedToSubpage
-                                                    ? REMOVE_NOTIFICATION_ICON
-                                                    : ADD_NOTIFICATION_ICON
-                                            }
-                                            </span>
-                                        </button>`
-                                                : `<button
-                                            type="button"
-                                            class="logged-out subpage-subscribe subscribe btn"
-                                            >
-                                            <span class="material-icons"
-                                            >&#xe399;
-                                            </span>
-                                            </button>`
-                                        }
-                                        <button
-                                        class="accordion-button custom collapsed"
-                                        type="button"
-                                        data-bs-toggle="collapse"
-                                        data-bs-target="#embed${subpage.id}"
-                                        aria-expanded="false"
-                                            aria-controls="embed${subpage.id}"
-                                        ></button>
-                                    </div>
-                                    <div
-                                    id="embed${subpage.id}"
-                                    class="accordion-collapse collapse"
-                                    >
-                                    <div class="embed">
-                                    <div class="embed-content">
-                                    ${subpage.content}
-                                    </div>
-                                    <a
-                                    href="${subpage.subpageUrl}"
-                                    class="subpage-link"
-                                    >Visit Page</a
-                                    >
-                                    </div>
-                                    </div>
-                                    </div>`;
-
-                                subpages += subpageAccordionItem;
-                            });
-
-                            const sourceAccordionItem = `<section class="source-block" data-source-id="${
-                                result.id
-                            }">
-                            <div class="source">
-                            <h2>
-                            <span class="d-none d-sm-inline">From: </span
-                            ><a class="source-link" href="${result.sourceUrl}"
-                                            ><img
-                                                    src="${
-                                                        result.sourceLogoUrl
-                                                    }"
-                                                    class="source-logo"
-                                                />Domain</a
-                                            >
-                                        </h2>
-                                        <div class="results-tag">
-                                        (${result.subpages.length} results)
-                                        </div>
-                                        ${
-                                            currentUserDoc
-                                                ? `<div class="btn-group dropup">
-                                            <button
-                                            type="button"
-                                            class="source-subscribe subscribe btn dropdown-toggle"
-                                                        data-bs-toggle="dropdown"
-                                                        aria-expanded="false"
-                                                    >
-                                                    <span class="material-icons">&#xe399; </span>
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-end">
-                                                    <li>
-                                                    <button
-                                                    class="subscribe-topic dropdown-item"
-                                                    type="button"
-                                                    >
-                                                    Subscribe to updates on ${result.topic}
-                                                    </button>
-                                                    </li>
-                                                    <li>
-                                                    <button
-                                                    class="subscribe-all dropdown-item"
-                                                                data-source-path="${result.path}"
-                                                                type="button"
-                                                                >
-                                                                Subscribe to all updates from ${result.sourceName}
-                                                            </button>
-                                                            </li>
-                                                            </ul>
-                                                            </div>`
-                                                : ""
-                                        }                                    
-                                    </div>
-                                    <div
-                                    class="subpages accordion accordion-flush ms-md-5"
-                                    >
-                                    ${subpages}
-                                    <button
-                                    class="view-more-btn btn btn-info"
-                                    type="button"
-                                    >
-                                    View More
-                                    </button>
-                                    </div>
-                                    </section>`;
-
-                            tabWrapperElement.innerHTML += sourceAccordionItem;
-                        });
                     })
                     .catch((error) =>
                         console.error("Error getting subpages", error)
@@ -731,7 +598,10 @@ function getUserSubscriptions(userDoc) {
         return null;
     }
 
-    const subscriptions = userDoc.data().subscriptions;
+    // Ignore strings used for finding users by search subscriptions when creating notifications
+    const subscriptions = userDoc
+        .data()
+        .subscriptions.filter((sub) => typeof sub !== "string");
 
     const subscriptionPaths = subscriptions.map((subscription) => {
         if (subscription.path) {
@@ -845,7 +715,7 @@ function addSourceAllSubscriptionHandler(event) {
     const target = event.currentTarget;
 
     const subscriptionPath = target.dataset.sourcePath;
-    const sourceId = subscriptionPath.split("/")[-1];
+    const sourceId = subscriptionPath.split("/").slice(-1)[0];
 
     console.log("add path to sub", subscriptionPath);
 
@@ -898,7 +768,7 @@ function addSourceAllSubscriptionHandler(event) {
 function removeAllSourceSubscriptionHandler(event) {
     const target = event.currentTarget;
     const subscriptionPath = target.dataset.sourcePath;
-    const sourceId = subscriptionPath.split("/")[-1];
+    const sourceId = subscriptionPath.split("/").slice(-1)[0];
 
     console.log("remove path to sub", subscriptionPath);
 
@@ -940,9 +810,16 @@ function addSourceWithSearchSubscriptionHandler(event) {
     const target = event.currentTarget;
 
     const subscriptionPath = target.dataset.sourcePath;
-    const sourceId = subscriptionPath.split("/")[-1];
+    const sourceId = subscriptionPath.split("/").slice(-1)[0];
+    console.log("sourceId", sourceId);
 
     const queryTopic = getQueryTopic();
+
+    if (!queryTopic) {
+        console.error("Error getting query topic");
+        window.alert("Unable to add subscription. Please try again.");
+        return;
+    }
 
     console.log("add path to sub", subscriptionPath);
 
@@ -963,10 +840,13 @@ function addSourceWithSearchSubscriptionHandler(event) {
             db.collection("users")
                 .doc(user.uid)
                 .update({
-                    subscriptions: firebase.firestore.FieldValue.arrayUnion({
-                        sourceRef: db.doc(subscriptionPath),
-                        search: queryTopic?.queryKeywords?.join(),
-                    }),
+                    subscriptions: firebase.firestore.FieldValue.arrayUnion(
+                        {
+                            sourceRef: db.doc(subscriptionPath),
+                            search: queryTopic.queryKeywords.join(),
+                        },
+                        sourceId
+                    ),
                 })
                 .then(() => {
                     db.collection("users")
@@ -1040,9 +920,15 @@ function addSourceWithSearchSubscriptionHandler(event) {
 function removeSourceWithSearchSubscriptionHandler(event) {
     const target = event.currentTarget;
     const subscriptionPath = target.dataset.sourcePath;
-    const sourceId = subscriptionPath.split("/")[-1];
+    const sourceId = subscriptionPath.split("/").slice(-1)[0];
 
     const queryTopic = getQueryTopic();
+
+    if (!queryTopic) {
+        console.error("Error getting query topic");
+        window.alert("Unable to remove subscription. Please try again.");
+        return;
+    }
 
     console.log("remove path to sub", subscriptionPath);
 
@@ -1085,8 +971,12 @@ function addSearchSubscriptionHandler(event) {
     const target = event.currentTarget;
 
     const queryTopic = getQueryTopic();
-    // TODO: When handling location filter update this to reflect state of filter
-    const local = true;
+
+    if (!queryTopic) {
+        console.error("Error getting query topic");
+        window.alert("Unable to add subscription. Please try again.");
+        return;
+    }
 
     console.log("add path to sub", queryTopic?.textTopic);
 
@@ -1100,10 +990,12 @@ function addSearchSubscriptionHandler(event) {
             db.collection("users")
                 .doc(user.uid)
                 .update({
-                    subscriptions: firebase.firestore.FieldValue.arrayUnion({
-                        search: queryTopic?.queryKeywords?.join(),
-                        local,
-                    }),
+                    subscriptions: firebase.firestore.FieldValue.arrayUnion(
+                        {
+                            search: queryTopic.queryKeywords?.join(),
+                        },
+                        ...queryTopic.queryKeywords
+                    ),
                 })
                 .then(() => {
                     console.log(`search sub added for user ${user.uid}`);
@@ -1131,8 +1023,12 @@ function removeSearchSubscriptionHandler(event) {
     const target = event.currentTarget;
 
     const queryTopic = getQueryTopic();
-    // TODO: When handling location filter update this to reflect state of filter
-    const local = true;
+
+    if (!queryTopic) {
+        console.error("Error getting query topic");
+        window.alert("Unable to remove subscription. Please try again.");
+        return;
+    }
 
     console.log("add path to sub", queryTopic?.queryKeywords);
 
@@ -1148,7 +1044,6 @@ function removeSearchSubscriptionHandler(event) {
                 .update({
                     subscriptions: firebase.firestore.FieldValue.arrayRemove({
                         search: queryTopic?.queryKeywords?.join(),
-                        local,
                     }),
                 })
                 .then(() => {
