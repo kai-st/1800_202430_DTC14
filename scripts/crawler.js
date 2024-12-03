@@ -800,7 +800,8 @@ const dummyData = [
     },
 ];
 
-function writeSourceAndSubpages(sourceData) {
+async function writeSourceAndSubpages(sourceData) {
+    await updateKeywords(sourceData);
     const allSubpageKeywords = sourceData.subpages.reduce(
         (keywords, subpage) => {
             return [...keywords, ...subpage.keywords];
@@ -820,247 +821,91 @@ function writeSourceAndSubpages(sourceData) {
             // Source not in db
             if (querySnapshot.empty) {
                 // Add new source
-                db.collection("sources")
-                    .add({
-                        crawledAt:
-                            firebase.firestore.FieldValue.serverTimestamp(),
-                        keywords: sourceKeywords,
-                        jurisdiction: {
-                            governmentLevel: sourceData.governmentLevel,
-                            location: sourceData.location,
-                        },
-                        sourceName: sourceData.sourceName,
-                        sourceUrl: sourceData.sourceUrl,
-                        sourceLogoUrl: sourceData.sourceLogoUrl,
-                    })
-                    .then((sourceDocRef) => {
-                        // Create new subpages subcollection for Source and add subpages
-                        const subpagesCollectionRef =
-                            sourceDocRef.collection("subpages");
-                        const batch = db.batch();
-                        for (const subpage of sourceData.subpages) {
-                            batch.add(subpagesCollectionRef, {
-                                content: subpage.content,
-                                keywords: subpage.keywords,
-                                subpageTitle: subpage.subpageTitle,
-                                subpageUrl: subpage.subpageUrl,
-                                updatedAt:
-                                    firebase.firestore.FieldValue.serverTimestamp(),
-                                news: subpage.keywords.includes("news"),
-                                sourceID: sourceDocRef.id,
-                                subpageSummary: subpage.subpageSummary,
-                            });
-                        }
-                        // Send batch to db
-                        batch
-                            .commit()
-                            .then(() => {
-                                console.log(
-                                    "Wrote new source and subpages for",
-                                    sourceData.sourceUrl
-                                );
-
-                                // get all the new subpages in order to add aliases for keywords
-                                subpagesCollectionRef
-                                    .get()
-                                    .then((newSubpageSnapshot) => {
-                                        newSubpageSnapshot.forEach(
-                                            (subpageDoc) => {
-                                                const keywords =
-                                                    sourceData.subpages.find(
-                                                        (page) =>
-                                                            page.subpageUrl ===
-                                                            subpageDoc.data()
-                                                                .subpageUrl
-                                                    ).keywords;
-                                                updateKeywords(
-                                                    keywords,
-                                                    sourceDocRef,
-                                                    subpageDoc.ref
-                                                );
-                                            }
-                                        );
-                                    });
-                            })
-                            .catch((error) => {
-                                console.error(
-                                    `Error writing subpages for new source ${sourceData.sourceUrl}`,
-                                    error
-                                );
-                            });
-                    })
-                    .catch((error) => {
-                        console.error(
-                            `Error writing new source ${sourceData.sourceUrl}`,
-                            error
-                        );
-                    });
+                addNewSourceAndSubpages(sourceData, sourceKeywords);
             } else {
+                // Update source
                 querySnapshot.forEach((sourceDoc) => {
-                    const batch = db.batch();
-
-                    // Update existing source
-                    batch.update(sourceDoc.ref, {
-                        crawledAt:
-                            firebase.firestore.FieldValue.serverTimestamp(),
-                        keywords: firebase.firestore.FieldValue.arrayUnion(
-                            ...sourceKeywords
-                        ),
-                    });
-
-                    // Get existing subpages
-                    const subpageUrls = sourceData.subpages.map(
-                        (subpage) => subpage.subpageUrl
+                    updateSourceAndSubpages(
+                        sourceDoc,
+                        sourceData,
+                        sourceKeywords
                     );
-                    sourceDoc.ref
-                        .collection("subpages")
-                        .where("subpageUrl", "in", subpageUrls)
-                        .get()
-                        .then((querySnapshot) => {
-                            const subpagesCollectionRef =
-                                sourceDoc.ref.collection("subpages");
-
-                            for (const subpage of sourceData.subpages) {
-                                const existingDoc = querySnapshot.docs.find(
-                                    (subpageDoc) => {
-                                        return (
-                                            subpageDoc.data().subpageUrl ===
-                                            subpage.subpageUrl
-                                        );
-                                    }
-                                );
-
-                                if (existingDoc) {
-                                    // Update existing subpage
-                                    batch.update(existingDoc.ref, {
-                                        content: subpage.content,
-                                        keywords: subpage.keywords,
-                                        updatedAt:
-                                            firebase.firestore.FieldValue.serverTimestamp(),
-                                        news: subpage.keywords.includes("news"),
-                                        subpageSummary: subpage.subpageSummary,
-                                    });
-                                } else {
-                                    // Add new subpage
-                                    batch.add(subpagesCollectionRef, {
-                                        content: subpage.content,
-                                        keywords: subpage.keywords,
-                                        subpageTitle: subpage.subpageTitle,
-                                        subpageUrl: subpage.subpageUrl,
-                                        updatedAt:
-                                            firebase.firestore.FieldValue.serverTimestamp(),
-                                        news: subpage.keywords.includes("news"),
-                                        sourceID: sourceDoc.id,
-                                        subpageSummary: subpage.subpageSummary,
-                                    });
-                                }
-
-                                // Send batch to db
-                                batch
-                                    .commit()
-                                    .then(() => {
-                                        console.log(
-                                            "Updated source and subpages for",
-                                            sourceData.sourceUrl
-                                        );
-
-                                        // const subpageUrls =
-                                        //     sourceData.subpages.map(
-                                        //         (subpage) => subpage.subpageUrl
-                                        //     );
-
-                                        // get all the new and updated subpages in order to add aliases for keywords
-                                        subpagesCollectionRef
-                                            .where(
-                                                "subpageUrl",
-                                                "in",
-                                                subpageUrls
-                                            )
-                                            .get()
-                                            .then(
-                                                (
-                                                    newOrUpdatedSubpagesSnapshot
-                                                ) => {
-                                                    newOrUpdatedSubpagesSnapshot.forEach(
-                                                        (subpageDoc) => {
-                                                            const keywords =
-                                                                sourceData.subpages.find(
-                                                                    (page) =>
-                                                                        page.subpageUrl ===
-                                                                        subpageDoc.data()
-                                                                            .subpageUrl
-                                                                ).keywords;
-                                                            updateKeywords(
-                                                                keywords,
-                                                                sourceDoc.ref,
-                                                                subpageDoc.ref
-                                                            );
-                                                        }
-                                                    );
-                                                }
-                                            )
-                                            .catch((error) => {
-                                                console.error(
-                                                    "Error getting new or updated subpages",
-                                                    error
-                                                );
-                                            });
-                                    })
-                                    .catch((error) => {
-                                        console.error(
-                                            `Error updating source ${sourceData.sourceUrl} and subpages`,
-                                            error
-                                        );
-                                    });
-                            }
-                        })
-                        .catch((error) => {
-                            console.error(
-                                `Error getting existing subpages for ${sourceData.sourceUrl}`,
-                                error
-                            );
-                        });
                 });
             }
         });
 }
 
-function updateKeywords(subpageKeywords, sourceRef, subpageRef) {
-    for (const keyword of subpageKeywords) {
-        findOrCreateKeywordRecord(keyword, sourceRef, subpageRef);
+// function updateKeywords(subpageKeywords, sourceRef, subpageRef) {
+//     for (const keyword of subpageKeywords) {
+//         findOrCreateKeywordRecord(keyword, sourceRef, subpageRef);
+//     }
+// }
+
+async function updateKeywords(sourceData) {
+    for (const subpage of sourceData.subpages) {
+        let keywordsWithAliases = [];
+        const keywordsFromCrawl = [...subpage.keywords];
+        for (const keyword of keywordsFromCrawl) {
+            const aliases = await findOrCreateKeywordRecord(
+                keyword,
+                keywordsFromCrawl
+            );
+            keywordsWithAliases = [...keywordsWithAliases, ...aliases];
+        }
+        subpage.keywords = keywordsWithAliases;
     }
 }
 
-function findOrCreateKeywordRecord(keyword, sourceRef, subpageRef) {
+// function findOrCreateKeywordRecord(keyword, sourceRef, subpageRef) {
+//     const lowercaseKeyword = keyword.toLowerCase();
+
+//     db.collection("keywords")
+//         .where("aliases", "array-contains", lowercaseKeyword)
+//         .get()
+//         .then((keywordSnapshot) => {
+//             if (keywordSnapshot.size > 0) {
+//                 let allAliases = [];
+//                 keywordSnapshot.forEach((keywordDoc) => {
+//                     allAliases = [...allAliases, ...keywordDoc.data().aliases];
+//                 });
+//                 updateKeywordsForRef(allAliases, sourceRef);
+//                 updateKeywordsForRef(allAliases, subpageRef);
+//             } else {
+//                 addNewKeyword(lowercaseKeyword);
+//             }
+//         })
+//         .catch((error) => {
+//             console.error("Error checking if keyword exists", error);
+//         });
+// }
+async function findOrCreateKeywordRecord(keyword, allKeywordsForSubpage) {
     const lowercaseKeyword = keyword.toLowerCase();
 
-    db.collection("keywords")
+    const keywordSnapshot = await db
+        .collection("keywords")
         .where("aliases", "array-contains", lowercaseKeyword)
-        .get()
-        .then((keywordSnapshot) => {
-            if (keywordSnapshot.size > 0) {
-                let allAliases = [];
-                keywordSnapshot.forEach((keywordDoc) => {
-                    allAliases = [...allAliases, ...keywordDoc.data().aliases];
-                });
-                updateKeywordsForRef(allAliases, sourceRef);
-                updateKeywordsForRef(allAliases, subpageRef);
-            } else {
-                addNewKeyword(lowercaseKeyword);
-            }
-        })
-        .catch((error) => {
-            console.error("Error checking if keyword exists", error);
+        .get();
+
+    if (keywordSnapshot.size > 0) {
+        let allAliases = [];
+        keywordSnapshot.forEach((keywordDoc) => {
+            allAliases = [...allAliases, ...keywordDoc.data().aliases];
         });
+        return allAliases;
+    } else {
+        await addNewKeyword(lowercaseKeyword, allKeywordsForSubpage);
+        console.log("finished adding keyword");
+        return [lowercaseKeyword];
+    }
 }
 
-function updateKeywordsForRef(aliases, firestoreRef) {
-    firestoreRef.update({
-        keywords: firebase.firestore.FieldValue.arrayUnion(...aliases),
-    });
-}
+// function updateKeywordsForRef(aliases, firestoreRef) {
+//     firestoreRef.update({
+//         keywords: firebase.firestore.FieldValue.arrayUnion(...aliases),
+//     });
+// }
 
-function addNewKeyword(lowercaseKeyword) {
+async function addNewKeyword(lowercaseKeyword, allKeywordsForSubpage = []) {
     const categories = [
         "diseases",
         "healthcare services",
@@ -1068,23 +913,189 @@ function addNewKeyword(lowercaseKeyword) {
         "vaccines",
     ];
 
-    db.collection("keywords")
-        .add({
+    try {
+        // Assume that if the keywords for a subpage include a category,
+        // it is reasonable to assume the other keywords for that page should be in that category.
+        // Otherwise categorization and adding aliases will be done manually for now,
+        // consider finding APIs for such in future
+        await db.collection("keywords").add({
             aliases: [lowercaseKeyword],
             name:
                 lowercaseKeyword[0].toUpperCase() +
                 lowercaseKeyword.substring(1),
             category:
-                categories.find((category) => category === lowercaseKeyword) ??
-                "uncategorized",
+                categories.find((category) => {
+                    allKeywordsForSubpage.includes(category);
+                }) ?? "uncategorized",
+        });
+
+        console.log("added keyword", lowercaseKeyword);
+    } catch (error) {
+        console.error("Error adding keyword", error);
+    }
+}
+
+function addNewSourceAndSubpages(sourceData, sourceKeywords) {
+    // console.log("source data", sourceData);
+    // const sourceJurisdiction = sourceData.location
+    //     ? {
+    //           governmentLevel: sourceData.governmentLevel,
+    //           location: sourceData.location,
+    //       }
+    //     : {
+    //           governmentLevel: sourceData.governmentLevel,
+    //       };
+    // console.log("jur", sourceJurisdiction);
+    db.collection("sources")
+        .add({
+            crawledAt: firebase.firestore.FieldValue.serverTimestamp(),
+            keywords: sourceKeywords,
+            jurisdiction: sourceData.jurisdiction,
+            sourceName: sourceData.sourceName,
+            sourceUrl: sourceData.sourceUrl,
+            sourceLogoUrl: sourceData.sourceLogoUrl,
         })
-        .then(() => {
-            console.log("added keyword", lowercaseKeyword);
+        .then((sourceDocRef) => {
+            // Create new subpages subcollection for Source and add subpages
+            const subpagesCollectionRef = sourceDocRef.collection("subpages");
+            const batch = db.batch();
+            for (const subpage of sourceData.subpages) {
+                const newSubpageRef = subpagesCollectionRef.doc();
+                batch.set(newSubpageRef, {
+                    content: subpage.content,
+                    keywords: subpage.keywords,
+                    subpageTitle: subpage.subpageTitle,
+                    subpageUrl: subpage.subpageUrl,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    news: subpage.keywords.includes("news"),
+                    sourceID: sourceDocRef.id,
+                    subpageSummary: subpage.subpageSummary,
+                });
+            }
+            // Send batch to db
+            batch
+                .commit()
+                .then(() => {
+                    console.log(
+                        "Wrote new source and subpages for",
+                        sourceData.sourceUrl
+                    );
+                })
+                .catch((error) => {
+                    console.error(
+                        `Error writing subpages for new source ${sourceData.sourceUrl}`,
+                        error
+                    );
+                });
         })
         .catch((error) => {
-            console.error("Error adding keyword", error);
+            console.error(
+                `Error writing new source ${sourceData.sourceUrl}`,
+                error
+            );
         });
 }
+
+function updateSourceAndSubpages(sourceDoc, sourceData, sourceKeywords) {
+    const batch = db.batch();
+
+    // Update existing source
+    batch.update(sourceDoc.ref, {
+        crawledAt: firebase.firestore.FieldValue.serverTimestamp(),
+        keywords: firebase.firestore.FieldValue.arrayUnion(...sourceKeywords),
+    });
+
+    const subpageUrls = sourceData.subpages.map(
+        (subpage) => subpage.subpageUrl
+    );
+    // Get existing subpages
+    sourceDoc.ref
+        .collection("subpages")
+        .where("subpageUrl", "in", subpageUrls)
+        .get()
+        .then((querySnapshot) => {
+            const subpagesCollectionRef = sourceDoc.ref.collection("subpages");
+
+            for (const subpage of sourceData.subpages) {
+                const existingDoc = querySnapshot.docs.find((subpageDoc) => {
+                    return subpageDoc.data().subpageUrl === subpage.subpageUrl;
+                });
+
+                if (existingDoc) {
+                    // Update existing subpage
+                    batch.update(existingDoc.ref, {
+                        content: subpage.content,
+                        keywords: subpage.keywords,
+                        updatedAt:
+                            firebase.firestore.FieldValue.serverTimestamp(),
+                        news: subpage.keywords.includes("news"),
+                        subpageSummary: subpage.subpageSummary,
+                    });
+                } else {
+                    // Add new subpage
+                    const newSubpageRef = subpagesCollectionRef.doc();
+                    batch.set(newSubpageRef, {
+                        content: subpage.content,
+                        keywords: subpage.keywords,
+                        subpageTitle: subpage.subpageTitle,
+                        subpageUrl: subpage.subpageUrl,
+                        updatedAt:
+                            firebase.firestore.FieldValue.serverTimestamp(),
+                        news: subpage.keywords.includes("news"),
+                        sourceID: sourceDoc.id,
+                        subpageSummary: subpage.subpageSummary,
+                    });
+                }
+
+                // Send batch to db
+                batch
+                    .commit()
+                    .then(() => {
+                        console.log(
+                            "Updated source and subpages for",
+                            sourceData.sourceUrl
+                        );
+                    })
+                    .catch((error) => {
+                        console.error(
+                            `Error updating source ${sourceData.sourceUrl} and subpages`,
+                            error
+                        );
+                    });
+            }
+        })
+        .catch((error) => {
+            console.error(
+                `Error getting existing subpages for ${sourceData.sourceUrl}`,
+                error
+            );
+        });
+}
+// function addNewKeyword(lowercaseKeyword) {
+//     const categories = [
+//         "diseases",
+//         "healthcare services",
+//         "mental health",
+//         "vaccines",
+//     ];
+
+//     db.collection("keywords")
+//         .add({
+//             aliases: [lowercaseKeyword],
+//             name:
+//                 lowercaseKeyword[0].toUpperCase() +
+//                 lowercaseKeyword.substring(1),
+//             category:
+//                 categories.find((category) => category === lowercaseKeyword) ??
+//                 "uncategorized",
+//         })
+//         .then(() => {
+//             console.log("added keyword", lowercaseKeyword);
+//         })
+//         .catch((error) => {
+//             console.error("Error adding keyword", error);
+//         });
+// }
 
 // Crawler experiments, ignore for now
 //
