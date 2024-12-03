@@ -34,6 +34,16 @@ function editUserGeoInfo() {
 }
 
 function saveUserGeoInfo(resp) {
+    try {
+        currentUserRef
+            .update({
+                postalCode: resp.postal,
+                city: resp.standard.city,
+                province: resp.standard.prov,
+            })
+    } catch (err) {
+        window.confirm("Your postal code is invalid. Please make sure you have entered the correct postal code with no spaces in between.")
+    }
     currentUserRef
         .update({
             postalCode: resp.postal,
@@ -41,9 +51,10 @@ function saveUserGeoInfo(resp) {
             province: resp.standard.prov,
         })
         .then(() => {
-            window.confirm("Please refresh this page to succesfully update your location.")
+            window.confirm("Your postal code has been successfully updated.")
             console.log("Document successfully updated!");
         });
+
 
     // disable edit
     // document.getElementById("postalCodeInputField").disabled = true;
@@ -53,9 +64,10 @@ function getUserGeoInfo() {
     var postalCode = document.getElementById("postalCodeInput").value;
     fetch(`https://geocoder.ca/?locate=${postalCode}&json=1`)
         .then((resp) => resp.json())
-        .then((resp) => {
-            saveUserGeoInfo(resp);
-        })
+        .then(
+            (resp) => {
+                saveUserGeoInfo(resp);
+            })
         .catch((err) => {
             console.log(err);
         });
