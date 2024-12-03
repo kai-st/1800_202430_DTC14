@@ -50,31 +50,6 @@ const dummyData = [
         ],
     },
     {
-        sourceUrl: "https://news.gov.bc.ca",
-        // Replace the domain in this link with the source domain>
-        sourceLogoUrl:
-            "https://www.google.com/s2/favicons?domain=news.gov.bc.ca&sz=32",
-        sourceName: "BC Gov News",
-        jurisdiction: {
-            // "national", "province", "city"
-            governmentLevel: "province",
-            // no location if national, two letter abbreviation if province eg "BC", array with all applicable cities if city eg ["Vancouver"] or ["Vancouver", "Burnaby"]
-            location: "BC",
-        },
-        subpages: [
-            {
-                subpageTitle:
-                    "PHO's statement on ensuring childrens' vaccinations are up to date",
-                subpageUrl:
-                    "https://news.gov.bc.ca/releases/2024HLTH0126-001324",
-                keywords: ["vaccines", "news"],
-                subpageSummary:
-                    "Dr. Bonnie Henry, British Columbia's provincial health officer, has issued the following statement to make sure children in B.C. are up to date on all their vaccines as part of back-to-school preparations:",
-                content: `<article><p>Dr. Bonnie Henry, British Columbia's provincial health officer, has issued the following statement to make sure children in B.C. are up to date on all their vaccines as part of back-to-school preparations:</p><p>“As the summer holidays draw to a close, many families are starting to think about their back-to-school tasks. Buy school supplies. Take their children for haircuts. Help their kids pick out the perfect outfit for the first day of school.</p><p>“This year, I’m urging you to add another important item to your to-do list: Ensure that your children are up to date on their routine vaccinations and&nbsp;they get vaccinated against common illnesses, such as measles, mumps and rubella, polio, pertussis (whooping cough) and chickenpox.</p><p>“August is the perfect time to take your children for any outstanding vaccines. As kids start or return to child care or school, they’ll be interacting with many friends, caregivers and teachers, increasing their chances of being exposed to these and other infectious diseases. And we know respiratory-illness season will soon be here, bringing COVID-19, influenza and other viruses.</p><p>“Getting your children vaccinated is the best way to protect them from vaccine-preventable illnesses that can cause serious illness, long-term disability and even death.</p><p>“Children six and under are eligible for free vaccines to protect them from more than a dozen diseases, such as COVID-19, influenza, polio, measles and chickenpox. We also provide children with free vaccines at school clinics beginning in Grade 6, including the human papillomavirus and meningitis vaccines, and booster doses of vaccines they received in early childhood.</p><p>“To get your infant or young child vaccinated, visit HealthLinkBC for full details. You can book an appointment at a health unit or at your doctor’s or nurse practitioner’s office if they do immunizations. If your child is older than five, you can also book an appointment to get them vaccinated at some pharmacies.</p><p>“School-aged children and teens typically receive their vaccines at clinics held at schools. However, they can also get vaccinated at health units, some doctors' and nurse practitioners' offices and some pharmacies.</p><p>“As many young adults begin mixing in new social groups this fall, pursue post-secondary opportunities or move into campus housing, vaccines against influenza and meningitis are recommended, along with an updated dose of the COVID-19 vaccine.</p><p>“I encourage everyone to visit HealthLinkBC for more information about childhood and young adult vaccines, and use the online tool to find a health unit close to home. You can also see your children's immunization schedule via HealthLinkBC or view immunization records through the Health Gateway.</p><p>“Whether the young people in your life are infants or young adults, now is the time to protect them through immunizations. Just like packing healthy lunches for your kids and encouraging them to get enough exercise and sleep, getting them vaccinated is one of the most important things you can do to help them have a happy and healthy school year.”</p><p><strong>Learn More:</strong></p><p>Unsure which vaccines your child is due for? You can check their immunization records through the Health Gateway: <a href="https://www.healthgateway.gov.bc.ca/">https://www.healthgateway.gov.bc.ca/</a></p><p>To learn more about COVID-19 vaccines for children, visit:&nbsp;<a href="https://www2.gov.bc.ca/gov/content/covid-19/vaccine/children">https://www2.gov.bc.ca/gov/content/covid-19/vaccine/children</a></p><p>View your children’s immunization schedule:&nbsp;<a href="https://www.healthlinkbc.ca/childhoodvaccines">https://www.healthlinkbc.ca/childhoodvaccines</a></p><p>For people who notice a record is missing, they can update records here: <a href="https://immunizationrecord.gov.bc.ca/">https://immunizationrecord.gov.bc.ca/</a></p><p>Register for a COVID-19 vaccine through the provincial Get Vaccinated system at:&nbsp;<a href="https://www2.gov.bc.ca/gov/content/covid-19/vaccine/register">https://www2.gov.bc.ca/gov/content/covid-19/vaccine/register</a> &nbsp;<br>After you do so, you’ll receive an invitation to book an appointment at a child-friendly clinic in your community.</p><p>Learn more about the provincial immunization program:&nbsp;<a href="https://immunizebc.ca/">https://immunizebc.ca/</a></p><div> </div></article>`,
-            },
-        ],
-    },
-    {
         // If a source exists in the db, only need sourceUrl and subpages
         sourceUrl: "https://immunizebc.ca",
         subpages: [
@@ -92,10 +67,13 @@ const dummyData = [
             },
         ],
     },
+];
+
+const alreadyWrittenData = [
     {
         sourceUrl: "https://www.canada.ca/en/public-health",
         sourceLogoUrl:
-            "https://www.google.com/s2/favicons?domain=immunizebc.ca&sz=32",
+            "https://www.google.com/s2/favicons?domain=www.canada.ca&sz=32",
         sourceName: "Public Health Agency of Canada",
         jurisdiction: {
             governmentLevel: "national",
@@ -216,13 +194,13 @@ const dummyData = [
                     "COVID-19: Symptoms, treatment, what to do if you feel sick",
                 subpageUrl:
                     "https://www.canada.ca/en/public-health/services/diseases/2019-novel-coronavirus-infection/symptoms.html",
-                keywords: ["covid-19, covid"],
+                keywords: ["covid-19", "covid"],
                 subpageSummary:
                     "This page contains information about Covid-19 symptoms, what to do if you're sick or exposed, how to care for others who have Covid-19, how to treat Covid-19, and what long-term symptoms might occur",
                 content: `<div class="mwsgeneric-base-html parbase section">
-
-
-
+    
+    
+    
                             <h2 class="mrgn-tp-md h3">Join the effort to limit the spread of COVID-19</h2>
                         <p><a href="/en/public-health/services/diseases/2019-novel-coronavirus-infection/symptoms/provincial-territorial-resources-covid-19.html" class="btn btn-call-to-action">Get a COVID-19 test near you</a></p>
                         <h2>On this page</h2>
@@ -234,21 +212,21 @@ const dummyData = [
                         <li><a href="#t">Treating COVID-19</a></li>
                         <li><a href="#lts">Long-term symptoms</a></li>
                         </ul>
-
-
-
+    
+    
+    
                         <h2 id="s">COVID-19 symptoms</h2>
-
-
-
+    
+    
+    
                         <p>Symptoms of COVID-19 can vary: </p>
                         <ul>
                         <li>from person to person</li>
                         <li>in different age groups</li>
                         <li>depending on the COVID-19 variant</li>
                         </ul>
-
-
+    
+    
                         <p>Some of the more commonly reported symptoms include:</p>
                         <ul>
                         <li>sore throat</li>
@@ -266,37 +244,37 @@ const dummyData = [
                         <li>abdominal pain, diarrhea and vomiting</li>
                         <li>feeling very unwell</li>
                         </ul>
-
-
+    
+    
                         <p><strong>If you don’t feel well or if you have any symptoms, even if mild, assume you may have COVID-19. </strong>Immediately isolate at home and away from others. Check with your local public health authority for more advice, including where and how to get tested if recommended. </p>
                         <p>You may be infected but not have symptoms. However, you can still spread the virus to others. You may:</p>
                         <ul>
                         <li>develop symptoms later (be pre-symptomatic)</li>
                         <li>never develop symptoms (be asymptomatic)</li>
                         </ul>
-
-
+    
+    
                         <p>If you’ve been in contact with someone who has COVID-19, contact your local public health authority for advice on what to do next.</p>
                         <p>Learn more about:</p>
                         <ul>
                         <li><a href="/en/public-health/services/diseases/2019-novel-coronavirus-infection/symptoms/testing/diagnosing.html">Testing for COVID-19: When to get tested and testing results</a></li>
                         <li><a href="/en/public-health/services/diseases/2019-novel-coronavirus-infection/symptoms/provincial-territorial-resources-covid-19.html">COVID-19: Contact your local public health authority</a></li>
                         </ul>
-
-
+    
+    
                         <h3>Start of symptoms </h3>
                         <p>You may start experiencing symptoms anywhere from 1 to 14 days after exposure. Typically, symptoms appear between 3 and 7 days after exposure. &nbsp;</p>
                         <h3>Vaccination prevents severe illness</h3>
-
-
+    
+    
                         <p>Vaccination is one of the most effective ways to protect our families, communities and ourselves against COVID-19. Evidence indicates that the vaccines used in Canada are very effective at preventing severe illness, hospitalization and death from COVID-19. </p>
                         <p>However, vaccines are <strong>not</strong> 100% effective and you may still become infected with or without symptoms.</p>
                         <p>Learn more about:</p>
                         <ul>
                         <li><a href="/en/public-health/services/diseases/coronavirus-disease-covid-19/vaccines/how-vaccinated.html">Vaccines for COVID-19: How to get vaccinated</a></li>
                         </ul>
-
-
+    
+    
                         <h3>Public health measures </h3>
                         <p>When layered together, public health measures are effective in reducing the spread of COVID-19, including variants of concern. </p>
                         <p>Regardless of your vaccination status, you should continue to: </p>
@@ -304,20 +282,20 @@ const dummyData = [
                         <li>follow the advice of your local public health authority </li>
                         <li>layer multiple individual public health measures to protect yourself and others</li>
                         </ul>
-
-
+    
+    
                         <p>Learn more about:</p>
-
+    
                         <ul>
                         <li><a href="/en/public-health/services/diseases/2019-novel-coronavirus-infection/symptoms/provincial-territorial-resources-covid-19.html">COVID-19: Provincial and territorial resources</a></li>
                         <li><a href="/en/public-health/services/diseases/2019-novel-coronavirus-infection/prevention-risks.html#p">COVID-19: Individual public health measures</a></li>
                         </ul>
-
-
-
+    
+    
+    
                         <h2 id="ss">If you have severe symptoms</h2>
-
-
+    
+    
                         <p>Call&nbsp;<strong>911</strong>&nbsp;or your local emergency number if you develop&nbsp;<strong>severe symptoms</strong>, such as:</p>
                         <ul>
                         <li>trouble breathing or severe shortness of breath</li>
@@ -326,27 +304,27 @@ const dummyData = [
                         <li>difficulty waking up or staying awake</li>
                         <li>pale, grey or blue-coloured skin, lips or nail beds</li>
                         </ul>
-
-
+    
+    
                         <p>Follow&nbsp;<a href="/en/public-health/services/diseases/2019-novel-coronavirus-infection/prevention-risks/how-care-someone-covid-19-home.html#a5">instructions for safe transport</a>&nbsp;if taking an ambulance or a private vehicle to a hospital or clinic.</p>
-
-
+    
+    
                         <h2 id="_Getting_tested">What to do if you’re sick or were exposed</h2>
-
+    
                         <p>It’s important that you continue to follow the recommendations and restrictions of your local public health authority on quarantine or isolation if you: </p>
                         <ul>
                         <li>may have COVID-19 (for example, you feel sick or have been exposed)</li>
                         <li>have tested positive for COVID-19 </li>
                         </ul>
-
-
+    
+    
                         <p>If you have to quarantine or isolate, follow appropriate precautions to reduce the risk of illness spreading within your home. If you don’t have somewhere safe to isolate, contact your local public health authority for available options.</p>
                         <p>Adults and children with mild COVID-19 symptoms can stay at home while recovering. You don’t need to go to the hospital if symptoms are mild.</p>
-
+    
                         <p>Check with your local public health authority about quarantine or isolation periods, and reporting. </p>
-
-
-
+    
+    
+    
                             <section class="well-sm">
                         <div class="container row-no-gutters">
                             <div class="col-md-6 wb-fieldflow-form">
@@ -374,47 +352,47 @@ const dummyData = [
                             </div>
                             </div>
                         </section>
-
+    
                         <p>Learn more about:</p>
                         <ul>
                         <li><a href="/en/public-health/services/diseases/2019-novel-coronavirus-infection/symptoms/testing/diagnosing.html">Testing for COVID-19: When to get tested and testing results</a></li>
                         <li><a href="/en/public-health/services/diseases/2019-novel-coronavirus-infection/canadas-reponse/support-provinces-territories.html#v">Safe Voluntary Isolation Sites Program</a></li>
                         </ul>
-
-
-
+    
+    
+    
                         <h2 id="i">Caring for others</h2>
-
-
-
+    
+    
+    
                         <p>You may be caring for someone at home who has or may have COVID-19. If so, you should follow the appropriate precautions to reduce the risk of illness spreading within your home.</p>
                         <p>Adults and children with mild COVID-19 symptoms can stay at home while recovering. You don’t need to go to the hospital if symptoms are mild.</p>
                         <p>Learn more about:</p>
                         <ul>
                         <li><a href="/en/public-health/services/diseases/2019-novel-coronavirus-infection/prevention-risks/how-care-someone-covid-19-home.html">COVID-19: What to do if you or someone in your home is sick</a></li>
                         </ul>
-
-
-
-
+    
+    
+    
+    
                         <h2 id="t">Treating COVID-19</h2>
-
-
+    
+    
                         <p>If you’re concerned about your symptoms, consult your health care provider. They may recommend steps or medications you can take to relieve some of your symptoms, like fever and cough.</p>
                         <p>Follow the advice of your health care provider, who may prescribe treatments.</p>
                         <p>Learn more about:</p>
-
+    
                         <ul>
                         <li><a href="/en/health-canada/services/drugs-health-products/covid19-industry/drugs-vaccines-treatments/treatments.html">COVID-19 treatments</a></li>
                         </ul>
-
-
-
-
-
+    
+    
+    
+    
+    
                         <h2 id="lts">Long-term symptoms</h2>
-
-
+    
+    
                         <p>Some people who become infected with COVID-19 may experience long-term symptoms, even after they recover from their initial infection. This is sometimes called post COVID-19 condition or long COVID. It has also been called post-acute COVID-19 syndrome (PACS) or long haul COVID.</p>
                         <p>Studies are underway to further understand what causes post COVID-19 condition and how to diagnose and treat it.</p>
                         <p>If you think you have this condition, talk to your health care provider about how to manage your symptoms.</p>
@@ -422,18 +400,18 @@ const dummyData = [
                         <ul>
                         <li><a href="/en/public-health/services/diseases/2019-novel-coronavirus-infection/symptoms/post-covid-19-condition.html">Post COVID-19 condition (long COVID)</a></li>
                         </ul>
-
-
-
+    
+    
+    
                         <h2>Related links</h2>
-
-
+    
+    
                         <ul>
                         <li><a href="/en/public-health/services/diseases/2019-novel-coronavirus-infection/awareness-resources.html">Digital factsheets, printable posters and shareable videos on COVID-19 (multilingual products available)</a></li>
                         <li><a href="/en/public-health/services/diseases/2019-novel-coronavirus-infection/digital-resources.html">COVID-19: Social media and promotional resources for Health Canada and Public Health Agency of Canada</a></li>
                         </ul>
-
-
+    
+    
                         </div>`,
             },
         ],
@@ -470,10 +448,10 @@ const dummyData = [
                 content: `<div class="page-content">
                 <div class="page-header" data-bundle="topic" data-page-has-image="true" data-is-location="false">
                 <div class="container ">
-
+    
                             <div class="col-12">
                         
-
+    
                 <nav class="breadcrumb" role="navigation" aria-labelledby="system-breadcrumb">
                     <h2 id="system-breadcrumb" class="visually-hidden">Breadcrumb</h2>
                     <ol>
@@ -482,7 +460,7 @@ const dummyData = [
                                     </li>
                                 </ol>
                 </nav>
-
+    
                     </div>
                     
                             <h1 class="title col-12">
@@ -498,19 +476,19 @@ const dummyData = [
                                             <div class="section-module container">
                             <div class="col-12 col-tb-8">
                                     
-
-
+    
+    
                 <div class="wysiwyg" id="wysiwyg--132426">
                     
-
+    
                 <div class="wysiwyg-content">
                     <h3>On July 26, 2024, B.C.’s Provincial Health Officer issued an order to end the public health emergency for COVID-19 and rescinded all related orders.</h3>
-
+    
                 </div>
-
+    
                 </div>
-
-
+    
+    
                         </div>
                             </div>
                                 
@@ -518,24 +496,24 @@ const dummyData = [
                                             <div class="section-module container">
                             <div class="col-12 col-tb-8">
                                     
-
-
+    
+    
                 <div class="wysiwyg" id="wysiwyg--69356">
                     <h2 class="title">
                     What is COVID-19?
                     </h2>
                     
-
+    
                 <div class="wysiwyg-content">
                     <p>COVID-19 is a respiratory disease caused by the virus SARS-CoV-2. It is spread mostly from person to person.</p>
                 <p>Most people who get COVID-19 will experience mild to moderate illness and will not require hospital care. Some people are more likely to become seriously ill from COVID-19 and require medical attention. Vaccination is the most effective way to prevent serious outcomes.</p>
                 <p><a href="http://www.bccdc.ca/health-info/diseases-conditions/covid-19/about-covid-19" target="_blank" rel="noreferrer noopener external">Visit BCCDC for more information<svg class="icon icon--external"><use xlink:href="/themes/custom/vch/images/svg-symbols.svg#icon--external"></use></svg></a></p>
-
+    
                 </div>
-
+    
                 </div>
-
-
+    
+    
                         </div>
                             </div>
                                 
@@ -543,14 +521,14 @@ const dummyData = [
                                             <div class="section-module container">
                             <div class="col-12 col-tb-8">
                                     
-
-
+    
+    
                 <div class="wysiwyg" id="wysiwyg--101856">
                     <h2 class="title">
                     COVID-19 testing
                     </h2>
                     
-
+    
                 <div class="wysiwyg-content">
                     <p>In B.C., A COVID-19 test is recommended when a positive or negative result will inform decisions about treatment or care. Testing is recommended for people with symptoms of COVID-19 and who are:</p>
                 <ul>
@@ -568,12 +546,12 @@ const dummyData = [
                 <p>If you are&nbsp;unsure whether you should get a COVID-19 test,&nbsp;<a href="https://covidcheck.gov.bc.ca/" target="_blank" rel="noreferrer noopener external">use the COVID-19 self-assessment<svg class="icon icon--external"><use xlink:href="/themes/custom/vch/images/svg-symbols.svg#icon--external"></use></svg></a>, contact your health-care provider or call 8-1-1. If you are at greater risk of severe disease you can get a PCR test from your physician or nurse practitioner, at a walk-in clinic, or at an Urgent and Primary Care Centre (UPCC). If you experience any symptoms such as loss of consciousness, difficulty breathing or chest pain, do not delay in seeking treatment. Visit your local emergency department or call 9-1-1.&nbsp;</p>
                 <h3>Information for health-care providers</h3>
                 <p>Family doctor and nurse practitioner offices who intend to administer COVID-19 PCR testing from their clinic location can access appropriate supplies through their usual clinical supply chains. For those not providing testing services on-site, LifeLab sites operating in the VCH region accept laboratory requisitions from health-care providers for COVID-19 testing. Please note on the requisition that this is a “COVID-19 MSP PCR test.”</p>
-
+    
                 </div>
-
+    
                 </div>
-
-
+    
+    
                         </div>
                             </div>
                                 
@@ -581,24 +559,24 @@ const dummyData = [
                                             <div class="section-module container">
                             <div class="col-12 col-tb-8">
                                     
-
-
+    
+    
                 <div class="wysiwyg" id="wysiwyg--69361">
                     <h2 class="title">
                     COVID-19 prevention and risks
                     </h2>
                     
-
+    
                 <div class="wysiwyg-content">
                     <p>We have many tools, such as vaccines, treatments and our own actions that can protect us from the impacts of COVID-19.</p>
                 <p>You can determine how and when to use these tools while supporting your family’s overall physical and mental health. These tools will help everyone be safer from COVID-19 and other illnesses, and they are even more important if you are at higher risk of severe illness from COVID-19.</p>
                 <p><a href="http://www.bccdc.ca/health-info/diseases-conditions/covid-19/prevention-risks" target="_blank" rel="noreferrer noopener external">Learn more about how to prevent the spread of COVID-19 in your community.<svg class="icon icon--external"><use xlink:href="/themes/custom/vch/images/svg-symbols.svg#icon--external"></use></svg></a></p>
-
+    
                 </div>
-
+    
                 </div>
-
-
+    
+    
                         </div>
                             </div>
                                 
@@ -606,27 +584,27 @@ const dummyData = [
                                             <div class="section-module container">
                             <div class="col-12 col-tb-8">
                                     
-
-
+    
+    
                 <div class="wysiwyg" id="wysiwyg--132431">
                     <h2 class="title">
                     COVID-19 immunization
                     </h2>
                     
-
+    
                 <div class="wysiwyg-content">
                     <p>In the fall, the best way to book is to wait for your invitation. If you previously received a COVID-19 vaccine in B.C., you’re already registered in the Get Vaccinated system, no action is required. If you have never received a COVID-19 vaccine in B.C., <a href="https://www2.gov.bc.ca/gov/content/covid-19/vaccine/register#register" target="_blank" rel="noreferrer noopener external">register in the Get Vaccinated system<svg class="icon icon--external"><use xlink:href="/themes/custom/vch/images/svg-symbols.svg#icon--external"></use></svg></a>.</p>
                 <p>Learn more about COVID-19 vaccines, such as vaccine safety and considerations and vaccines and children, on the <a href="http://www.bccdc.ca/health-info/diseases-conditions/covid-19/covid-19-vaccine" target="_blank" rel="noreferrer noopener external">BCCDC website<svg class="icon icon--external"><use xlink:href="/themes/custom/vch/images/svg-symbols.svg#icon--external"></use></svg></a>.</p>
-
+    
                 </div>
-
+    
                 </div>
-
-
+    
+    
                         </div>
                             </div>
                             
-
+    
                     
                     
                 </div>`,
@@ -643,18 +621,18 @@ const dummyData = [
                     <div class="container center-modules">
                         <div class="section-module col-12 col-tb-8">
                         
-
-
-
+    
+    
+    
                     <div class="article-header">
                     <p class="type">
                             Resource
                         </p>
-
+    
                     <h1>Vancouver Mental Health and Substance Use Family Advisory Committee</h1>
-
+    
                     </div>
-
+    
                         </div>
                     </div>
                     <div class="container center-modules">
@@ -668,16 +646,16 @@ const dummyData = [
                                 <source srcset="/sites/default/files/styles/3_2_600/public/2023-09/sand-pattern-overlay.png?itok=9Mm3KE5M 1x" media="screen and (max-width: 600px)" type="image/png" width="600" height="400">
                                 <source srcset="/sites/default/files/styles/3_2_1280/public/2023-09/sand-pattern-overlay.png?itok=BM1QHuVe 1x" type="image/png" width="1280" height="854">
                                     <img loading="eager" src="/sites/default/files/styles/3_2_1280/public/2023-09/sand-pattern-overlay.png?itok=BM1QHuVe" width="1280" height="854" alt="Decorative image">
-
+    
                     </picture>
-
-
+    
+    
                     
-
+    
                     </div>
-
+    
                                 </div>
-
+    
                             </div>
                                 </div>
                                     
@@ -685,13 +663,13 @@ const dummyData = [
                                                 <div class="container center-modules">
                                 <div class="section-module col-12 col-tb-6">
                                         
-
+    
                     <div class="short-description" id="short-description--">
                             <p class="font-body-1">
                         The Vancouver Mental Health and Substance Use Family Advisory Committee represents the diverse voices of families within Vancouver Mental Health and Substance Use Services and acts in advisory, advocacy, and educational roles to improve the care experience.
                         </p>
                         </div>
-
+    
                             </div>
                                 </div>
                                     
@@ -699,20 +677,20 @@ const dummyData = [
                                                 <div class="container center-modules">
                                 <div class="section-module col-12 col-tb-6">
                                         
-
-
+    
+    
                     <div class="wysiwyg" id="wysiwyg--139256">
                         
-
+    
                     <div class="wysiwyg-content">
                         <p>The overview of this committee from the group has been provided by members to help illustrate their goals and contributions to mental health and substance use in the region.&nbsp;</p>
                     <p>If you have questions about this committee, please contact <a href="mailto:VancouverFAC@vch.ca">VancouverFAC@vch.ca</a>.<br><br>&nbsp;</p>
-
+    
                     </div>
-
+    
                     </div>
-
-
+    
+    
                             </div>
                                 </div>
                                     
@@ -720,23 +698,23 @@ const dummyData = [
                                                 <div class="container center-modules">
                                 <div class="section-module col-12 col-tb-6">
                                         
-
-
+    
+    
                     <div class="wysiwyg" id="wysiwyg--139261">
                         <h2 class="title">
                         Membership
                         </h2>
                         
-
+    
                     <div class="wysiwyg-content">
                         <p>Membership consists of family members, persons with lived and living experience, representatives from community agencies, mental health and substance use professionals (including VCH staff), and the <a href="/en/vancouver-consumer-involvement-and-initiatives" data-entity-type="node" data-entity-uuid="a44d3df3-567d-47df-be97-737cc1f3b349" data-entity-substitution="canonical" title="Vancouver Consumer Involvement and Initiatives">Vancouver Family Support and Involvement team</a>. FAC membership should reflect the diversity of services (i.e. mental health and substance use), family relationships (i.e. parent, sibling, spouse, etc.) and culture and experience.</p>
                     <p>Members are residents of Vancouver, or have a family member who receives <a href="/en/health-topics/vancouver-mental-health-and-substance-use-services" data-entity-type="node" data-entity-uuid="dbcc77af-f4d8-48c4-8b26-57ce4db5a8ff" data-entity-substitution="canonical" title="Vancouver mental health and substance use services">mental health and substance use services in Vancouver</a>.&nbsp;</p>
-
+    
                     </div>
-
+    
                     </div>
-
-
+    
+    
                             </div>
                                 </div>
                                     
@@ -744,14 +722,14 @@ const dummyData = [
                                                 <div class="container center-modules">
                                 <div class="section-module col-12 col-tb-6">
                                         
-
-
+    
+    
                     <div class="wysiwyg" id="wysiwyg--139266">
                         <h2 class="title">
                         Goals
                         </h2>
                         
-
+    
                     <div class="wysiwyg-content">
                         <p>Our committee meets monthly (second Tuesday of the month from 5 to 7 p.m. over Zoom) with the objectives to:</p>
                     <ul>
@@ -760,12 +738,12 @@ const dummyData = [
                     <li>Ensure that services reflect best practices of client and family-centred care</li>
                     <li>Support the ongoing development of a culture of recovery</li>
                     </ul>
-
+    
                     </div>
-
+    
                     </div>
-
-
+    
+    
                             </div>
                                 </div>
                                     
@@ -773,28 +751,53 @@ const dummyData = [
                                                 <div class="container center-modules">
                                 <div class="section-module col-12 col-tb-6">
                                         
-
-
+    
+    
                     <div class="wysiwyg" id="wysiwyg--139271">
                         <h2 class="title">
                         Getting involved
                         </h2>
                         
-
+    
                     <div class="wysiwyg-content">
                         <p>We are always looking for new members. We are comprised of family members and persons with lived and living experience (PLLE).&nbsp; Zoom. Diverse perspectives are valued. We extend a wholehearted welcome to new members.</p>
                     <p>For more information contact us at <a href="mailto:vancouverfac@ vch.ca">vancouverfac@ vch.ca</a>.</p>
                     <p>&nbsp;</p>
                     <p>Learn <a href="/en/health-topics/mental-health-and-substance-use-family-peer-and-consumer-involvement" data-entity-type="node" data-entity-uuid="9da6056f-8dd2-468a-b045-dd483faea333" data-entity-substitution="canonical" title="Mental health and substance use family, peer and consumer involvement ">other opportunities for mental health and substance use involvement at VCH.</a></p>
-
+    
                     </div>
-
+    
                     </div>
-
-
+    
+    
                             </div>
                                 </div>
                 </article>`,
+            },
+        ],
+    },
+    {
+        sourceUrl: "https://news.gov.bc.ca",
+        // Replace the domain in this link with the source domain>
+        sourceLogoUrl:
+            "https://www.google.com/s2/favicons?domain=news.gov.bc.ca&sz=32",
+        sourceName: "BC Gov News",
+        jurisdiction: {
+            // "national", "province", "city"
+            governmentLevel: "province",
+            // no location if national, two letter abbreviation if province eg "BC", array with all applicable cities if city eg ["Vancouver"] or ["Vancouver", "Burnaby"]
+            location: "BC",
+        },
+        subpages: [
+            {
+                subpageTitle:
+                    "PHO's statement on ensuring childrens' vaccinations are up to date",
+                subpageUrl:
+                    "https://news.gov.bc.ca/releases/2024HLTH0126-001324",
+                keywords: ["vaccines", "news"],
+                subpageSummary:
+                    "Dr. Bonnie Henry, British Columbia's provincial health officer, has issued the following statement to make sure children in B.C. are up to date on all their vaccines as part of back-to-school preparations:",
+                content: `<article><p>Dr. Bonnie Henry, British Columbia's provincial health officer, has issued the following statement to make sure children in B.C. are up to date on all their vaccines as part of back-to-school preparations:</p><p>“As the summer holidays draw to a close, many families are starting to think about their back-to-school tasks. Buy school supplies. Take their children for haircuts. Help their kids pick out the perfect outfit for the first day of school.</p><p>“This year, I’m urging you to add another important item to your to-do list: Ensure that your children are up to date on their routine vaccinations and&nbsp;they get vaccinated against common illnesses, such as measles, mumps and rubella, polio, pertussis (whooping cough) and chickenpox.</p><p>“August is the perfect time to take your children for any outstanding vaccines. As kids start or return to child care or school, they’ll be interacting with many friends, caregivers and teachers, increasing their chances of being exposed to these and other infectious diseases. And we know respiratory-illness season will soon be here, bringing COVID-19, influenza and other viruses.</p><p>“Getting your children vaccinated is the best way to protect them from vaccine-preventable illnesses that can cause serious illness, long-term disability and even death.</p><p>“Children six and under are eligible for free vaccines to protect them from more than a dozen diseases, such as COVID-19, influenza, polio, measles and chickenpox. We also provide children with free vaccines at school clinics beginning in Grade 6, including the human papillomavirus and meningitis vaccines, and booster doses of vaccines they received in early childhood.</p><p>“To get your infant or young child vaccinated, visit HealthLinkBC for full details. You can book an appointment at a health unit or at your doctor’s or nurse practitioner’s office if they do immunizations. If your child is older than five, you can also book an appointment to get them vaccinated at some pharmacies.</p><p>“School-aged children and teens typically receive their vaccines at clinics held at schools. However, they can also get vaccinated at health units, some doctors' and nurse practitioners' offices and some pharmacies.</p><p>“As many young adults begin mixing in new social groups this fall, pursue post-secondary opportunities or move into campus housing, vaccines against influenza and meningitis are recommended, along with an updated dose of the COVID-19 vaccine.</p><p>“I encourage everyone to visit HealthLinkBC for more information about childhood and young adult vaccines, and use the online tool to find a health unit close to home. You can also see your children's immunization schedule via HealthLinkBC or view immunization records through the Health Gateway.</p><p>“Whether the young people in your life are infants or young adults, now is the time to protect them through immunizations. Just like packing healthy lunches for your kids and encouraging them to get enough exercise and sleep, getting them vaccinated is one of the most important things you can do to help them have a happy and healthy school year.”</p><p><strong>Learn More:</strong></p><p>Unsure which vaccines your child is due for? You can check their immunization records through the Health Gateway: <a href="https://www.healthgateway.gov.bc.ca/">https://www.healthgateway.gov.bc.ca/</a></p><p>To learn more about COVID-19 vaccines for children, visit:&nbsp;<a href="https://www2.gov.bc.ca/gov/content/covid-19/vaccine/children">https://www2.gov.bc.ca/gov/content/covid-19/vaccine/children</a></p><p>View your children’s immunization schedule:&nbsp;<a href="https://www.healthlinkbc.ca/childhoodvaccines">https://www.healthlinkbc.ca/childhoodvaccines</a></p><p>For people who notice a record is missing, they can update records here: <a href="https://immunizationrecord.gov.bc.ca/">https://immunizationrecord.gov.bc.ca/</a></p><p>Register for a COVID-19 vaccine through the provincial Get Vaccinated system at:&nbsp;<a href="https://www2.gov.bc.ca/gov/content/covid-19/vaccine/register">https://www2.gov.bc.ca/gov/content/covid-19/vaccine/register</a> &nbsp;<br>After you do so, you’ll receive an invitation to book an appointment at a child-friendly clinic in your community.</p><p>Learn more about the provincial immunization program:&nbsp;<a href="https://immunizebc.ca/">https://immunizebc.ca/</a></p><div> </div></article>`,
             },
         ],
     },
@@ -835,12 +838,6 @@ async function writeSourceAndSubpages(sourceData) {
         });
 }
 
-// function updateKeywords(subpageKeywords, sourceRef, subpageRef) {
-//     for (const keyword of subpageKeywords) {
-//         findOrCreateKeywordRecord(keyword, sourceRef, subpageRef);
-//     }
-// }
-
 async function updateKeywords(sourceData) {
     for (const subpage of sourceData.subpages) {
         let keywordsWithAliases = [];
@@ -856,28 +853,6 @@ async function updateKeywords(sourceData) {
     }
 }
 
-// function findOrCreateKeywordRecord(keyword, sourceRef, subpageRef) {
-//     const lowercaseKeyword = keyword.toLowerCase();
-
-//     db.collection("keywords")
-//         .where("aliases", "array-contains", lowercaseKeyword)
-//         .get()
-//         .then((keywordSnapshot) => {
-//             if (keywordSnapshot.size > 0) {
-//                 let allAliases = [];
-//                 keywordSnapshot.forEach((keywordDoc) => {
-//                     allAliases = [...allAliases, ...keywordDoc.data().aliases];
-//                 });
-//                 updateKeywordsForRef(allAliases, sourceRef);
-//                 updateKeywordsForRef(allAliases, subpageRef);
-//             } else {
-//                 addNewKeyword(lowercaseKeyword);
-//             }
-//         })
-//         .catch((error) => {
-//             console.error("Error checking if keyword exists", error);
-//         });
-// }
 async function findOrCreateKeywordRecord(keyword, allKeywordsForSubpage) {
     const lowercaseKeyword = keyword.toLowerCase();
 
@@ -898,12 +873,6 @@ async function findOrCreateKeywordRecord(keyword, allKeywordsForSubpage) {
         return [lowercaseKeyword];
     }
 }
-
-// function updateKeywordsForRef(aliases, firestoreRef) {
-//     firestoreRef.update({
-//         keywords: firebase.firestore.FieldValue.arrayUnion(...aliases),
-//     });
-// }
 
 async function addNewKeyword(lowercaseKeyword, allKeywordsForSubpage = []) {
     const categories = [
@@ -936,16 +905,6 @@ async function addNewKeyword(lowercaseKeyword, allKeywordsForSubpage = []) {
 }
 
 function addNewSourceAndSubpages(sourceData, sourceKeywords) {
-    // console.log("source data", sourceData);
-    // const sourceJurisdiction = sourceData.location
-    //     ? {
-    //           governmentLevel: sourceData.governmentLevel,
-    //           location: sourceData.location,
-    //       }
-    //     : {
-    //           governmentLevel: sourceData.governmentLevel,
-    //       };
-    // console.log("jur", sourceJurisdiction);
     db.collection("sources")
         .add({
             crawledAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -979,6 +938,18 @@ function addNewSourceAndSubpages(sourceData, sourceKeywords) {
                     console.log(
                         "Wrote new source and subpages for",
                         sourceData.sourceUrl
+                    );
+                    const allNewSubpagesSnapshot = sourceDocRef
+                        .collection("subpages")
+                        .get();
+                    console.log(allNewSubpagesSnapshot);
+                    const allNewSubpageIds = allNewSubpagesSnapshot.docs.map(
+                        (doc) => doc.id
+                    );
+                    notifyUsersWithSearchSubs(
+                        sourceKeywords,
+                        sourceDocRef,
+                        allNewSubpageIds
                     );
                 })
                 .catch((error) => {
@@ -1014,6 +985,8 @@ function updateSourceAndSubpages(sourceDoc, sourceData, sourceKeywords) {
         .where("subpageUrl", "in", subpageUrls)
         .get()
         .then((querySnapshot) => {
+            const allNewOrUpdatedSubpageRefs = [];
+
             const subpagesCollectionRef = sourceDoc.ref.collection("subpages");
 
             for (const subpage of sourceData.subpages) {
@@ -1031,6 +1004,7 @@ function updateSourceAndSubpages(sourceDoc, sourceData, sourceKeywords) {
                         news: subpage.keywords.includes("news"),
                         subpageSummary: subpage.subpageSummary,
                     });
+                    allNewOrUpdatedSubpageRefs.push(existingDoc.ref);
                 } else {
                     // Add new subpage
                     const newSubpageRef = subpagesCollectionRef.doc();
@@ -1045,24 +1019,29 @@ function updateSourceAndSubpages(sourceDoc, sourceData, sourceKeywords) {
                         sourceID: sourceDoc.id,
                         subpageSummary: subpage.subpageSummary,
                     });
+                    allNewOrUpdatedSubpageRefs.push(newSubpageRef);
                 }
-
-                // Send batch to db
-                batch
-                    .commit()
-                    .then(() => {
-                        console.log(
-                            "Updated source and subpages for",
-                            sourceData.sourceUrl
-                        );
-                    })
-                    .catch((error) => {
-                        console.error(
-                            `Error updating source ${sourceData.sourceUrl} and subpages`,
-                            error
-                        );
-                    });
             }
+            // Send batch to db
+            batch
+                .commit()
+                .then(() => {
+                    console.log(
+                        "Updated source and subpages for",
+                        sourceData.sourceUrl
+                    );
+                    notifyUsersOnUpdate(
+                        sourceKeywords,
+                        sourceDoc.ref,
+                        allNewOrUpdatedSubpageRefs
+                    );
+                })
+                .catch((error) => {
+                    console.error(
+                        `Error updating source ${sourceData.sourceUrl} and subpages`,
+                        error
+                    );
+                });
         })
         .catch((error) => {
             console.error(
@@ -1071,32 +1050,206 @@ function updateSourceAndSubpages(sourceDoc, sourceData, sourceKeywords) {
             );
         });
 }
-// function addNewKeyword(lowercaseKeyword) {
-//     const categories = [
-//         "diseases",
-//         "healthcare services",
-//         "mental health",
-//         "vaccines",
-//     ];
 
-//     db.collection("keywords")
-//         .add({
-//             aliases: [lowercaseKeyword],
-//             name:
-//                 lowercaseKeyword[0].toUpperCase() +
-//                 lowercaseKeyword.substring(1),
-//             category:
-//                 categories.find((category) => category === lowercaseKeyword) ??
-//                 "uncategorized",
-//         })
-//         .then(() => {
-//             console.log("added keyword", lowercaseKeyword);
-//         })
-//         .catch((error) => {
-//             console.error("Error adding keyword", error);
-//         });
-// }
+function notifyUsersOnUpdate(keywords, sourceRef, subpagesRefs) {
+    const subpageIds = subpagesRefs.map((ref) => ref.id);
+    notifyUsersWithSearchSubs(keywords, sourceRef, subpageIds);
+    notifyUsersWithSourceSearchSubs(sourceRef, keywords, subpageIds);
+    notifyUsersWithAllSourceSubs(sourceRef, subpageIds);
+    notifyUsersWithSubpageSubs(sourceRef, subpagesRefs);
+}
 
+async function writeSearchSubNotifications(
+    userDoc,
+    subscriptions,
+    sourceRef,
+    subpageIds
+) {
+    for (const sub of subscriptions) {
+        const pagesMaybeForSearchSnapshot = await sourceRef
+            .collection("subpages")
+            .where("keywords", "array-contains-any", sub.search.split(","))
+            .get();
+
+        const pagesForSearchDocs = pagesMaybeForSearchSnapshot.docs.filter(
+            (pageDoc) => subpageIds.includes(pageDoc.id)
+        );
+
+        await userDoc.ref.collection("notifications").add({
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            isRead: false,
+            relatedSubscriptions: sub,
+            source: sourceRef,
+            subpages: pagesForSearchDocs.map((doc) => doc.id),
+        });
+        console.log("notification created for", userDoc.id, sub);
+    }
+}
+
+// For users subscribed to indiviual subpages, create one notification for source with all the subpages they are subbed to
+async function notifyUsersWithSubpageSubs(sourceRef, subpagesRefs) {
+    const usersWithSubpageSubs = [];
+    for (const subpageRef of subpagesRefs) {
+        const usersSnapshot = await db
+            .collection("users")
+            .where("subscriptions", "array-contains", subpageRef)
+            .get();
+        for (const userDoc of usersSnapshot.docs) {
+            const foundUserIndex = usersWithSubpageSubs.findIndex((user) =>
+                user.userRef.isEqual(userDoc.ref)
+            );
+            if (foundUserIndex === -1) {
+                usersWithSubpageSubs.push({
+                    userRef: userDoc.ref,
+                    relatedSubscriptions: [subpageRef],
+                    subpages: [subpageRef.id],
+                });
+            } else {
+                usersWithSubpageSubs[foundUserIndex].relatedSubscriptions.push(
+                    subpageRef
+                );
+                usersWithSubpageSubs[foundUserIndex].subpages.push(
+                    subpageRef.id
+                );
+            }
+        }
+    }
+    if (usersWithSubpageSubs.length < 1) {
+        console.log("No users with subpage subs to notify");
+        return;
+    }
+    for (const user of usersWithSubpageSubs) {
+        await user.userRef.collection("notifications").add({
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            isRead: false,
+            relatedSubscription: user.relatedSubscriptions,
+            source: sourceRef,
+            subpages: user.subpages,
+        });
+        console.log("notification created for", user);
+    }
+}
+
+// For users subscribed to all source updates, create notification for the source with all new and updated subpages
+async function notifyUsersWithAllSourceSubs(sourceRef, subpageIds) {
+    const usersWithAllSourceSubsSnapshot = await db
+        .collection("users")
+        .where("subscriptions", "array-contains", sourceRef)
+        .get();
+    if (usersWithAllSourceSubsSnapshot.empty) {
+        console.log("No users with all source subs to notify");
+        return;
+    }
+    for (const userDoc of usersWithAllSourceSubsSnapshot.docs) {
+        await userDoc.ref.collection("notifications").add({
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            isRead: false,
+            relatedSubscriptions: sourceRef,
+            source: sourceRef,
+            subpages: subpageIds,
+        });
+        console.log(
+            "notification created for source",
+            sourceRef.id,
+            "for user",
+            userDoc.id
+        );
+    }
+}
+
+// For users subscribed to source with search create a notification for each search for the source with all subpages that have the keywords they are subscribed to.
+async function notifyUsersWithSourceSearchSubs(
+    sourceRef,
+    keywords,
+    subpageIds
+) {
+    const usersMightHaveSourceSearchSubsSnapshot = await db
+        .collection("users")
+        .where("subscriptions", "array-contains", sourceRef.id)
+        .get();
+    if (usersMightHaveSourceSearchSubsSnapshot.empty) {
+        console.log("No users with source search subs to notify");
+        return;
+    }
+    for (const userDoc of usersMightHaveSourceSearchSubsSnapshot.docs) {
+        const sourceWithSearchSubs = userDoc
+            .data()
+            .subscriptions.filter((subscription) => {
+                if (typeof subscription === "string") {
+                    return false;
+                }
+                if (!subscription.search || !subscription.sourceRef) {
+                    return false;
+                }
+
+                const subSearchTerms = subscription.search.split(",");
+
+                return (
+                    keywords.some((keyword) =>
+                        subSearchTerms.includes(keyword)
+                    ) && subscription.sourceRef.isEqual(sourceRef)
+                );
+            });
+        if (sourceWithSearchSubs.length < 1) {
+            continue;
+        }
+        writeSearchSubNotifications(
+            userDoc,
+            sourceWithSearchSubs,
+            sourceRef,
+            subpageIds
+        );
+    }
+}
+
+// For users subscribed to search, create a notification for each search for the source with all subpages that have the keywords they are subscribed to. Only this need to be done with a new source
+async function notifyUsersWithSearchSubs(keywords, sourceRef, subpageIds) {
+    try {
+        const usersMightHaveSearchSubsSnapshot = await db
+            .collection("users")
+            .where("subscriptions", "array-contains-any", keywords)
+            .get();
+        if (usersMightHaveSearchSubsSnapshot.empty) {
+            console.log("No users with search subs to notify");
+            return;
+        }
+        for (const userDoc of usersMightHaveSearchSubsSnapshot.docs) {
+            const searchSubs = userDoc
+                .data()
+                .subscriptions.filter((subscription) => {
+                    if (typeof subscription === "string") {
+                        return false;
+                    }
+                    if (!subscription.search || subscription.sourceRef) {
+                        return false;
+                    }
+
+                    const subSearchTerms = subscription.search.split(",");
+
+                    return keywords.some((keyword) =>
+                        subSearchTerms.includes(keyword)
+                    );
+                });
+            if (searchSubs.length < 1) {
+                continue;
+            }
+            writeSearchSubNotifications(
+                userDoc,
+                searchSubs,
+                sourceRef,
+                subpageIds
+            );
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function writeCrawlDataToFirebase(sourcesWithSubpages) {
+    for (const sourceData of sourcesWithSubpages) {
+        writeSourceAndSubpages(sourceData);
+    }
+}
 // Crawler experiments, ignore for now
 //
 //Hits CORS
