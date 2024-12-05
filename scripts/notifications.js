@@ -20,6 +20,7 @@ async function loadNotifications() {
             .collection("users")
             .doc(currentUser.uid)
             .collection("notifications")
+            .orderBy('createdAt', 'desc')
             .get();
         
         
