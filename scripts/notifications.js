@@ -32,7 +32,7 @@ async function loadNotifications() {
             source = await sourceRef.get()
             sourceSubpages = notificationData.subpages
             subpageDocs = await sourceRef.collection("subpages").where(firebase.firestore.FieldPath.documentId(), "in", sourceSubpages).get()
-            displayNotification(source, subpageDocs, notificationData.createdAt)
+            displayNotification(notification.id, source, subpageDocs, notificationData.createdAt)
         }
         } else {
             notifications_section.innerHTML = `
@@ -73,15 +73,16 @@ async function loadNotifications() {
     }
 }
 
-async function displayNotification(source, subpages, date) {
+async function displayNotification(notificationID, source, subpages, date) {
     const sourceData = source.data()
     const notification_section = document.getElementById("notifications")
     wrapper = document.createElement("div")
     wrapper.classList.add(`wrapper-${source.id}`)
+    accordianId = notificationID + source.id
     wrapper.innerHTML = `
     <div class="template-wrapper">
                 <div class="tab">Updated ${date.toDate().toDateString()}</div>
-                <section class="source-block" id="${source.id}">
+                <section class="source-block" id="${accordianId}">
                 <div class="source">
                     <h2>
                         <span class="d-none d-sm-inline">From: </span>
@@ -92,17 +93,18 @@ async function displayNotification(source, subpages, date) {
                         >
                     </h2>
                 </div>
-                <div class="subpages accordion accordion-flush ms-md-5" id="subpages-${source.id}">
+                <div class="subpages accordion accordion-flush ms-md-5" id="subpages-${accordianId}">
                 </div>
             </section>
         </div>
         </div>
     `
     notification_section.appendChild(wrapper)
-    subpage_section = document.getElementById(`subpages-${source.id}`)
+    subpage_section = document.getElementById(`subpages-${accordianId}`)
     
     subpages.forEach(subpage => {
         subpageData = subpage.data()
+        subpageID = notificationID + subpage.id
 
         console.log("subpage: ", subpage)
         console.log("subpage data: ", subpageData)
@@ -117,13 +119,13 @@ async function displayNotification(source, subpages, date) {
                             class="accordion-button custom collapsed"
                             type="button"
                             data-bs-toggle="collapse"
-                            data-bs-target="#${subpage.id}"
+                            data-bs-target="#${subpageID}"
                             aria-expanded="false"
-                            aria-controls="${subpage.id}"
+                            aria-controls="${subpageID}"
                         ></button>
                     </div>
                     <!-- Update id to be unique for each copy of component -->
-                    <div id="${subpage.id}" class="accordion-collapse collapse">
+                    <div id="${subpageID}" class="accordion-collapse collapse">
                         <!-- Replace things in here with whatever content -->
                         <div class="embed">
                             <div class="embed-content">
