@@ -368,6 +368,13 @@ async function loadResultsForTab(
         document
             .querySelector(".topic-subscribe-btn-group")
             ?.classList.remove("d-none");
+    } else {
+        document
+            .querySelector(".topic-unsubscribe-btn-group")
+            ?.classList.add("d-none");
+        document
+            .querySelector(".topic-subscribe-btn-group")
+            ?.classList.add("d-none");
     }
 
     let sourcesQuery = db
