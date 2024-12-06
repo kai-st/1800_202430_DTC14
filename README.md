@@ -27,9 +27,10 @@ List technologies (with version numbers), API's, icons, fonts, images, media or 
 State what a user needs to do when they come to your project. How do others start using your code or application?
 Here are the steps ...
 
--   ...
--   ...
--   ...
+-   Set up Firestore Authentication
+-   Set up Firebase Database
+-   Set up Firestore
+-   Add sources. The dummy data in the crawler file shows the format
 
 ## 5. Known Bugs and Limitations
 
