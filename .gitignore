@@ -4,3 +4,4 @@ node_modules/
 .vscode/
 .scripts/firebaseAPI_DTC14.js
 firebaseAPI_DTC14.js
+.firebase
