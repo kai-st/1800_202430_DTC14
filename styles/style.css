@@ -8,18 +8,16 @@
 }
 
 body {
-    display: grid;
-    grid-template-rows: auto 1fr auto;
     min-height: 100vh;
-    min-height: 100svh;
     background-color: var(--light-teal);
-    /* color: var(--dark-teal); */
 }
 
 main {
     width: min(100%, 1000px);
     margin-inline: auto;
     background-color: #fff;
+    padding-bottom: 120px;
+    min-height: 100vh;
 }
 
 a {
@@ -32,7 +30,7 @@ a {
     margin-left: auto;
     margin-right: auto;
 }
- 
+
 .banner {
     background-color: var(--light-teal);
     border: 20px solid var(--primary-teal);
@@ -81,8 +79,20 @@ a {
 
 /* Header Styles */
 
+header {
+    position: sticky;
+}
+
+.navbar {
+    flex-wrap: nowrap;
+}
+
 .btn-group .dropdown-toggle.account::after {
     display: none;
+}
+
+.account {
+    padding-inline: 0;
 }
 
 .account .material-icons {
@@ -100,16 +110,15 @@ a {
 
 .compass-logo {
     max-width: 3rem;
-    margin-inline-end: 12px;
+    /* margin-inline-end: 12px; */
 }
 /* Footer Styles */
 
-.bottom-bar-placeholder,
 .bottom-bar {
     bottom: 0;
     right: 0;
     left: 0;
-    padding: 0 8px 4px;
+    padding: 0 8px;
     background-color: white;
 }
 
@@ -123,34 +132,37 @@ a {
     list-style: none;
     justify-content: space-around;
     padding: 0;
-    margin-block: 12px;
+    margin-block-start: 12px;
 }
 
-.bottom-bar a,
-.bottom-bar-placeholder a {
+.bottom-bar {
     color: rgba(var(--bs-emphasis-color-rgb), 0.8);
     text-decoration: none;
     text-align: center;
     display: flex;
     flex-direction: column;
 }
-.bottom-bar .material-icons,
-.bottom-bar-placeholder .material-icons {
+
+.bottom-bar .material-icons {
     margin-inline: auto;
     font-size: 48px;
 }
 
-.bottom-bar-placeholder a {
-    color: white;
-}
-
 @media screen and (min-width: 992px) {
-    .bottom-bar,
-    .bottom-bar-placeholder {
+    .bottom-bar {
         display: none;
     }
 
     .navbar {
         padding: 0;
+    }
+
+    .compass-logo {
+        max-width: 3rem;
+        margin-inline-end: 12px;
+    }
+
+    .account {
+        padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
     }
 }

@@ -2,7 +2,6 @@ const ADD_NOTIFICATION_ICON = "&#xe399;";
 const REMOVE_NOTIFICATION_ICON = "&#xe7f6;";
 const EDIT_NOTIFICATION_ICON = "&#xe525;";
 
-// TODO: make sure id is set on categories on topics page
 function setBackLink(category) {
     document.querySelector(
         ".back"
@@ -199,7 +198,6 @@ const dummyResults = [
     },
 ];
 
-// TODO: handle source/search subscriptions
 const loadResults = async () => {
     console.log("loading");
 
@@ -496,8 +494,11 @@ async function loadResultsForTab(
                                 subpagesSnapshot
                             );
                         }
-                        sourceBlock.querySelector(".results-length").innerText =
-                            subpagesSnapshot.size;
+                        sourceBlock.querySelector(
+                            ".results-length"
+                        ).innerText = `${subpagesSnapshot.size} result${
+                            subpagesSnapshot.size == 1 ? "" : "s"
+                        }`;
 
                         subpagesSnapshot.forEach((subpageDoc) => {
                             const subpageData = {
@@ -1114,4 +1115,4 @@ function attachSubscriptionListenersInTab(govLevel) {
     );
 }
 
-// TODO add and handle view more button & handle location filter
+// TODO add and handle view more button

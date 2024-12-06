@@ -1,19 +1,6 @@
 /* Results styles */
 /* extra classes added in many places to increase specificity to override bootstrap styles */
 
-.results-main {
-    max-width: 1000px;
-    margin-inline: auto;
-    padding-bottom: 48px;
-}
-
-.template-wrapper {
-    max-width: 1000px;
-    margin-inline: auto;
-    margin-block: 48px;
-    border: 5px solid red;
-}
-
 .back {
     display: inline-block;
 }
@@ -34,10 +21,6 @@
     width: 36px;
     height: 36px;
     object-fit: contain;
-}
-
-.dropup .dropdown-toggle.subscribe::after {
-    display: none;
 }
 
 .accordion-button.custom {
@@ -64,7 +47,8 @@
 }
 
 .subpage-header {
-    padding-inline: 24px;
+    padding-inline-start: 24px;
+    padding-inline-end: 12px;
 }
 
 .source-block:nth-child(n + 2) {
@@ -119,14 +103,24 @@
     margin: 0;
 }
 
+.dropdown-menu {
+    width: min(100vw - 30px, 1000px);
+}
+.dropdown-menu * {
+    white-space: normal;
+}
+
 .subscribe {
-    width: 5rem;
-    padding-block: 16px;
+    width: 4.5rem;
+    padding-block: 14px;
+    margin-block: 2px;
+    border-color: #1a606a;
 }
 
 .topic-subscribe,
 .topic-unsubscribe {
     width: 3.5rem;
+    margin-inline: 4px;
 }
 
 .accordion-button.custom,
@@ -145,6 +139,7 @@
 
 .results-tag {
     margin-inline-end: auto;
+    text-wrap: nowrap;
 }
 .subpage-header .accordion-button {
     margin-inline-start: auto;
@@ -164,6 +159,10 @@
 .subpage-item.accordion-item:not(:first-child),
 .subpage-item.accordion {
     border-top: 3px solid #009bb3;
+}
+
+.accordion {
+    --bs-accordion-active-color: black;
 }
 
 .subpage-link {
@@ -211,4 +210,13 @@
 
 .accordion-item.hide-over-five:nth-child(n + 6) {
     display: none;
+}
+
+@media (min-width: 600px) {
+    .dropdown-menu {
+        width: auto;
+    }
+    .dropdown-menu * {
+        white-space: nowrap;
+    }
 }

@@ -50,9 +50,9 @@
         <!------------------------------>
         <!-- Stuff for body goes here -->
 
-        <header id="headerPlaceholder"></header>
+        <header id="headerPlaceholder" class="sticky-top"></header>
 
-        <main class="results-main">
+        <main>
             <a href="/" class="back mt-2 ms-2 mt-sm-4">
                 <span class="material-icons">&#xe317;</span>Back to
                 <span class="text-capitalize" id="previous-page">News</span>
@@ -181,7 +181,7 @@
             <!-- Set the id for the source-block to the source id -->
             <section class="source-block">
                 <div class="source">
-                    <h2>
+                    <h2 class="py-1">
                         <span class="d-none d-sm-inline">From: </span>
                         <!-- Set href to source domain homepage and innerText to source name -->
                         <a class="source-link" target="_blank" href="#">
@@ -195,7 +195,7 @@
                     </h2>
                     <div class="results-tag">
                         <!-- Set number of results with js -->
-                        (<span class="results-length">0</span> results)
+                        (<span class="results-length">0 results</span>)
                     </div>
 
                     <!-- Show only one of these button groups at a time depending on user state. Remove these button groups to not include subscription functionality -->
@@ -364,7 +364,7 @@
                 <div class="subpage-item accordion-item hide-over-five">
                     <div class="subpage-header accordion-header">
                         <!-- insert subpage title from db -->
-                        <h3>Subpage Title</h3>
+                        <h3 class="py-1">Subpage Title</h3>
                         <!-- Show only one of these buttons at a time depending on user state. Remove these buttons to not include subscription functionality -->
 
                         <!-- Logged in user, not subscribed. data-subpage-path should be set to the firestore reference path for the subpage when loading results -->
