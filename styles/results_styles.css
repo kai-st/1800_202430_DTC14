@@ -117,18 +117,16 @@
     border-color: #1a606a;
 }
 
-.topic-subscribe,
-.topic-unsubscribe {
-    width: 3.5rem;
+.search-sub {
     margin-inline: 4px;
+    padding-block: 8px;
 }
 
-.accordion-button.custom,
-.subpage-subscribe {
+.accordion-button.custom {
     width: 3.5rem;
 }
 .accordion-button.custom:focus-visible,
-.subpage-subscribe:focus-visible {
+.subscribe:focus-visible {
     outline: 3px solid #1a606a;
     outline-offset: -5px;
 }

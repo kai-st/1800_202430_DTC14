@@ -362,10 +362,12 @@ async function loadResultsForTab(
 
     if (userSuscribedToSearch) {
         document
-            .querySelector(".topic-unsubscribe")
+            .querySelector(".topic-unsubscribe-btn-group")
             ?.classList.remove("d-none");
     } else if (currentUserDoc) {
-        document.querySelector(".topic-subscribe")?.classList.remove("d-none");
+        document
+            .querySelector(".topic-subscribe-btn-group")
+            ?.classList.remove("d-none");
     }
 
     let sourcesQuery = db
@@ -533,10 +535,17 @@ async function loadResultsForTab(
                                 subpageBlock.querySelector(".not-subscribed");
                             subBtn.id = `${subpageData.id}-not-subscribed`;
 
+                            const subbedBtnGroup = subpageBlock.querySelector(
+                                ".subpage-unsubscribe-btn-group"
+                            );
+                            const subBtnGroup = subpageBlock.querySelector(
+                                ".subpage-subscribe-btn-group"
+                            );
+
                             if (userSubscribedToSubpage) {
-                                subbedBtn.classList.remove("d-none");
+                                subbedBtnGroup.classList.remove("d-none");
                             } else if (currentUserDoc) {
-                                subBtn.classList.remove("d-none");
+                                subBtnGroup.classList.remove("d-none");
                             }
 
                             if (
@@ -544,8 +553,8 @@ async function loadResultsForTab(
                                 userSubscribedToAllSource ||
                                 userSubscribedToSourceWithSearch
                             ) {
-                                subbedBtn.setAttribute("disabled", "");
-                                subBtn.setAttribute("disabled", "");
+                                subbedBtnGroup.setAttribute("disabled", "");
+                                subBtnGroup.setAttribute("disabled", "");
                             }
 
                             subpageBlock.querySelector(
@@ -628,12 +637,12 @@ function addSubpageSubscriptionHandler(event) {
     const subpageId = target.id.split("-")[0];
 
     console.log("add path to sub", subscriptionPath);
-
+    // TODO optimistic updates need to be fixed for menu buttons
     // Optimisticly update
-    target.classList.add("d-none");
-    document
-        .querySelector(`${subpageId}-not-subscribed`)
-        ?.classList.remove("d-none");
+    // target.classList.add("d-none");
+    // document
+    //     .querySelector(`${subpageId}-not-subscribed`)
+    //     ?.classList.remove("d-none");
 
     // Add subscription to user subscription array in db
     firebase.auth().onAuthStateChanged((user) => {
@@ -655,10 +664,10 @@ function addSubpageSubscriptionHandler(event) {
                         error
                     );
                     // revert to previous state
-                    target.classList.remove("d-none");
-                    document
-                        .querySelector(`${subpageId}-not-subscribed`)
-                        ?.classList.add("d-none");
+                    // target.classList.remove("d-none");
+                    // document
+                    //     .querySelector(`${subpageId}-not-subscribed`)
+                    //     ?.classList.add("d-none");
                     window.alert(
                         "Unable to add subscription. Please try again."
                     );
@@ -675,10 +684,10 @@ function removeSubpageSubscriptionHandler(event) {
     console.log("remove path to sub", subscriptionPath);
 
     // Optimisticly update
-    target.classList.add("d-none");
-    document
-        .querySelector(`${subpageId}-subscribed`)
-        ?.classList.remove("d-none");
+    // target.classList.add("d-none");
+    // document
+    //     .querySelector(`${subpageId}-subscribed`)
+    //     ?.classList.remove("d-none");
 
     // Remove subscription from user subscription array in db
     firebase.auth().onAuthStateChanged((user) => {
@@ -700,10 +709,10 @@ function removeSubpageSubscriptionHandler(event) {
                         error
                     );
                     // revert to previous state
-                    target.classList.remove("d-none");
-                    document
-                        .querySelector(`${subpageId}-subscribed`)
-                        ?.classList.add("d-none");
+                    // target.classList.remove("d-none");
+                    // document
+                    //     .querySelector(`${subpageId}-subscribed`)
+                    //     ?.classList.add("d-none");
                     window.alert(
                         "Unable to remove subscription. Please try again."
                     );
@@ -982,8 +991,12 @@ function addSearchSubscriptionHandler(event) {
     console.log("add path to sub", queryTopic?.textTopic);
 
     // Optimistically update
-    target.classList.add("d-none");
-    document.querySelector("topic-unsubscribe")?.classList.remove("d-none");
+    document
+        .querySelector(".topic-subscribe-btn-group")
+        ?.classList.add("d-none");
+    document
+        .querySelector(".topic-unsubscribe-btn-group")
+        ?.classList.remove("d-none");
 
     // Add subscription to user subscription array in db
     firebase.auth().onAuthStateChanged((user) => {
@@ -1008,9 +1021,11 @@ function addSearchSubscriptionHandler(event) {
                         error
                     );
                     // revert to previous state
-                    target.classList.remove("d-none");
                     document
-                        .querySelector("topic-unsubscribe")
+                        .querySelector(".topic-subscribe-btn-group")
+                        ?.classList.remove("d-none");
+                    document
+                        .querySelector(".topic-unsubscribe-btn-group")
                         ?.classList.add("d-none");
                     window.alert(
                         "Unable to add subscription. Please try again."
@@ -1034,8 +1049,12 @@ function removeSearchSubscriptionHandler(event) {
     console.log("add path to sub", queryTopic?.queryKeywords);
 
     // Optimistically update
-    target.classList.add("d-none");
-    document.querySelector("topic-subscribe")?.classList.remove("d-none");
+    document
+        .querySelector(".topic-unsubscribe-btn-group")
+        ?.classList.add("d-none");
+    document
+        .querySelector(".topic-subscribe-btn-group")
+        ?.classList.remove("d-none");
 
     // Remove subscription from user subscription array in db
     firebase.auth().onAuthStateChanged((user) => {
@@ -1057,9 +1076,11 @@ function removeSearchSubscriptionHandler(event) {
                         error
                     );
                     // revert to previous state
-                    target.classList.remove("d-none");
                     document
-                        .querySelector("topic-subscribe")
+                        .querySelector(".topic-unsubscribe-btn-group")
+                        ?.classList.remove("d-none");
+                    document
+                        .querySelector(".topic-subscribe-btn-group")
                         ?.classList.add("d-none");
                     window.alert(
                         "Unable to remove subscription. Please try again."
