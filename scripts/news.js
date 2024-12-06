@@ -37,12 +37,12 @@ async function getNewsArticles() {
                 .get();
             allNewsArticles.push(...sourcesMunicipalSnapshot.docs);
 
-            const newsForCity = document.getElementById("newsForCity")
+            const newsForCity = document.getElementById("newsForCity");
             newsForCity.innerHTML = `
             <div class="py-5 px-3 text-center">
                     <h1 class="pb-3">News for ${userCity}</h1>
                 </div>
-            `
+            `;
         }
     }
 
@@ -66,7 +66,7 @@ async function getNewsArticles() {
         }
     } else {
         const news_section = document.getElementById("news");
-        news_section.classList.add("p-4")
+        news_section.classList.add("p-4");
         news_section.innerHTML += `
         <div class="news-action card">
             <p class="card-text fs-4">
@@ -97,7 +97,7 @@ async function printNewsArticle(doc) {
     const summary = doc.subpageSummary;
 
     const news_section = document.getElementById("news");
-    news_section.classList.remove("p-4")
+    news_section.classList.remove("p-4");
     news_section.innerHTML += `
     <div class="news-article">
             <div id="single-accordion-template" class="subpage-item accordion">
@@ -109,7 +109,7 @@ async function printNewsArticle(doc) {
                             >
                                 ${sourceData.sourceName} 
                             </span></a
-                        ><span> -  ${title}</span></h3>
+                        ><span class="d-none d-lg-inline"> -  </span>${title}</h3>
                     <button
                         class="accordion-button custom collapsed"
                         type="button"
@@ -135,5 +135,5 @@ async function printNewsArticle(doc) {
 }
 
 function setup() {
-    getNewsArticles()
+    getNewsArticles();
 }

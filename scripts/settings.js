@@ -38,14 +38,15 @@ function editUserGeoInfo() {
 
 function saveUserGeoInfo(resp) {
     try {
-        currentUser
-            .update({
-                postalCode: resp.postal,
-                city: resp.standard.city,
-                province: resp.standard.prov,
-            })
+        currentUser.update({
+            postalCode: resp.postal,
+            city: resp.standard.city,
+            province: resp.standard.prov,
+        });
     } catch (err) {
-        window.confirm("Your postal code is invalid. Please make sure you have entered the correct postal code with no spaces in between.")
+        window.confirm(
+            "Your postal code is invalid. Please make sure you have entered the correct postal code with no spaces in between."
+        );
     }
     currentUser
         .update({
@@ -54,7 +55,7 @@ function saveUserGeoInfo(resp) {
             province: resp.standard.prov,
         })
         .then(() => {
-            window.confirm("Your postal code has been successfully updated.")
+            window.confirm("Your postal code has been successfully updated.");
             console.log("Document successfully updated!");
         });
 
@@ -66,109 +67,15 @@ function getUserGeoInfo() {
     var postalCode = document.getElementById("postalCodeInput").value;
     fetch(`https://geocoder.ca/?locate=${postalCode}&json=1`)
         .then((resp) => resp.json())
-        .then(
-            (resp) => {
-                saveUserGeoInfo(resp);
-            })
+        .then((resp) => {
+            saveUserGeoInfo(resp);
+        })
         .catch((err) => {
             console.log(err);
         });
 }
 
-// get user's current UpdateLocation status
-// function currentUpdateLocationSetting() {
-//     firebase.auth().onAuthStateChanged(user => {
-//         // Check if user is signed in:
-//         if (user) {
-//             //go to the correct user document by referencing to the user uid
-//             currentUser = db.collection("users").doc(user.uid)
-//             //get the document for current user.
-//             currentUser.get()
-//                 .then(userData => {
-//                     //get the user's account data
-//                     let userAccount = userData.data();
-//                     let userUpdateLocation = userAccount.updateLocation
-//                     if (userUpdateLocation == true) {
-//                         document.getElementById("userUpdateLocation").innerHTML = `
-//                             Current setting: ON
-//                             `
-//                     } else if (userUpdateLocation == null) {
-//                         // if user doesn't have updateLocation in their document, add updateLocation to their document and assign "false" to begin with
-//                         currentUser.update({
-//                             updateLocation: false
-//                         }).then(() => {
-//                             document.getElementById("userUpdateLocation").innerHTML = `
-//                             Current setting: OFF
-//                             `
-//                             console.log("Update location's current setting successfully activated!");
-//                         })
-//                             .catch((error) => {
-//                                 console.log("Error updating document: ", error);
-//                             })
-//                     } else {
-//                         document.getElementById("userUpdateLocation").innerHTML = `
-//                             Current setting: OFF
-//                             `
-//                     }
-//                 })
-//         }
-//     })
-// }
-// currentUpdateLocationSetting();
-
-// // toggle user's UpdateLocation when they click the button
-// function toggleUpdateLocation() {
-//     firebase.auth().onAuthStateChanged(user => {
-//         // Check if user is signed in:
-//         if (user) {
-//             //go to the correct user document by referencing to the user uid
-//             currentUser = db.collection("users").doc(user.uid)
-//             //get the document for current user.
-//             currentUser.get()
-//                 .then(userData => {
-//                     //get the user's account data
-//                     let userAccount = userData.data();
-//                     let userUpdateLocation = userAccount.updateLocation
-
-//                     //if the user's account fields are not empty, then write them in to the form.
-
-//                     if (userAccount != null && userUpdateLocation == false) {
-//                         currentUser.update({
-//                             updateLocation: true
-//                         }).then(() => {
-//                             document.getElementById("userUpdateLocation").innerHTML = `
-//                             Current setting: ON
-//                             `
-//                             console.log("Update location successfully turned on!");
-//                         })
-//                             .catch((error) => {
-//                                 console.log("Error updating document: ", error);
-//                             })
-//                     } else if (userAccount != null && userUpdateLocation == true) {
-//                         currentUser.update({
-//                             updateLocation: false
-//                         }).then(() => {
-//                             document.getElementById("userUpdateLocation").innerHTML = `
-//                             Current setting: OFF
-//                             `
-//                             console.log("Update location successfully turned off!");
-//                         })
-//                             .catch((error) => {
-//                                 console.log("Error updating document: ", error);
-//                             })
-//                     }
-//                 })
-//         }
-//         else {
-//             // No user is signed in.
-//             window.confirm("No user is signed in");
-//             console.log("No user is signed in");
-//         }
-//     }).catch((error) => {
-//         console.log("Error getting document:", error);
-//     });
-// }
-
+// Not currently in use as we have not implemented sending emails.
 // get user's current emailNotifications status
 function currentEmailNotificationsSetting() {
     firebase.auth().onAuthStateChanged((user) => {
@@ -217,8 +124,9 @@ function currentEmailNotificationsSetting() {
         }
     });
 }
-currentEmailNotificationsSetting();
+// currentEmailNotificationsSetting();
 
+// Not currently in use as we have not implemented sending emails.
 // toggle user's emailNotifications when they click the button
 function toggleEmailNotifications() {
     firebase.auth().onAuthStateChanged((user) => {
@@ -281,9 +189,6 @@ function toggleEmailNotifications() {
             console.log("No user is signed in");
         }
     });
-    // .catch((error) => {
-    //     console.log("Error getting document:", error);
-    // });
 }
 
 // when the user clicks on the "Delete" button
@@ -318,7 +223,9 @@ function deleteConfirmation() {
                                 window.confirm(
                                     "Please sign out of your account to finish the deletion process."
                                 );
-                                console.log("Give user instructions to confirm deletion of account");
+                                console.log(
+                                    "Give user instructions to confirm deletion of account"
+                                );
                                 // user is redirected to index.html signed-out
                                 window.location.replace(
                                     "index.html",

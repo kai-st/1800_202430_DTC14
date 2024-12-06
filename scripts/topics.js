@@ -23,7 +23,7 @@ function populateKeywords(keywords) {
 
         // no horizontal bar needed if there's only one name in category or i is the last number in category
         // Replace spaces with + in urls
-        if (i == 1 || i == keywords.length - 1) {
+        if (i == keywords.length - 1) {
             nameItems.innerHTML += `<li><a class=" mt-4 text-capitalize dropdown-item" href="/results.html?category=${category.replace(
                 " ",
                 "+"
