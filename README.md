@@ -69,14 +69,31 @@ Content of the project folder:
 └── README.md
 
 It has the following subfolders and files:
-├── .git                     # Folder for git repo
-├── images                   # Folder for images
-    /compass.svg             # Care Compass logo SVG
-├── scripts                  # Folder for scripts
-    /blah.js                 #
-├── styles                   # Folder for styles
-    /blah.css                #
-
+├── .git                      # Folder for git repo
+├── images                    # Folder for images
+    /compass.svg              # Care Compass logo SVG
+├── scripts                   # Folder for scripts
+    /authentication.js        # Firebase authentication JS
+    /crawler.js               # Web crawler JS
+    /news.js                  # Get and print news articles JS
+    /notifications.js         # Load and display notifications JS
+    /postalcode.js            # Get and update user's postal code from the News page JS
+    /results.js               # Populate the Results page JS
+    /script.js                # Logout and get user's location functions JS
+    /settings.js              # Get and update user's postal code from the Settings page, delete account data JS
+    /skeleton.js              # Skeleton for header and footer JS
+    /topics.js                # Populate the Topics page with keywords JS
+    /writeUserSettings.js     # Get the user's email for subscriptions JS
+├── styles                    # Folder for styles
+    /news_styles.css          # News page styling CSS
+    /notifications_styles.css # Notifications styling CSS
+    /results_styles.css       # Results styling CSS
+    /style.css                # Global, header, and footer styling CSS
+    /topics_styles.css        # Topics styling CSS
+├── text                      # Folder for texts
+    /footer.html              # Footer module HTML
+    /header_after_login.html  # Header module after the user is logged in HTML
+    /header_before_login.html # Header module before the user is logged in HTML
 
 
 ```
